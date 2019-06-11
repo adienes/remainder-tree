@@ -65,7 +65,7 @@ def dumb_remainder_tree(A,m):
 
 
 #up to N numbers and d datapoints
-def complexity_graph(N, d=555):
+def complexity_graph(N, d=1000):
 	x = []
 	y = []
 
