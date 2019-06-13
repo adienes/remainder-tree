@@ -56,6 +56,8 @@ std::array<int, 2*N-1> product_tree(std::array<int, N> X)
 }
 
 
+//given A0, A1, ... An, and m0, m1, ... mn, this returns
+//1, A0 mod m1, A0*A1 mod m2, ... A0*...An-1 mod mn
 template<std::size_t n>
 std::array<int, n> accumulating_remainder_tree(std::array<int, n> A, std::array<int, n> m)
 {
