@@ -30,14 +30,34 @@ std::tuple<int, int> lift_index(int k)
 	return std::make_tuple(i,j);
 }
 
+//reflects a tree on the y-axis in place
+template<std::size_t N>
+void reflect_tree(std::array<int, N> X)
+{
+	int depth = log2(N);
+
+	for (int i = 0; i <= depth; i++)
+	{
+		int width = pow(2,i)-1;
+
+		for (int j = 0; j <= width; j++)
+		{
+			//this switches the two locations
+			X[width-j] ^= X[j];
+			X[j] ^= X[width-j];
+			X[width-j] ^= X[j];
+		}
+	}
+}
 
 
 //given an array of size N, returns the product tree of size 2N
 //assumes N is a power of 2
 //it won't have to be (we can pad it etc.) but this is just a preliminary version
 template<std::size_t N>
-std::array<int, 2*N-1> product_tree(std::array<int, N> X)
+std::array<int, 2*N-1> product_tree(std::array<int, N> X, std::array<int, 2*N-1> mtree = {})
 {
+	//INPUT: a list of integers; OUTPUT: a product tree of double the size
 	int depth = log2(N); //round this UP when not power of 2
 
 	std::array<int, 2*N-1> ptree;
@@ -45,7 +65,14 @@ std::array<int, 2*N-1> product_tree(std::array<int, N> X)
 	//initialize leaves
 	for (int j = 0; j < pow(2, depth); j++)
 	{
-		ptree[flatten_index(depth,j)] = X[j];
+		int leaf = flatten_index(depth,j);
+
+		ptree[leaf] = X[j];
+
+		if (mtree[leaf] != 0)
+		{
+			ptree[leaf] %= mtree[leaf];
+		}
 	}
 
 	//build up the product tree recursively
@@ -53,8 +80,18 @@ std::array<int, 2*N-1> product_tree(std::array<int, N> X)
 	{
 		for (int j = 0; j < pow(2,i); j++)
 		{
+			int parent = flatten_index(i,j);
+			int left = 2*parent + 1;
+			int right = left + 1;
+
 			//padding is not necessary if on this step we catch IndexError with 1
-			ptree[flatten_index(i,j)] = ptree[flatten_index(i+1, 2*j)]*ptree[flatten_index(i+1, 2*j+1)];
+			ptree[parent] = ptree[left]*ptree[right];
+
+			if (mtree[parent] != 0)
+			{
+				ptree[parent] %= mtree[parent];
+			}
+
 		}
 	}
 
@@ -63,15 +100,15 @@ std::array<int, 2*N-1> product_tree(std::array<int, N> X)
 
 
 template<std::size_t n>
-std::array<int, n> factorial_tree(std::array<int, n> X)
+std::array<int, n> accumulating_tree(std::array<int, n> X, std::array<int, n> mtree = {})
 {
-	//I am calling the accumulating tree a 'factorial tree'
 	//code cut from body of accumulating_remainder_tree
 	//this can be used to store the product tree of A modulo the mi
+	//this can be applied to any tree; for our applications we will only apply it to product trees
+	//INPUT: a tree; OUTPUT: accumulating tree (of same size)
 	int depth = log2(n);
 
-	std::array<int, 2*n-1> X_ptree = product_tree(X);
-	std::array<int, 2*n - 1> ftree = {1};
+	std::array<int, n> acctree = {1};
 
 	for (int i = 0; i < depth; i++)
 	{
@@ -81,14 +118,25 @@ std::array<int, n> factorial_tree(std::array<int, n> X)
 			int left = 2*parent + 1;
 			int right = left+1;
 
-			ftree[left] = ftree[parent];
-			ftree[right] = ftree[parent]*X_ptree[left];
+			acctree[left] = acctree[parent];
+			acctree[right] = acctree[parent]*X[left];
+
+			if (mtree[left] != 0)
+			{
+				acctree[left] %= mtree[left];
+			}
+
+			if (mtree[right] != 0)
+			{
+				acctree[right] %= mtree[right];
+			}
 		}
 	}
 
-	return ftree;
+	return acctree;
 
 }
+
 
 
 //so might make sense to pad beginning of m with a 1, and pad end of A with a 1
@@ -99,7 +147,25 @@ std::array<int, n> accumulating_remainder_tree(std::array<int, n> A, std::array<
 {
 	int depth = log2(n);
 	std::array<int, 2*n-1> m_ptree = product_tree(m);
-	std::array<int, 2*n-1> A_ptree = product_tree(A);
+
+	std::array<int, 2*n-1> m_acctree = accumulating_tree(m_ptree);
+	reflect_tree(m_acctree);
+
+	//this power tree is reduced modulo the reflected m_ftree
+	std::array<int, 2*n-1> A_ptree = product_tree(A, m_acctree);
+	//delete m_acctree;
+
+	std::array<int, 2*n-1> A_rtree = accumulating_tree(A_ptree, m_ptree);
+
+	//need a nice array slice here...
+	std::array<int, n> C;
+
+	for (int j = 0; j < pow(2, depth); j++)
+	{
+		C[j] = A_rtree[flatten_index(depth, j)];
+	}
+
+	return C;
 
 	//I would like to build the product tree of A 'manually'
 	//this is because we only need to store the values modulo the product of some m
@@ -126,15 +192,7 @@ std::array<int, n> accumulating_remainder_tree(std::array<int, n> A, std::array<
 		}
 	}
 
-	//need a nice array slice here...
-	std::array<int, n> C;
-
-	for (int j = 0; j < pow(2, depth); j++)
-	{
-		C[j] = rtree[flatten_index(depth, j)];
-	}
-
-	return C;
+	
 }
 
 
