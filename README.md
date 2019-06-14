@@ -6,3 +6,6 @@ More runtime graphs created and compared. Studied from the literature. Experimen
 
 6/12/19
 Got confused about recursion tree; tried to set up Linux or Visual Studio or any way to run C++ code.
+
+6/13/19
+Created a C++ implementation. No optimizations done yet whatsoever. First priority tomorrow is to set it up with GMP. Then, do the log-factor speedup, also I need to implement RemainderForest. Notation still sucks, sadly.
