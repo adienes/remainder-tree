@@ -30,24 +30,41 @@ std::tuple<int, int> lift_index(int k)
 	return std::make_tuple(i,j);
 }
 
+
+template<std::size_t N>
+void print_tree(std::array<int, N> X)
+{
+	std::cout << std::endl;
+	for (int i = 0; i < N; i++)
+	{
+		std::cout << X[i] << " , ";
+	}
+	std::cout << std::endl;
+}
+
+
 //reflects a tree on the y-axis in place
 template<std::size_t N>
-void reflect_tree(std::array<int, N> X)
+std::array<int, N> reflect_tree(std::array<int, N> X) //why doesn't mutability work the way I think it does?
 {
 	int depth = log2(N);
 
-	for (int i = 0; i <= depth; i++)
+	for (int i = 1; i <= depth; i++)
 	{
-		int width = pow(2,i)-1;
+		int width = pow(2,i);
 
-		for (int j = 0; j <= width; j++)
+		for (int j = 0; 2*j < width; j++)
 		{
+			int a = flatten_index(i,j);
+			int b = flatten_index(i, width-j-1);
+
 			//this switches the two locations
-			X[width-j] ^= X[j];
-			X[j] ^= X[width-j];
-			X[width-j] ^= X[j];
+			X[b] = X[a]^X[b];
+			X[a] = X[a]^X[b];
+			X[b] = X[a]^X[b];
 		}
 	}
+	return X;
 }
 
 
@@ -148,12 +165,16 @@ std::array<int, n> accumulating_remainder_tree(std::array<int, n> A, std::array<
 	int depth = log2(n);
 	std::array<int, 2*n-1> m_ptree = product_tree(m);
 
-	std::array<int, 2*n-1> m_acctree = accumulating_tree(m_ptree);
-	reflect_tree(m_acctree);
+	std::array<int, 2*n-1> m_acctree = reflect_tree(accumulating_tree(reflect_tree(m_ptree)));
+
 
 	//this power tree is reduced modulo the reflected m_ftree
 	std::array<int, 2*n-1> A_ptree = product_tree(A, m_acctree);
 	//delete m_acctree;
+
+	print_tree(m_ptree);
+	print_tree(m_acctree);
+	print_tree(A_ptree);
 
 	std::array<int, 2*n-1> A_rtree = accumulating_tree(A_ptree, m_ptree);
 
@@ -166,32 +187,6 @@ std::array<int, n> accumulating_remainder_tree(std::array<int, n> A, std::array<
 	}
 
 	return C;
-
-	//I would like to build the product tree of A 'manually'
-	//this is because we only need to store the values modulo the product of some m
-	//there is definitely a cleaner way to do this but for now I'll basically just copy the code
-	//and take mods where appropriate.
-
-	//this requires knowing m1*...m7, m2*...m7, ... m6*m7, m7
-	//so do a separate tree to calculate these moduli
-	//this keeps every multiple of the A in the smallest space it can be. When m << A this is a massive speedup
-
-	std::array<int, 2*n - 1> rtree = {1}; //initializes the root to be Id. Might want A0, or V, etc.
-
-	for (int i = 0; i < depth; i++)
-	{
-		for (int j = 0; j < pow(2, i); j++)
-		{
-			int parent = flatten_index(i,j);
-			int left = 2*parent + 1;
-			int right = left+1;
-
-			//left child is mod, right child is multiply and mod
-			rtree[left] = rtree[parent]%m_ptree[left];
-			rtree[right] = (rtree[parent]*A_ptree[left])%m_ptree[right];
-		}
-	}
-
 	
 }
 
