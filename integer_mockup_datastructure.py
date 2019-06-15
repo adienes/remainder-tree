@@ -89,8 +89,8 @@ def complexity_graph(N, d=1000):
 	plt.show()
 
 
-test_A = [random.randint(1,300) for i in range(800)]
-test_m = [random.randint(1,300) for i in range(800)]
+test_A = [random.randint(1,300) for i in range(80000)]
+test_m = [random.randint(1,300) for i in range(80000)]
 
 #test_A = [i for i in range(100)]
 print ("Fast answer: ", remainder_tree(test_A, test_m)[:100])

@@ -107,6 +107,48 @@ def remainder_tree_v2(A, m): #tries a slightly different structure of pairing? m
 		#print ()
 	return C
 
+def array_remainder_tree(A,m):
+	N = len(A)
+	assert N == len(m)
+
+	if N == 0: #shouldn't really ever occur but this handles weird cases
+		return []
+
+	leftmost = 1 << N.bit_length()
+	# amazingly, total length of array (empty [0]) is 2^(lgN+1) + 2(N - 2^lgN) = 2*N (or via invariants)
+	ATree = [0]*2*N
+	mTree = [0]*2*N
+	CTree = [0]*2*N
+
+	# fill in the base values of A, m in the tree (the initial m[i] and the initial A[i])
+	for i in range(leftmost, 2*N):
+		ATree[i] = A[i - leftmost]
+		mTree[i] = m[i - leftmost]
+	for i in range(N, leftmost):
+		ATree[i] = A[i + N-leftmost]
+		mTree[i] = m[i + N-leftmost]
+
+	# fill in the rest of the values in tree (the products of m[i] and A[i])
+	for i in range(N-1, 0, -1):
+		if not i & (i+1) == 0: # don't calculate A values for rightmost branch of tree (indices 2^j-1) since we don't need them
+			ATree[i] = ATree[2*i]*ATree[2*i+1]
+		mTree[i] = mTree[2*i]*mTree[2*i+1]
+
+	# computation of the modulos starting at the root with initial value 1
+	CTree[1] = 1
+	for i in range(1, N):
+		CTree[2*i] = CTree[i] % mTree[2*i]
+		CTree[2*i+1] = (CTree[i] * ATree[2*i]) % mTree[2*i+1]
+
+	# initialize and set output
+	C = [0]*N
+	for i in range(leftmost, 2*N):
+		C[i - leftmost] = (CTree[i] * ATree[i]) % mTree[i]
+	for i in range(N, leftmost):
+		C[i + N-leftmost] = (CTree[i] * ATree[i]) % mTree[i]
+
+	return CTree
+
 
 def array_rt_v1(A,m):
 	pass
@@ -145,13 +187,17 @@ def weird_remainder_tree(A,m):
 	return C
 
 
-def array_remainder_tree(A,m):
-	pass
-
 random.seed(14)
 
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+colorIndex = 0
+print("assiened")
+
 #up to N numbers and d datapoints
-def complexity_graph(N, d=1):
+def complexity_graph(N, d, rt_alg):
+	global colorIndex
+	global colors
+
 	x = [0]
 	y = [0]
 
@@ -159,11 +205,11 @@ def complexity_graph(N, d=1):
 	B = interval
 	while B <= N:
 		#print (B)
-		start = time.time()
 
 		A = [random.randint(1, B) for i in range(B)]
 		m = [random.randint(1, B) for i in range(B)] 
-		q = remainder_tree(A, m)
+		start = time.time()
+		q = rt_alg(A, m)
 
 		end = time.time()
 
@@ -172,19 +218,29 @@ def complexity_graph(N, d=1):
 
 		B += interval
 
-	plt.plot(x,y)
-	plt.show()
+	plt.plot(x,y, colors[colorIndex])
+	colorIndex = colorIndex + 1
 
-test_A = [random.randint(1,300) for i in range(80000)]
-test_m = [random.randint(1,300) for i in range(80000)]
+#test_A = [random.randint(1,300) for i in range(80000)]
+#test_m = [random.randint(1,300) for i in range(80000)]
 
-test_A = [1,2,3,4,5,6,7,8,9,10]
-test_m = [17,19,31,101,103,11,13,29,23,37]
+#test_A = [1,2,3,4,5,6,7,8,9,10]
+#test_m = [17,19,31,101,103,11,13,29,23,37]
 
-print ("Fast answer: ", remainder_tree(test_A, test_m)[:100])
+#print ("Fast answer: ", remainder_tree_v2(test_A, test_m)[:100])
 
+print("Starting test.")
+print("remainder_tree")
+complexity_graph(30000, 1000, remainder_tree)
 
-complexity_graph(750000)
+print("remainder_tree_v2")
+complexity_graph(30000, 1000, remainder_tree_v2)
+
+print("array_remainder_tree")
+complexity_graph(30000, 1000, array_remainder_tree)
+
+plt.show()
+
 #print ()
 #print ()
 #print ("True answer: ", dumb_remainder_tree(test_A, test_m)[:100])
