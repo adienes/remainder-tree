@@ -8,6 +8,10 @@
 //to compile this on a mac use
 //c++ -std=c++11 -stdlib=libc++ remainder_alg_first_pass.cpp -o rafp
 
+// to compile and run on linux use
+// g++ -o <executable file name> remainder_alg_first_pass.cpp
+// ./<executable file name>
+
 
 //note that everywhere it says 'int' we will eventually want to use GMP or whatnot
 //ints are too small...
