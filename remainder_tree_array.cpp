@@ -1,7 +1,6 @@
 // remainder_tree_array.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include "pch.h"
 #include <iostream>
 #include <ctime>
 #include <cmath>
@@ -22,7 +21,7 @@ int main()
 {
 	//int A[5] = { 1, 2, 3, 4, 5 };
 	//int newA = test(A, 5);
-	const int testSize = 80;
+	const int testSize = 10;
 	const int numSize = 10;
 
 	vector<int> test_A(testSize);
@@ -90,11 +89,6 @@ vector<int> remainder_tree(vector<int> A, vector<int> m) {
 	}
 	for (int i = N; i < leftmost; i++) {
 		C[i + N - leftmost] = CTree[i];
-	}
-
-
-	for (int i = 0; i < N; i++) {
-		cout << C[i] << " ";
 	}
 
 	return C;
