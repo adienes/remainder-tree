@@ -4,18 +4,20 @@
 #include <iostream>
 #include <ctime>
 #include <cmath>
-#include <vector>
 #include <cassert>
 #include <random>
+#include <NTL/ZZ.h>
+#include <NTL/vector.h>
 
 using namespace std;
+using namespace NTL;
 
 /* 
  * Returns C[], an array of residues A0 mod m0, A0A1 mod m0m1, etc.
  * A: array of A0, A1, ...
  * m: array of m0, m1, ...
  */
-vector<int> remainder_tree(vector<int> A, vector<int> m);
+Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m);
 
 int main()
 {
@@ -24,8 +26,10 @@ int main()
 	const int testSize = 10;
 	const int numSize = 10;
 
-	vector<int> test_A(testSize);
-	vector<int> test_m(testSize);
+	Vec<ZZ> test_A;
+	test_A.SetLength(testSize);
+	Vec<ZZ> test_m;
+	test_m.SetLength(testSize);
 	for (int i = 0; i < testSize; i++) {
 		test_A[i] = rand() % numSize + 1;
 		test_m[i] = rand() % numSize + 1;
@@ -42,7 +46,7 @@ int main()
 	cout << endl;
 
 
-	vector<int> test_C = remainder_tree(test_A, test_m);
+	Vec<ZZ> test_C = remainder_tree(test_A, test_m);
 
 	for (int i = 0; i < numSize; i++) {
 		cout << test_C[i] << " ";
@@ -50,17 +54,24 @@ int main()
 
 }
 
-vector<int> remainder_tree(vector<int> A, vector<int> m) {
-	assert(A.size() == m.size());
+Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
+	assert(A.length() == m.length());
 
-	int N = A.size();
-	if (N == 0) return vector<int>(0);
+	int N = A.length();
+	if (N == 0) {
+		Vec<ZZ> v;
+		v.SetLength(0);
+		return v;
+	}
 
 	int leftmost = 1 << ((int)log2(N) + 1);
 
-	vector<int> ATree(2 * N);
-	vector<int> mTree(2 * N);
-	vector<int> CTree(2 * N);
+	Vec<ZZ> ATree;
+	ATree.SetLength(2 * N);
+	Vec<ZZ> mTree;
+	mTree.SetLength(2 * N);
+	Vec<ZZ> CTree;
+	CTree.SetLength(2 * N);
 
 	for (int i = leftmost; i < 2 * N; i++) {
 		ATree[i] = A[i - leftmost];
@@ -82,7 +93,8 @@ vector<int> remainder_tree(vector<int> A, vector<int> m) {
 		CTree[2 * i + 1] = (CTree[i] * ATree[2 * i]) % mTree[2 * i + 1];
 	}
 
-	vector<int> C(N);
+	Vec<ZZ> C;
+	C.SetLength(N);
 
 	for (int i = leftmost; i < 2 * N; i++) {
 		C[i - leftmost] = CTree[i];

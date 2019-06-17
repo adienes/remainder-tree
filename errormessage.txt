@@ -1,0 +1,248 @@
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::ZZ_expo(long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::bit_xor(NTL::ZZ&, NTL::ZZ const&, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::sub(NTL::ZZ&, long, NTL::ZZ const&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::bit_and(NTL::ZZ&, NTL::ZZ const&, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::bit_or(NTL::ZZ&, NTL::ZZ const&, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::SubMod(NTL::ZZ&, NTL::ZZ const&, long, NTL::ZZ const&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::SubMod(NTL::ZZ&, long, NTL::ZZ const&, NTL::ZZ const&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::AddMod(NTL::ZZ&, NTL::ZZ const&, long, NTL::ZZ const&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::InvMod(NTL::ZZ&, NTL::ZZ const&, NTL::ZZ const&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::divide(NTL::ZZ&, NTL::ZZ const&, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::divide(NTL::ZZ const&, NTL::ZZ const&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::divide(NTL::ZZ&, NTL::ZZ const&, NTL::ZZ const&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::operator>>(std::istream&, NTL::ZZ&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::CRT(NTL::ZZ&, NTL::ZZ&, long, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::PrintDigits(std::ostream&, long, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::SetSeed(NTL::RandomStream const&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::GetCurrentRandomStream()':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::RandomWord()':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::VectorRandomWord(long, unsigned long*)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::RandomBnd(long) [clone .part.69]':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::RandomLen_long(long) [clone .part.68]':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::RandomBits_long(long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::RandomBits_ulong(long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::RandomBits(NTL::ZZ&, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::RandomLen(NTL::ZZ&, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::MultiThreadedGenGermainPrime(NTL::ZZ&, long, long)::{lambda(long)#1}::operator()(long) const':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::BasicThreadPool::ConcurrentTaskFct<NTL::MultiThreadedGenGermainPrime(NTL::ZZ&, long, long)::{lambda(long)#1}>::run(long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::RandomBnd(NTL::ZZ&, NTL::ZZ const&)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::BasicThreadPool::ConcurrentTaskFct<NTL::MultiThreadedRandomPrime(NTL::ZZ&, long, long)::{lambda(long)#1}>::run(long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(ZZ.o): In function `NTL::RandomPrime(NTL::ZZ&, long, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(fileio.o): In function `NTL::UniqueID[abi:cxx11]()':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(fileio.o): In function `NTL::FileName(char const*, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gaorsmul_1(_ntl_gbigint_body*, long, long, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gslowbits(_ntl_gbigint_body*, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gdoubtoz(double, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gsubmod(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gscompare(_ntl_gbigint_body*, long)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gdoub(_ntl_gbigint_body*)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gsqrt(_ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_glog(_ntl_gbigint_body*)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `gmod_simple(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gaddmod(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gswap(_ntl_gbigint_body**, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_ggcd(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gdiv(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gsmulmod(_ntl_gbigint_body*, long, _ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_reduce_struct_montgomery::adjust(_ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_ginv(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gsq(_ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gexps(long, long, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gmul(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gexteucl(_ntl_gbigint_body*, _ntl_gbigint_body**, _ntl_gbigint_body*, _ntl_gbigint_body**, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+//usr/local/lib/libntl.a(lip.o):/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: more undefined references to `pthread_setspecific' follow
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gexteucl(_ntl_gbigint_body*, _ntl_gbigint_body**, _ntl_gbigint_body*, _ntl_gbigint_body**, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o):/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: more undefined references to `pthread_key_create' follow
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gmulmod(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gxxratrecon(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+//usr/local/lib/libntl.a(lip.o):/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: more undefined references to `pthread_setspecific' follow
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gxxratrecon(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o):/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: more undefined references to `pthread_key_create' follow
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gexp(_ntl_gbigint_body*, long, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gaorsmul(_ntl_gbigint_body*, _ntl_gbigint_body*, long, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(lip.o): In function `_ntl_gpowermod(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+//usr/local/lib/libntl.a(lip.o): In function `NTL::details_pthread::key_wrapper::key_wrapper(void (*)(void*))':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(thread.o): In function `NTL::CurrentThreadID[abi:cxx11]()':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(BasicThreadPool.o): In function `NTL::ResetThreadPool(NTL::BasicThreadPool*)':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+//usr/local/lib/libntl.a(BasicThreadPool.o): In function `NTL::ReleaseThreadPool()':
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:673: undefined reference to `pthread_setspecific'
+/home/daniel/Desktop/ntl-11.3.2/src/../include/NTL/tools.h:665: undefined reference to `pthread_key_create'
+collect2: error: ld returned 1 exit status
