@@ -4,6 +4,7 @@
 #include <tuple>
 #include <cassert>
 #include <NTL/ZZ.h>
+#include <NTL/vector.h>
 
 using namespace std;
 
@@ -23,27 +24,26 @@ using namespace NTL;
 //translates indices in trees to indices in arrays
 //if you want left child of (i,j), do (i+1, 2*j)
 //right child is (i+1, 2*j+1), and parent is (i-1, j//2)
-ZZ flatten_index(ZZ i, ZZ j)
+int flatten_index(int i, int j)
 {
-	assert (j <= pow(2,i)-1);
-	return pow(2,i)+j-1;
+	assert (j <= 1<<i -1);
+	return 1<<i +j-1;
 }
 
 //gives tree indices from array index
-tuple<ZZ, ZZ> lift_index(ZZ k)
+tuple<int, int> lift_index(int k)
 {
-	ZZ i = log2(k+1);
-	ZZ j = k + 1 - pow(2,i);
+	int i = log2(k+1);
+	int j = k + 1 - 1<<i;
 
 	return make_tuple(i,j);
 }
 
 
-template<ZZ N>
-void print_tree(array<ZZ, N> X)
+void print_tree(Vec<ZZ> X)
 {
 	cout << endl;
-	for (ZZ i = 0; i < N; i++)
+	for (int i = 0; i < X.length(); i++)
 	{
 		cout << X[i] << " , ";
 	}
@@ -52,19 +52,18 @@ void print_tree(array<ZZ, N> X)
 
 
 //reflects a tree on the y-axis in place
-template<ZZ N>
-array<ZZ, N> reflect_tree(array<ZZ, N> X) //why doesn't mutability work the way I think it does?
+Vec<ZZ> reflect_tree(Vec<ZZ> X) //why doesn't mutability work the way I think it does?
 {
-	ZZ depth = log2(N);
+	int depth = log2(X.length());
 
-	for (ZZ i = 1; i <= depth; i++)
+	for (int i = 1; i <= depth; i++)
 	{
-		ZZ width = pow(2,i);
+		int width = 1<<i;
 
-		for (ZZ j = 0; 2*j < width; j++)
+		for (int j = 0; 2*j < width; j++)
 		{
-			ZZ a = flatten_index(i,j);
-			ZZ b = flatten_index(i, width-j-1);
+			int a = flatten_index(i,j);
+			int b = flatten_index(i, width-j-1);
 
 			//this switches the two locations
 			X[b] = X[a]^X[b];
@@ -79,18 +78,17 @@ array<ZZ, N> reflect_tree(array<ZZ, N> X) //why doesn't mutability work the way 
 //given an array of size N, returns the product tree of size 2N
 //assumes N is a power of 2
 //it won't have to be (we can pad it etc.) but this is just a preliminary version
-template<ZZ N>
-array<ZZ, 2*N-1> product_tree(array<ZZ, N> X, array<ZZ, 2*N-1> mtree = {})
+Vec<ZZ> product_tree(Vec<ZZ> X, Vec<ZZ> mtree = {})
 {
-	//INPUT: a list of ZZegers; OUTPUT: a product tree of double the size
-	ZZ depth = log2(N); //round this UP when not power of 2
+	//INPUT: a list of integers; OUTPUT: a product tree of double the size
+	int depth = log2(X.length()); //round this UP when not power of 2
 
-	array<ZZ, 2*N-1> ptree;
+	Vec<ZZ> ptree;
 
 	//initialize leaves
-	for (ZZ j = 0; j < pow(2, depth); j++)
+	for (int j = 0; j < 1<<depth; j++)
 	{
-		ZZ leaf = flatten_index(depth,j);
+		int leaf = flatten_index(depth,j);
 
 		ptree[leaf] = X[j];
 
@@ -101,13 +99,13 @@ array<ZZ, 2*N-1> product_tree(array<ZZ, N> X, array<ZZ, 2*N-1> mtree = {})
 	}
 
 	//build up the product tree recursively
-	for (ZZ i = depth-1; i >= 0; i--)
+	for (int i = depth-1; i >= 0; i--)
 	{
-		for (ZZ j = 0; j < pow(2,i); j++)
+		for (int j = 0; j < 1<<i; j++)
 		{
-			ZZ parent = flatten_index(i,j);
-			ZZ left = 2*parent + 1;
-			ZZ right = left + 1;
+			int parent = flatten_index(i,j);
+			int left = 2*parent + 1;
+			int right = left + 1;
 
 			//padding is not necessary if on this step we catch IndexError with 1
 			ptree[parent] = ptree[left]*ptree[right];
@@ -124,24 +122,23 @@ array<ZZ, 2*N-1> product_tree(array<ZZ, N> X, array<ZZ, 2*N-1> mtree = {})
 }
 
 
-template<ZZ n>
-array<ZZ, n> accumulating_tree(array<ZZ, n> X, array<ZZ, n> mtree = {})
+Vec<ZZ> accumulating_tree(Vec<ZZ> X, Vec<ZZ> mtree = {})
 {
 	//code cut from body of accumulating_remainder_tree
 	//this can be used to store the product tree of A modulo the mi
 	//this can be applied to any tree; for our applications we will only apply it to product trees
 	//INPUT: a tree; OUTPUT: accumulating tree (of same size)
-	ZZ depth = log2(n);
+	int depth = log2(X.length());
 
-	array<ZZ, n> acctree = {1};
+	Vec<ZZ> acctree[0] = 1;
 
-	for (ZZ i = 0; i < depth; i++)
+	for (int i = 0; i < depth; i++)
 	{
-		for (ZZ j = 0; j < pow(2, i); j++)
+		for (int j = 0; j < 1<<i; j++)
 		{
-			ZZ parent = flatten_index(i,j);
-			ZZ left = 2*parent + 1;
-			ZZ right = left+1;
+			int parent = flatten_index(i,j);
+			int left = 2*parent + 1;
+			int right = left+1;
 
 			acctree[left] = acctree[parent];
 			acctree[right] = acctree[parent]*X[left];
@@ -167,29 +164,28 @@ array<ZZ, n> accumulating_tree(array<ZZ, n> X, array<ZZ, n> mtree = {})
 //so might make sense to pad beginning of m with a 1, and pad end of A with a 1
 //given A0, A1, ... An, and m0, m1, ... mn, this returns
 //1, A0 mod m1, A0*A1 mod m2, ... A0*...An-1 mod mn
-template<ZZ n>
-array<ZZ, n> accumulating_remainder_tree(array<ZZ, n> A, array<ZZ, n> m)
+Vec<ZZ> accumulating_remainder_tree(Vec<ZZ> A, Vec<ZZ> m)
 {
-	ZZ depth = log2(n);
-	array<ZZ, 2*n-1> m_ptree = product_tree(m);
+	int depth = log2(A.length());
+	Vec<ZZ> m_ptree = product_tree(m);
 
-	array<ZZ, 2*n-1> m_acctree = reflect_tree(accumulating_tree(reflect_tree(m_ptree)));
+	Vec<ZZ> m_acctree = reflect_tree(accumulating_tree(reflect_tree(m_ptree)));
 
 
 	//this power tree is reduced modulo the reflected m_ftree
-	array<ZZ, 2*n-1> A_ptree = product_tree(A, m_acctree);
+	Vec<ZZ> A_ptree = product_tree(A, m_acctree);
 	//delete m_acctree;
 
 	print_tree(m_ptree);
 	print_tree(m_acctree);
 	print_tree(A_ptree);
 
-	array<ZZ, 2*n-1> A_rtree = accumulating_tree(A_ptree, m_ptree);
+	Vec<ZZ> A_rtree = accumulating_tree(A_ptree, m_ptree);
 
 	//need a nice array slice here...
-	array<ZZ, n> C;
+	Vec<ZZ> C;
 
-	for (ZZ j = 0; j < pow(2, depth); j++)
+	for (int j = 0; j < 1<<depth; j++)
 	{
 		C[j] = A_rtree[flatten_index(depth, j)];
 	}
@@ -204,10 +200,16 @@ array<ZZ, n> accumulating_remainder_tree(array<ZZ, n> A, array<ZZ, n> m)
 
 int main()
 {
-	array<ZZ, 8> A = {1,2,3,4,5,6,7,1};
-	array<ZZ, 8> m = {1,2,3,1,5,1,7,1};
+	array<int, 8> Aint = {1,2,3,4,5,6,7,1};
+	array<int, 8> mint = {1,2,3,1,5,1,7,1};
+	Vec<ZZ> A;
+	Vec<ZZ> m;
+	for(int i = 0; i < 8; i++){
+		A[i] = Aint[i];
+		m[i] = mint[i];
+	}
 
-	array<ZZ, 8> remainders = accumulating_remainder_tree(A,m);
+	Vec<ZZ> remainders = accumulating_remainder_tree(A,m);
 
-	print_tree(remainders);
+	print_tree(remainders);	
 }
