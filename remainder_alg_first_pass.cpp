@@ -2,7 +2,9 @@
 #include <array>
 #include <cmath>
 #include <tuple>
-#include <assert.h>
+#include <cassert>
+
+using namespace std;
 
 
 //to compile this on a mac use
@@ -26,30 +28,30 @@ int flatten_index(int i, int j)
 }
 
 //gives tree indices from array index
-std::tuple<int, int> lift_index(int k)
+tuple<int, int> lift_index(int k)
 {
 	int i = log2(k+1);
 	int j = k + 1 - pow(2,i);
 
-	return std::make_tuple(i,j);
+	return make_tuple(i,j);
 }
 
 
-template<std::size_t N>
-void print_tree(std::array<int, N> X)
+template<size_t N>
+void print_tree(array<int, N> X)
 {
-	std::cout << std::endl;
+	cout << endl;
 	for (int i = 0; i < N; i++)
 	{
-		std::cout << X[i] << " , ";
+		cout << X[i] << " , ";
 	}
-	std::cout << std::endl;
+	cout << endl;
 }
 
 
 //reflects a tree on the y-axis in place
-template<std::size_t N>
-std::array<int, N> reflect_tree(std::array<int, N> X) //why doesn't mutability work the way I think it does?
+template<size_t N>
+array<int, N> reflect_tree(array<int, N> X) //why doesn't mutability work the way I think it does?
 {
 	int depth = log2(N);
 
@@ -75,13 +77,13 @@ std::array<int, N> reflect_tree(std::array<int, N> X) //why doesn't mutability w
 //given an array of size N, returns the product tree of size 2N
 //assumes N is a power of 2
 //it won't have to be (we can pad it etc.) but this is just a preliminary version
-template<std::size_t N>
-std::array<int, 2*N-1> product_tree(std::array<int, N> X, std::array<int, 2*N-1> mtree = {})
+template<size_t N>
+array<int, 2*N-1> product_tree(array<int, N> X, array<int, 2*N-1> mtree = {})
 {
 	//INPUT: a list of integers; OUTPUT: a product tree of double the size
 	int depth = log2(N); //round this UP when not power of 2
 
-	std::array<int, 2*N-1> ptree;
+	array<int, 2*N-1> ptree;
 
 	//initialize leaves
 	for (int j = 0; j < pow(2, depth); j++)
@@ -120,8 +122,8 @@ std::array<int, 2*N-1> product_tree(std::array<int, N> X, std::array<int, 2*N-1>
 }
 
 
-template<std::size_t n>
-std::array<int, n> accumulating_tree(std::array<int, n> X, std::array<int, n> mtree = {})
+template<size_t n>
+array<int, n> accumulating_tree(array<int, n> X, array<int, n> mtree = {})
 {
 	//code cut from body of accumulating_remainder_tree
 	//this can be used to store the product tree of A modulo the mi
@@ -129,7 +131,7 @@ std::array<int, n> accumulating_tree(std::array<int, n> X, std::array<int, n> mt
 	//INPUT: a tree; OUTPUT: accumulating tree (of same size)
 	int depth = log2(n);
 
-	std::array<int, n> acctree = {1};
+	array<int, n> acctree = {1};
 
 	for (int i = 0; i < depth; i++)
 	{
@@ -163,27 +165,27 @@ std::array<int, n> accumulating_tree(std::array<int, n> X, std::array<int, n> mt
 //so might make sense to pad beginning of m with a 1, and pad end of A with a 1
 //given A0, A1, ... An, and m0, m1, ... mn, this returns
 //1, A0 mod m1, A0*A1 mod m2, ... A0*...An-1 mod mn
-template<std::size_t n>
-std::array<int, n> accumulating_remainder_tree(std::array<int, n> A, std::array<int, n> m)
+template<size_t n>
+array<int, n> accumulating_remainder_tree(array<int, n> A, array<int, n> m)
 {
 	int depth = log2(n);
-	std::array<int, 2*n-1> m_ptree = product_tree(m);
+	array<int, 2*n-1> m_ptree = product_tree(m);
 
-	std::array<int, 2*n-1> m_acctree = reflect_tree(accumulating_tree(reflect_tree(m_ptree)));
+	array<int, 2*n-1> m_acctree = reflect_tree(accumulating_tree(reflect_tree(m_ptree)));
 
 
 	//this power tree is reduced modulo the reflected m_ftree
-	std::array<int, 2*n-1> A_ptree = product_tree(A, m_acctree);
+	array<int, 2*n-1> A_ptree = product_tree(A, m_acctree);
 	//delete m_acctree;
 
 	print_tree(m_ptree);
 	print_tree(m_acctree);
 	print_tree(A_ptree);
 
-	std::array<int, 2*n-1> A_rtree = accumulating_tree(A_ptree, m_ptree);
+	array<int, 2*n-1> A_rtree = accumulating_tree(A_ptree, m_ptree);
 
 	//need a nice array slice here...
-	std::array<int, n> C;
+	array<int, n> C;
 
 	for (int j = 0; j < pow(2, depth); j++)
 	{
@@ -200,15 +202,15 @@ std::array<int, n> accumulating_remainder_tree(std::array<int, n> A, std::array<
 
 int main()
 {
-	std::array<int, 8> A = {1,2,3,4,5,6,7,1};
-	std::array<int, 8> m = {1,2,3,1,5,1,7,1};
+	array<int, 8> A = {1,2,3,4,5,6,7,1};
+	array<int, 8> m = {1,2,3,1,5,1,7,1};
 
-	std::array<int, 8> remainders = accumulating_remainder_tree(A,m);
+	array<int, 8> remainders = accumulating_remainder_tree(A,m);
 
 	for (int i = 0; i < remainders.size(); i++)
 	{
-		std::cout << remainders[i] << " , ";
+		cout << remainders[i] << " , ";
 	}
-	std::cout << std::endl;
+	cout << endl;
 	return 0;
 }
