@@ -154,8 +154,7 @@ void complexity_graph(int N, int d){
 
 		int testSize = B;
 		int numSize = B;
-		//int arr_m[testSize] = {1, 2, 3, 1, 5, 1, 7, 1, 1, 1, 11, 1, 13, 1, 1, 1, 17, 1, 19, 1, 1};
-
+		
 		Vec<ZZ> test_A;
 		test_A.SetLength(testSize);
 		Vec<ZZ> test_m;
@@ -163,8 +162,6 @@ void complexity_graph(int N, int d){
 		for (int i = 0; i < testSize; i++) {
 			test_A[i] = rand() % numSize + 1;
 			test_m[i] = rand() % numSize + 1;
-			//test_A[i] = i;
-			//test_m[i] = arr_m[i];
 		}
 		/*
 		for (int i = 0; i < testSize; i++) {
