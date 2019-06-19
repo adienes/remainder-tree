@@ -31,8 +31,41 @@ void complexity_graph(int N, int d);
 
 int main()
 {
-	//int A[5] = { 1, 2, 3, 4, 5 };
-	//int newA = test(A, 5);
+	// for testing with Wilson's theorem
+
+	/*int testSize = 20;
+	int arr_m[testSize] = {1, 2, 3, 1, 5, 1, 7, 1, 1, 1, 11, 1, 13, 1, 1, 1, 17, 1, 19, 1};
+
+	Vec<ZZ> test_A;
+	test_A.SetLength(testSize);
+	Vec<ZZ> test_m;
+	test_m.SetLength(testSize);
+	for (int i = 0; i < testSize; i++) {
+		//test_A[i] = rand() % numSize + 1;
+		//test_m[i] = rand() % numSize + 1;
+		test_A[i] = i+1;
+		test_m[i] = arr_m[i];
+	}
+	
+	for (int i = 0; i < testSize; i++) {
+		cout << test_A[i] << " ";
+	}
+	cout << endl;
+
+	for (int i = 0; i < testSize; i++) {
+		cout << test_m[i] << " ";
+	}
+	cout << endl;
+	
+
+	Vec<ZZ> test_C = remainder_tree(test_A, test_m);
+
+	for (int i = 0; i < testSize; i++) {
+		cout << test_C[i] << " ";
+	}
+	cout << endl;
+	*/
+
 
 	complexity_graph(300000, 1000);
 	
@@ -86,10 +119,10 @@ Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
 	C.SetLength(N);
 
 	for (int i = leftmost; i < 2 * N; i++) {
-		C[i - leftmost] = (CTree[i] * ATree[i]) % mTree[i];
+		C[i - leftmost] = CTree[i];
 	}
 	for (int i = N; i < leftmost; i++) {
-		C[i + N - leftmost] = (CTree[i] * ATree[i]) % mTree[i];
+		C[i + N - leftmost] = CTree[i];
 	}
 
 	return C;
@@ -121,7 +154,7 @@ void complexity_graph(int N, int d){
 
 		int testSize = B;
 		int numSize = B;
-		//int arr_m[testSize] = {2, 3, 1, 5, 1, 7, 1, 1, 1, 11, 1, 13, 1, 1, 1, 17, 1, 19, 1, 1};
+		//int arr_m[testSize] = {1, 2, 3, 1, 5, 1, 7, 1, 1, 1, 11, 1, 13, 1, 1, 1, 17, 1, 19, 1, 1};
 
 		Vec<ZZ> test_A;
 		test_A.SetLength(testSize);
@@ -130,7 +163,7 @@ void complexity_graph(int N, int d){
 		for (int i = 0; i < testSize; i++) {
 			test_A[i] = rand() % numSize + 1;
 			test_m[i] = rand() % numSize + 1;
-			//test_A[i] = i+1;
+			//test_A[i] = i;
 			//test_m[i] = arr_m[i];
 		}
 		/*

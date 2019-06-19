@@ -1,14 +1,22 @@
 #include <iostream>
-#include <gmp.h>
-#include <NTL/ZZ.h>
+#include <array>
 
 using namespace std;
-using namespace NTL;
+
+void test(array<int, 5> &var);
 
 int main()
 {
-   ZZ a;
-   a = 1;
-   cout << a << endl;
+   	array<int, 5> arr = {1, 2, 3, 4, 5};
+   	test(arr);
+   	for(int i = 0; i < 5; i++){
+   		cout << arr[i] << endl;
+   	}
+   
 }
 
+void test(array<int, 5> &var){
+	for(int i = 0; i < 5; i++){
+		var[i] += 1;
+	}
+}
