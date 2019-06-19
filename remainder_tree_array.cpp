@@ -2,15 +2,23 @@
 //
 
 #include <iostream>
-#include <ctime>
+#include <chrono>
 #include <cmath>
 #include <cassert>
 #include <random>
+#include <vector>
 #include <NTL/ZZ.h>
 #include <NTL/vector.h>
 
 using namespace std;
+using namespace std::chrono;
 using namespace NTL;
+/*
+ * To compile and run in Linux:
+ * g++ -o remainder_tree_array remainder_tree_array.cpp -lntl -lgmp -pthread
+ * ./remainder_tree_array
+ *
+ */
 
 /* 
  * Returns C[], an array of residues A0 mod m0, A0A1 mod m0m1, etc.
@@ -18,39 +26,16 @@ using namespace NTL;
  * m: array of m0, m1, ...
  */
 Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m);
+void print_tree(Vec<ZZ> tree);
+void complexity_graph(int N, int d);
 
 int main()
 {
 	//int A[5] = { 1, 2, 3, 4, 5 };
 	//int newA = test(A, 5);
-	const int testSize = 10;
-	const int numSize = 10;
 
-	Vec<ZZ> test_A;
-	test_A.SetLength(testSize);
-	Vec<ZZ> test_m;
-	test_m.SetLength(testSize);
-	for (int i = 0; i < testSize; i++) {
-		test_A[i] = rand() % numSize + 1;
-		test_m[i] = rand() % numSize + 1;
-	}
-
-	for (int i = 0; i < numSize; i++) {
-		cout << test_A[i] << " ";
-	}
-	cout << endl;
-
-	for (int i = 0; i < numSize; i++) {
-		cout << test_m[i] << " ";
-	}
-	cout << endl;
-
-
-	Vec<ZZ> test_C = remainder_tree(test_A, test_m);
-
-	for (int i = 0; i < numSize; i++) {
-		cout << test_C[i] << " ";
-	}
+	complexity_graph(300000, 1000);
+	
 
 }
 
@@ -83,7 +68,7 @@ Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
 	}
 
 	for (int i = N - 1; i > 0; i--) {
-		if (i & (i + 1) != 0) ATree[i] = ATree[2 * i] * ATree[2 * i + 1];
+		if ((i & (i+1)) != 0) ATree[i] = ATree[2 * i] * ATree[2 * i + 1];
 		mTree[i] = mTree[2 * i] * mTree[2 * i + 1];
 	}
 
@@ -93,28 +78,103 @@ Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
 		CTree[2 * i + 1] = (CTree[i] * ATree[2 * i]) % mTree[2 * i + 1];
 	}
 
+	//print_tree(ATree);
+	//print_tree(mTree);
+	//print_tree(CTree);
+	
 	Vec<ZZ> C;
 	C.SetLength(N);
 
 	for (int i = leftmost; i < 2 * N; i++) {
-		C[i - leftmost] = CTree[i];
+		C[i - leftmost] = (CTree[i] * ATree[i]) % mTree[i];
 	}
 	for (int i = N; i < leftmost; i++) {
-		C[i + N - leftmost] = CTree[i];
+		C[i + N - leftmost] = (CTree[i] * ATree[i]) % mTree[i];
 	}
 
 	return C;
 }
 
-int* test(int A[], int N) {
-	int* C = new int[N];
 
-	for (int i = 0; i < N; i++) {
-		C[i] = A[i] * 2;
+void print_tree(Vec<ZZ> tree){
+	int top = 1;
+	int counter = 0;
+	for(int i = 1; i < tree.length(); i++){
+		cout << tree[i] << " ";
+		counter++;
+		if (counter == top){
+			cout << endl;
+			counter = 0;
+			top *= 2;
+		}
+	}
+	cout << endl;
+}
+
+void complexity_graph(int N, int d){
+	vector<int> x;
+	vector<int> y;
+
+	int interval = N/d;
+	int B = 0;
+	while(B < N){
+
+		int testSize = B;
+		int numSize = B;
+		//int arr_m[testSize] = {2, 3, 1, 5, 1, 7, 1, 1, 1, 11, 1, 13, 1, 1, 1, 17, 1, 19, 1, 1};
+
+		Vec<ZZ> test_A;
+		test_A.SetLength(testSize);
+		Vec<ZZ> test_m;
+		test_m.SetLength(testSize);
+		for (int i = 0; i < testSize; i++) {
+			test_A[i] = rand() % numSize + 1;
+			test_m[i] = rand() % numSize + 1;
+			//test_A[i] = i+1;
+			//test_m[i] = arr_m[i];
+		}
+		/*
+		for (int i = 0; i < testSize; i++) {
+			cout << test_A[i] << " ";
+		}
+		cout << endl;
+
+		for (int i = 0; i < testSize; i++) {
+			cout << test_m[i] << " ";
+		}
+		cout << endl;
+		*/
+
+		uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		Vec<ZZ> test_C = remainder_tree(test_A, test_m);
+
+		/*for (int i = 0; i < testSize; i++) {
+			cout << test_C[i] << " ";
+		}
+		cout << endl;
+		*/
+
+		time_t end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+		x.push_back(B);
+		y.push_back(end-start);
+
+		B += interval;
 	}
 
-	return C;
+	for(int i = 0; i < x.size(); i++){
+		cout << x[i] << ", ";
+	}		
+	cout << endl;
+
+	for(int i = 0; i < y.size(); i++){
+		cout << y[i] << ", ";
+	}		
+	cout << endl;
+
+
 }
+
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
