@@ -5,6 +5,7 @@
 #include <cassert>
 #include <NTL/ZZ.h>
 #include <NTL/vector.h>
+#include <random>
 
 using namespace std;
 
@@ -230,7 +231,7 @@ Vec<ZZ> accumulating_remainder_tree(Vec<ZZ> A, Vec<ZZ> m)
 
 int main()
 {
-	long N = pow(2,16);
+	long N = 30000;
 
 	Vec<ZZ> A;
 	Vec<ZZ> m;
@@ -238,14 +239,19 @@ int main()
 	A.SetLength(N);
 	m.SetLength(N);
 
-	ZZ x;
+	random_device rd;
+	mt19937 mt(rd());
+	uniform_int_distribution<long> dist(1, N);
+
 	for(int i = 0; i < N; i++){
 		int bitsize = log2(i+1)+2;
 
-		GenPrime(x, bitsize);
-		A[i] = pow(i,7) + i*i*i + 2*i + 1;
-		m[i] = x;
+		
+		A[i] = dist(mt);
+		m[i] = dist(mt);
+
 	}
+
 
 	Vec<ZZ> ztree = zero_vector(2*N);
 
@@ -254,5 +260,8 @@ int main()
 
 	Vec<ZZ> remainders = accumulating_remainder_tree(A,m);
 
-	print_tree(remainders);	
+	print_tree(remainders);
+
+
+
 }
