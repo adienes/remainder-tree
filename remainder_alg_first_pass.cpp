@@ -10,8 +10,9 @@ using namespace std;
 
 using namespace NTL;
 
-//to compile this on a mac use
-//c++ -std=c++11 -stdlib=libc++ remainder_alg_first_pass.cpp -o rafp
+//ex. compile:
+//g++ -o <exe> remainder_alg_first_pass.cpp -std=c++11 -march=native -O2 -lntl -lgmp -lgmpxx -pthread
+
 
 // to compile and run on linux use
 // g++ -o <executable file name> remainder_alg_first_pass.cpp
@@ -26,15 +27,15 @@ using namespace NTL;
 //right child is (i+1, 2*j+1), and parent is (i-1, j//2)
 int flatten_index(int i, int j)
 {
-	assert (j <= 1<<i -1);
-	return 1<<i +j-1;
+	assert (j <= pow(2,i) - 1);
+	return pow(2,i) +j-1;
 }
 
 //gives tree indices from array index
 tuple<int, int> lift_index(int k)
 {
 	int i = log2(k+1);
-	int j = k + 1 - 1<<i;
+	int j = k + 1 - pow(2,i);
 
 	return make_tuple(i,j);
 }
@@ -58,7 +59,7 @@ Vec<ZZ> reflect_tree(Vec<ZZ> X) //why doesn't mutability work the way I think it
 
 	for (int i = 1; i <= depth; i++)
 	{
-		int width = 1<<i;
+		int width = pow(2,i);
 
 		for (int j = 0; 2*j < width; j++)
 		{
@@ -74,19 +75,34 @@ Vec<ZZ> reflect_tree(Vec<ZZ> X) //why doesn't mutability work the way I think it
 	return X;
 }
 
+Vec<ZZ> zero_vector(int N)
+{
+	Vec<ZZ> ret;
+	ret.SetLength(N);
+	for (int i = 0; i < N; i++)
+	{
+		ret[i] = 0;
+	}
+
+	return ret;
+}
 
 //given an array of size N, returns the product tree of size 2N
 //assumes N is a power of 2
 //it won't have to be (we can pad it etc.) but this is just a preliminary version
-Vec<ZZ> product_tree(Vec<ZZ> X, Vec<ZZ> mtree = {})
+Vec<ZZ> product_tree(Vec<ZZ> X, Vec<ZZ> mtree)
 {
+
 	//INPUT: a list of integers; OUTPUT: a product tree of double the size
 	int depth = log2(X.length()); //round this UP when not power of 2
 
 	Vec<ZZ> ptree;
+	ptree = zero_vector(2*X.length()-1);
+
+
 
 	//initialize leaves
-	for (int j = 0; j < 1<<depth; j++)
+	for (int j = 0; j < pow(2, depth); j++)
 	{
 		int leaf = flatten_index(depth,j);
 
@@ -98,10 +114,12 @@ Vec<ZZ> product_tree(Vec<ZZ> X, Vec<ZZ> mtree = {})
 		}
 	}
 
+
+
 	//build up the product tree recursively
 	for (int i = depth-1; i >= 0; i--)
 	{
-		for (int j = 0; j < 1<<i; j++)
+		for (int j = 0; j < pow(2,i); j++)
 		{
 			int parent = flatten_index(i,j);
 			int left = 2*parent + 1;
@@ -122,19 +140,23 @@ Vec<ZZ> product_tree(Vec<ZZ> X, Vec<ZZ> mtree = {})
 }
 
 
-Vec<ZZ> accumulating_tree(Vec<ZZ> X, Vec<ZZ> mtree = {})
+Vec<ZZ> accumulating_tree(Vec<ZZ> X, Vec<ZZ> mtree)
 {
 	//code cut from body of accumulating_remainder_tree
 	//this can be used to store the product tree of A modulo the mi
 	//this can be applied to any tree; for our applications we will only apply it to product trees
 	//INPUT: a tree; OUTPUT: accumulating tree (of same size)
+	assert (X.length() == mtree.length());
+
 	int depth = log2(X.length());
 
-	Vec<ZZ> acctree[0] = 1;
+	Vec<ZZ> acctree;
+	acctree.SetLength(X.length());
+	acctree[0] = 1;
 
 	for (int i = 0; i < depth; i++)
 	{
-		for (int j = 0; j < 1<<i; j++)
+		for (int j = 0; j < pow(2,i); j++)
 		{
 			int parent = flatten_index(i,j);
 			int left = 2*parent + 1;
@@ -166,26 +188,36 @@ Vec<ZZ> accumulating_tree(Vec<ZZ> X, Vec<ZZ> mtree = {})
 //1, A0 mod m1, A0*A1 mod m2, ... A0*...An-1 mod mn
 Vec<ZZ> accumulating_remainder_tree(Vec<ZZ> A, Vec<ZZ> m)
 {
+	assert (A.length() == m.length());
+
 	int depth = log2(A.length());
-	Vec<ZZ> m_ptree = product_tree(m);
 
-	Vec<ZZ> m_acctree = reflect_tree(accumulating_tree(reflect_tree(m_ptree)));
+	Vec<ZZ> ztree = zero_vector(2*m.length()-1);
 
+	Vec<ZZ> m_ptree = product_tree(m, ztree);
+
+	//print_tree(m_ptree);
+	
+
+	Vec<ZZ> m_acctree = reflect_tree(accumulating_tree(reflect_tree(m_ptree), ztree));
+
+	//print_tree(m_acctree);
 
 	//this power tree is reduced modulo the reflected m_ftree
 	Vec<ZZ> A_ptree = product_tree(A, m_acctree);
 	//delete m_acctree;
 
-	print_tree(m_ptree);
-	print_tree(m_acctree);
-	print_tree(A_ptree);
+	//print_tree(A_ptree);
 
 	Vec<ZZ> A_rtree = accumulating_tree(A_ptree, m_ptree);
 
+	//print_tree(A_rtree);
+
 	//need a nice array slice here...
 	Vec<ZZ> C;
+	C.SetLength(A.length());
 
-	for (int j = 0; j < 1<<depth; j++)
+	for (int j = 0; j < pow(2,depth); j++)
 	{
 		C[j] = A_rtree[flatten_index(depth, j)];
 	}
@@ -196,18 +228,29 @@ Vec<ZZ> accumulating_remainder_tree(Vec<ZZ> A, Vec<ZZ> m)
 
 
 
-
-
 int main()
 {
-	array<int, 8> Aint = {1,2,3,4,5,6,7,1};
-	array<int, 8> mint = {1,2,3,1,5,1,7,1};
+	long N = pow(2,16);
+
 	Vec<ZZ> A;
 	Vec<ZZ> m;
-	for(int i = 0; i < 8; i++){
-		A[i] = Aint[i];
-		m[i] = mint[i];
+
+	A.SetLength(N);
+	m.SetLength(N);
+
+	ZZ x;
+	for(int i = 0; i < N; i++){
+		int bitsize = log2(i+1)+2;
+
+		GenPrime(x, bitsize);
+		A[i] = pow(i,7) + i*i*i + 2*i + 1;
+		m[i] = x;
 	}
+
+	Vec<ZZ> ztree = zero_vector(2*N);
+
+	//print_tree(A);
+	//print_tree(m);
 
 	Vec<ZZ> remainders = accumulating_remainder_tree(A,m);
 
