@@ -53,7 +53,44 @@ void print_tree(Vec<ZZ> & X)
 }
 
 
-Vec<ZZ> alternate_tree(Vec<ZZ> &A, Vec<ZZ> &m)
+ZZ mtree_val(int i, int j, const Vec<ZZ> &m)
+{
+	int N = m.length();
+	int depth = log2(N);
+	assert ((i <= depth) and (j < pow(2, i)));
+
+	if (i == depth)
+	{
+		return m[j];
+	}
+
+	else
+	{
+		return mtree_val(i+1, 2*j, m)*mtree_val(i+1, 2*j+1, m);
+	}
+}
+
+ZZ Atree_val(int i, int j, const Vec<ZZ> &A)
+{
+	int N = A.length();
+	int depth = log2(N);
+	assert ((i <= depth) and (j < pow(2,i)));
+
+	if ((i == depth) or (j == 0))
+	{
+		return A[j];
+	}
+
+	else
+	{
+		return Atree_val(i+1, 2*j-1, A)*Atree_val(i+1, 2*j, A);
+	}
+}
+
+
+//k will be approx log log N (it's the space-time tradeoff)
+//when k = 0 we have normal remainder tree
+Vec<ZZ> RemTree(const Vec<ZZ> &A, const Vec<ZZ> &m, const ZZ &V = ZZ(1))
 {
 	int N = A.length();
 	assert (N == m.length());
@@ -116,7 +153,7 @@ Vec<ZZ> alternate_tree(Vec<ZZ> &A, Vec<ZZ> &m)
 	Vec<ZZ> remtree;
 	remtree.SetLength(2*N-1);
 
-	remtree[0] = A[0]%mtree[0];
+	remtree[0] = (V*A[0])%mtree[0];
 
 	for (int i = 0; i < depth; i++)
 	{
@@ -132,14 +169,68 @@ Vec<ZZ> alternate_tree(Vec<ZZ> &A, Vec<ZZ> &m)
 		}
 	}
 
-	return remtree;
+	Vec<ZZ> remainders;
+	remainders.SetLength(N);
+
+	int leftmost_leaf = flatten_index(depth, 0);
+	for (int j = 0; j < N; j++)
+	{
+		remainders[j] = remtree[leftmost_leaf+j];
+	}
+	return remainders;
 }
 
+//searches up to N for Wilson primes
+Vec<ZZ> WilsonRemainders(long N, long interval)
+{
+	Vec<ZZ> A;
+	Vec<ZZ> m;
 
+	A.SetLength(interval);
+	m.SetLength(interval);
+
+	Vec<ZZ> remainders;
+	remainders.SetLength(N);
+
+	ZZ V = ZZ(1);
+
+	for (int b = 0; b*interval < N; b++)
+	{
+		for (int i = 0; i < interval; i++)
+		{
+			ZZ val = ZZ(b*interval+(i+1));
+
+			A[i] = val-1;
+			if (val == 1)
+			{
+				A[i] += 1;
+			}
+
+			if (ProbPrime(val))
+			{
+				m[i] = val*val;
+			}
+
+			else
+			{
+				m[i] = 1;
+			}
+		}
+
+		Vec<ZZ> interval_remainders = RemTree(A, m, V);
+		for (int i = 0; i < interval; i++)
+		{
+			remainders[b*interval+i] = interval_remainders[i];
+			V *= A[i];
+		}
+	}
+
+	return remainders;
+}
 
 int main()
 {
-	long N = pow(2,24);
+	long N = pow(2,1);
 
 	Vec<ZZ> A;
 	Vec<ZZ> m;
@@ -167,13 +258,15 @@ int main()
 	//print_tree(m);
 
 	auto start = chrono::high_resolution_clock::now();
-	Vec<ZZ> remainders = alternate_tree(A,m);
+	Vec<ZZ> remainders = RemTree(A,m);
+	Vec<ZZ> WREM = WilsonRemainders(pow(2,10), pow(2,6));
 	auto finish = chrono::high_resolution_clock::now();
 
 	chrono::duration<double> runtime = finish-start;
 
-	//print_tree(remainders);
+	//print_tree(WREM);
 	cout << remainders[0] << endl;
+	cout << WREM[562] << " , " << 563*563 << endl;
 	cout << runtime.count() << endl;
 
 
