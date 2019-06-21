@@ -6,6 +6,7 @@
 #include <NTL/ZZ.h>
 #include <NTL/vector.h>
 #include <random>
+#include <chrono>
 
 using namespace std;
 
@@ -42,7 +43,7 @@ tuple<int, int> lift_index(int k)
 }
 
 
-void print_tree(Vec<ZZ> X)
+void print_tree(Vec<ZZ> & X)
 {
 	cout << endl;
 	for (int i = 0; i < X.length(); i++)
@@ -54,7 +55,7 @@ void print_tree(Vec<ZZ> X)
 
 
 //reflects a tree on the y-axis in place
-Vec<ZZ> reflect_tree(Vec<ZZ> X) //why doesn't mutability work the way I think it does?
+void reflect_tree(Vec<ZZ> & X) //why doesn't mutability work the way I think it does?
 {
 	int depth = log2(X.length());
 
@@ -73,7 +74,6 @@ Vec<ZZ> reflect_tree(Vec<ZZ> X) //why doesn't mutability work the way I think it
 			X[b] = X[a]^X[b];
 		}
 	}
-	return X;
 }
 
 Vec<ZZ> zero_vector(int N)
@@ -91,7 +91,7 @@ Vec<ZZ> zero_vector(int N)
 //given an array of size N, returns the product tree of size 2N
 //assumes N is a power of 2
 //it won't have to be (we can pad it etc.) but this is just a preliminary version
-Vec<ZZ> product_tree(Vec<ZZ> X, Vec<ZZ> mtree)
+Vec<ZZ> product_tree(Vec<ZZ> &X, Vec<ZZ> &mtree)
 {
 
 	//INPUT: a list of integers; OUTPUT: a product tree of double the size
@@ -141,7 +141,7 @@ Vec<ZZ> product_tree(Vec<ZZ> X, Vec<ZZ> mtree)
 }
 
 
-Vec<ZZ> accumulating_tree(Vec<ZZ> X, Vec<ZZ> mtree)
+Vec<ZZ> accumulating_tree(Vec<ZZ> &X, Vec<ZZ> &mtree)
 {
 	//code cut from body of accumulating_remainder_tree
 	//this can be used to store the product tree of A modulo the mi
@@ -187,7 +187,7 @@ Vec<ZZ> accumulating_tree(Vec<ZZ> X, Vec<ZZ> mtree)
 //so might make sense to pad beginning of m with a 1, and pad end of A with a 1
 //given A0, A1, ... An, and m0, m1, ... mn, this returns
 //1, A0 mod m1, A0*A1 mod m2, ... A0*...An-1 mod mn
-Vec<ZZ> accumulating_remainder_tree(Vec<ZZ> A, Vec<ZZ> m)
+Vec<ZZ> accumulating_remainder_tree(Vec<ZZ> &A, Vec<ZZ> &m)
 {
 	assert (A.length() == m.length());
 
@@ -198,9 +198,12 @@ Vec<ZZ> accumulating_remainder_tree(Vec<ZZ> A, Vec<ZZ> m)
 	Vec<ZZ> m_ptree = product_tree(m, ztree);
 
 	//print_tree(m_ptree);
-	
+	reflect_tree(m_ptree);
+	Vec<ZZ> m_acctree = accumulating_tree(m_ptree, ztree);
+	reflect_tree(m_acctree);
+	reflect_tree(m_ptree);
 
-	Vec<ZZ> m_acctree = reflect_tree(accumulating_tree(reflect_tree(m_ptree), ztree));
+	//Vec<ZZ> m_acctree = reflect_tree(accumulating_tree(reflect_tree(m_ptree), ztree));
 
 	//print_tree(m_acctree);
 
@@ -231,7 +234,7 @@ Vec<ZZ> accumulating_remainder_tree(Vec<ZZ> A, Vec<ZZ> m)
 
 int main()
 {
-	long N = 30000;
+	long N = pow(2,16);
 
 	Vec<ZZ> A;
 	Vec<ZZ> m;
@@ -241,7 +244,7 @@ int main()
 
 	random_device rd;
 	mt19937 mt(rd());
-	uniform_int_distribution<long> dist(1, N);
+	uniform_int_distribution<int> dist(1, N);
 
 	for(int i = 0; i < N; i++){
 		int bitsize = log2(i+1)+2;
@@ -253,14 +256,20 @@ int main()
 	}
 
 
-	Vec<ZZ> ztree = zero_vector(2*N);
+	//Vec<ZZ> ztree = zero_vector(2*N);
 
 	//print_tree(A);
 	//print_tree(m);
 
+	auto start = chrono::high_resolution_clock::now();
 	Vec<ZZ> remainders = accumulating_remainder_tree(A,m);
+	auto finish = chrono::high_resolution_clock::now();
 
-	print_tree(remainders);
+	chrono::duration<double> runtime = finish-start;
+
+	//print_tree(remainders);
+	cout << runtime.count() << endl;
+
 
 
 
