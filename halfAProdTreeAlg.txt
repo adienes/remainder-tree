@@ -1,0 +1,14 @@
+This algorithm does in-place calculations to end up with a binary tree A'Tree such that A'Tree[i] = ATree[2i]. These are the only values needed for the accumulating remainder tree algorithm.
+
+Here: ATree has length 2N where N is the number of leaves. Assume N is a power of 2, should be easily adaptable for general N.
+Thus, A'Tree has length N.
+
+1) Store the N/2 numbers A[0], A[2], ..., A[N-2] as leaves A'Tree[N/2], A'Tree[N/2+1], ..., A'Tree[N-1] in A'Tree.
+
+2) Starting with i = N-1 and going to i = N/2:
+	i) If the value at the leaf is A[2i], calculate temp = A[2i]A[2i+1] (here, we can let temp be A'Tree[0] since it isn't used.)
+	ii) Ascend one layer of the tree to arrive at node X
+		-If going to the left, store temp in X.
+		-If going to the right, swap the value in X with temp, then set temp *= value in X. Repeat step ii)
+
+This algorithm takes N multiplications, same as the regular product tree. However, it takes only N array indices as opposed to 2N.

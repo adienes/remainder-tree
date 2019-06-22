@@ -104,7 +104,7 @@ Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
 		mTree[i] = mTree[2 * i] * mTree[2 * i + 1];
 	}
 	for(int i = N - 1; i > 0; i--) {
-		if ((i & (i+1)) != 0) ATree[i] = (ATree[2 * i] * ATree[2 * i + 1]) % mTree[1s	];
+		if ((i & (i+1)) != 0) ATree[i] = ATree[2 * i] * ATree[2 * i + 1] % mTree[1];
 	}
 
 	CTree[1] = 1;
