@@ -67,7 +67,7 @@ int main()
 	*/
 
 
-	complexity_graph(300000, 1000);
+	complexity_graph(1<<24, 1);
 	
 
 }
@@ -101,8 +101,10 @@ Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
 	}
 
 	for (int i = N - 1; i > 0; i--) {
-		if ((i & (i+1)) != 0) ATree[i] = ATree[2 * i] * ATree[2 * i + 1];
 		mTree[i] = mTree[2 * i] * mTree[2 * i + 1];
+	}
+	for(int i = N - 1; i > 0; i--) {
+		if ((i & (i+1)) != 0) ATree[i] = (ATree[2 * i] * ATree[2 * i + 1]) % mTree[1s	];
 	}
 
 	CTree[1] = 1;
@@ -150,7 +152,7 @@ void complexity_graph(int N, int d){
 
 	int interval = N/d;
 	int B = 0;
-	while(B < N){
+	while(B <= N){
 
 		int testSize = B;
 		int numSize = B;
