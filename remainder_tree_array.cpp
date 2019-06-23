@@ -31,6 +31,7 @@ void complexity_graph(int N, int d);
 
 int main()
 {
+	
 	// for testing with Wilson's theorem
 
 	/*int testSize = 20;
@@ -73,17 +74,23 @@ int main()
 }
 
 Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
+	// Assert that lengths of A and m match
 	assert(A.length() == m.length());
 
+	// Set N = length of input arrays
 	int N = A.length();
+
+	// Return default value if N = 0
 	if (N == 0) {
 		Vec<ZZ> v;
 		v.SetLength(0);
 		return v;
 	}
 
+	// Index of leaf at the bottom left
 	int leftmost = 1 << ((int)log2(N) + 1);
 
+	// Declare trees (always of length 2N for any N)
 	Vec<ZZ> ATree;
 	ATree.SetLength(2 * N);
 	Vec<ZZ> mTree;
@@ -91,26 +98,42 @@ Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
 	Vec<ZZ> CTree;
 	CTree.SetLength(2 * N);
 
-	for (int i = leftmost; i < 2 * N; i++) {
+	/* 
+	 * For example when N=11 the leaves are in this order:
+	 *     / \       /\   /\    /\
+	 *    /   \     /  7 8  9 10  11
+	 *   /\   /\   /\  
+	 *  1  2 3  4 5  6
+	 *
+	 */
+
+	// Initialize the leaves in ATree and mTree
+	for (int i = leftmost; i < 2 * N; i++) { // leaves on lowest layer
 		ATree[i] = A[i - leftmost];
 		mTree[i] = m[i - leftmost];
 	}
-	for (int i = N; i < leftmost; i++) {
+	for (int i = N; i < leftmost; i++) { // leaves on second lowest layer
 		ATree[i] = A[i + N - leftmost];
 		mTree[i] = m[i + N - leftmost];
 	}
 
+	// Calculate the rest of the product tree mTree
 	for (int i = N - 1; i > 0; i--) {
-		mTree[i] = mTree[2 * i] * mTree[2 * i + 1];
-	}
-	for(int i = N - 1; i > 0; i--) {
-		if ((i & (i+1)) != 0) ATree[i] = ATree[2 * i] * ATree[2 * i + 1] % mTree[1];
+		mTree[i] = mTree[2 * i] * mTree[2 * i + 1]; // parent is product of leaves
 	}
 
+	// Calculate the rest of the product tree aTree, taking mod mTree[1] = m[0]*...*m[N-1]
+	for(int i = N - 1; i > 0; i--) {
+		if ((i & (i+1)) != 0) { // Don't do calculation if on a node in right-most branch
+			ATree[i] = (ATree[2 * i] * ATree[2 * i + 1]) % mTree[1]; // parent is product of leaves mod mTree[1]
+		}
+	}
+
+	// Calculate accumulating remainder tree
 	CTree[1] = 1;
 	for (int i = 1; i < N; i++) {
-		CTree[2 * i] = CTree[i] % mTree[2 * i];
-		CTree[2 * i + 1] = (CTree[i] * ATree[2 * i]) % mTree[2 * i + 1];
+		CTree[2 * i] = CTree[i] % mTree[2 * i]; // Left branch
+		CTree[2 * i + 1] = (CTree[i] * ATree[2 * i]) % mTree[2 * i + 1]; // Right branch
 	}
 
 	//print_tree(ATree);
@@ -130,7 +153,9 @@ Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
 	return C;
 }
 
-
+/*
+ * Prints a tree given in Vec<ZZ> form
+ */
 void print_tree(Vec<ZZ> tree){
 	int top = 1;
 	int counter = 0;
@@ -145,6 +170,11 @@ void print_tree(Vec<ZZ> tree){
 	}
 	cout << endl;
 }
+
+/*
+ * Gives data points on size of input vs. computation time.
+ * N = max size of data, d = number of data points
+ */
 
 void complexity_graph(int N, int d){
 	vector<int> x;
