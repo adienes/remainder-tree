@@ -25,8 +25,8 @@ using namespace NTL;
  * A: array of A0, A1, ...
  * m: array of m0, m1, ...
  */
-Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m);
-void print_tree(Vec<ZZ> tree);
+Vec<ZZ> remainder_tree(Vec<ZZ> &A, Vec<ZZ> &m);
+void print_tree(Vec<ZZ> &tree);
 void complexity_graph(int N, int d);
 
 int main()
@@ -73,7 +73,12 @@ int main()
 
 }
 
-Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
+/*
+ * Original Remainder Tree method 
+ * No space optimizations
+ */
+
+Vec<ZZ> remainder_tree(Vec<ZZ> &A, Vec<ZZ> &m) {
 	// Assert that lengths of A and m match
 	assert(A.length() == m.length());
 
@@ -156,7 +161,7 @@ Vec<ZZ> remainder_tree(Vec<ZZ> A, Vec<ZZ> m) {
 /*
  * Prints a tree given in Vec<ZZ> form
  */
-void print_tree(Vec<ZZ> tree){
+void print_tree(Vec<ZZ> &tree){
 	int top = 1;
 	int counter = 0;
 	for(int i = 1; i < tree.length(); i++){
@@ -216,7 +221,7 @@ void complexity_graph(int N, int d){
 		cout << endl;
 		*/
 
-		time_t end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		uint64_t end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
 		x.push_back(B);
 		y.push_back(end-start);
