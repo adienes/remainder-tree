@@ -259,7 +259,7 @@ int main()
 
 	auto start = chrono::high_resolution_clock::now();
 	Vec<ZZ> remainders = RemTree(A,m);
-	Vec<ZZ> WREM = WilsonRemainders(pow(2,20), pow(2,16));
+	Vec<ZZ> WREM = WilsonRemainders(pow(2,18), pow(2,18));
 	auto finish = chrono::high_resolution_clock::now();
 
 	chrono::duration<double> runtime = finish-start;
