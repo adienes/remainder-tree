@@ -2,6 +2,7 @@
 #include <cmath>
 #include <chrono>
 #include <cassert>
+#include <vector>
 #include <NTL/ZZ.h>
 #include <NTL/vector.h>
 
@@ -9,15 +10,19 @@ using namespace std;
 using namespace std::chrono;
 using namespace NTL;
 
-void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m);
+void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value, int start, int end);
 void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, const int k);
 ZZ getNode(int index, Vec<ZZ> &base, ZZ mod);
 void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m);
 void print_tree(Vec<ZZ> tree);
-//void complexity_graph(int N, int d);
+void complexity_graph(int N, int d);
 
 int main(){
-	int bound = 1337;
+	
+	complexity_graph(30000, 100);
+
+	// Test for Wilson theorem
+	/*int bound = 1337;
 
 	Vec<ZZ> A;
 	A.SetLength(bound);
@@ -48,7 +53,7 @@ int main(){
 	for(int i = 0; i < C.length(); i++){
 		cout << C[i] << " ";
 	}
-	cout << endl;
+	cout << endl;*/
 }
 
 /*
@@ -139,7 +144,7 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1), i
  * Doesn't do intervals yet
  * k = layer at which we switch from recomputing to remainder tree on each subtree
  */
-void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, const int k){
+void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, const int k = 3){
 
 	// Assert that lengths of A and m match
 	assert(C.length() == A.length());
@@ -269,10 +274,10 @@ void print_tree(Vec<ZZ> tree){
  * N = max size of data, d = number of data points
  */
 
-/*
 void complexity_graph(int N, int d){
 	vector<int> x;
 	vector<int> y;
+	vector<int> z;
 
 	int interval = N/d;
 	int B = 0;
@@ -289,45 +294,34 @@ void complexity_graph(int N, int d){
 			test_A[i] = rand() % numSize + 1;
 			test_m[i] = rand() % numSize + 1;
 		}
-		for (int i = 0; i < testSize; i++) {
-			cout << test_A[i] << " ";
-		}
-		cout << endl;
-
-		for (int i = 0; i < testSize; i++) {
-			cout << test_m[i] << " ";
-		}
-		cout << endl;
-		
-
-		uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-		Vec<ZZ> test_C = remainder_tree(test_A, test_m);
-
-		for (int i = 0; i < testSize; i++) {
-			cout << test_C[i] << " ";
-		}
-		cout << endl;
-		
-
-		uint64_t end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
 		x.push_back(B);
+
+		Vec<ZZ> test_C;
+		test_C.SetLength(testSize);
+
+		uint64_t start;
+		uint64_t end;
+		
+		start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		remainder_tree(test_C, test_A, test_m);
+		end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
 		y.push_back(end-start);
+
+
+		start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		remainder_tree_v1(test_C, test_A, test_m, 1);
+		end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		
+		z.push_back(end-start);
 
 		B += interval;
 	}
 
 	for(int i = 0; i < x.size(); i++){
-		cout << x[i] << ", ";
-	}		
-	cout << endl;
-
-	for(int i = 0; i < y.size(); i++){
-		cout << y[i] << ", ";
-	}		
-	cout << endl;
+		cout << x[i] << ": " << y[i] << ", " << z[i] << endl;
+	}
 
 
 }
-
-*/

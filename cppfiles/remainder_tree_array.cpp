@@ -32,43 +32,44 @@ void complexity_graph(int N, int d);
 int main()
 {
 	
-	// for testing with Wilson's theorem
+	//complexity_graph(1<<20, 1);
 
-	/*int testSize = 20;
-	int arr_m[testSize] = {1, 2, 3, 1, 5, 1, 7, 1, 1, 1, 11, 1, 13, 1, 1, 1, 17, 1, 19, 1};
 
-	Vec<ZZ> test_A;
-	test_A.SetLength(testSize);
-	Vec<ZZ> test_m;
-	test_m.SetLength(testSize);
-	for (int i = 0; i < testSize; i++) {
-		//test_A[i] = rand() % numSize + 1;
-		//test_m[i] = rand() % numSize + 1;
-		test_A[i] = i+1;
-		test_m[i] = arr_m[i];
-	}
 	
-	for (int i = 0; i < testSize; i++) {
-		cout << test_A[i] << " ";
+	int bound = 1<<20;
+
+	// Testing Wilson's Theorem
+	Vec<ZZ> A;
+	A.SetLength(bound);
+	Vec<ZZ> m;
+	m.SetLength(bound);
+
+	for(int i = 0; i < bound; i++){
+		A[i] = i+1;
+		m[i] = ProbPrime(ZZ(i+1)) ? i+1 : 1;
+	}
+
+	/*for(int i = 0; i < A.length(); i++){
+		cout << A[i] << " ";
 	}
 	cout << endl;
 
-	for (int i = 0; i < testSize; i++) {
-		cout << test_m[i] << " ";
-	}
-	cout << endl;
-	
-
-	Vec<ZZ> test_C = remainder_tree(test_A, test_m);
-
-	for (int i = 0; i < testSize; i++) {
-		cout << test_C[i] << " ";
+	for(int i = 0; i < m.length(); i++){
+		cout << m[i] << " ";
 	}
 	cout << endl;
 	*/
+	Vec<ZZ> C;
+	C.SetLength(bound);
 
+	remainder_tree(C, A, m);
+	
 
-	complexity_graph(1<<20, 1);
+	/*for(int i = 0; i < C.length(); i++){
+		cout << C[i] << " ";
+	}
+	cout << endl;
+	*/
 	
 
 }
