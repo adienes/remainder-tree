@@ -22,6 +22,9 @@ int main(){
  * Doesn't do intervals yet
  */
 Vec<ZZ> remainder_tree_v1(Vec<ZZ> &A, Vec<ZZ> &m){
+	// layer at which we switch from recomputing to remainder tree on each subtree
+	const int k = 4; 
+
 	// Assert that lengths of A and m match
 	assert(A.length() == m.length());
 
@@ -38,11 +41,7 @@ Vec<ZZ> remainder_tree_v1(Vec<ZZ> &A, Vec<ZZ> &m){
 	// Index of leaf at the bottom left
 	int leftmost = 1 << ((int)log2(N) + 1);
 
-	// Declare trees (always of length 2N for any N)
-	Vec<ZZ> ATree;
-	ATree.SetLength(2 * N);
-	Vec<ZZ> mTree;
-	mTree.SetLength(2 * N);
+	// Declare Ctree (always of length 2N for any N)
 	Vec<ZZ> CTree;
 	CTree.SetLength(2 * N);
 
@@ -55,6 +54,26 @@ Vec<ZZ> remainder_tree_v1(Vec<ZZ> &A, Vec<ZZ> &m){
 	 *
 	 */
 
+	// Calculate the product of all the mods to keep A's small
+	mProd = getNode(1, m, 0);
+
+	// Step 1: Calculate the kth layer by recomputing everything necessary
+	CTree[1] = 1;
+	for (int i = 1; i < 1<<k; i++) {
+		CTree[2 * i] = CTree[i] % getNode(2*i, m, 0); // Left branch
+		CTree[2 * i + 1] = (CTree[i] * getNode(2*i, A, mProd)) % getNode(2*i+1, m, 0); // Right branch
+		CTree[i].kill();
+	}
+
+	// Step 2: Calculate the subproduct trees
+	// Roots are: CTree[2^k], ..., CTree[2^(k+1)-1]
+	for(int i = 0; i < 1<<k; i++) {
+		Vec<ZZ> ATree;
+		ATree.SetLength(2 * N);
+		Vec<ZZ> mTree;
+		mTree.SetLength(2 * N);
+	}
+
 	// Initialize the leaves in ATree and mTree
 	for (int i = leftmost; i < 2 * N; i++) { // leaves on lowest layer
 		ATree[i] = A[i - leftmost];
@@ -65,7 +84,7 @@ Vec<ZZ> remainder_tree_v1(Vec<ZZ> &A, Vec<ZZ> &m){
 		mTree[i] = m[i + N - leftmost];
 	}
 
-	
+
 
 
 
@@ -74,14 +93,22 @@ Vec<ZZ> remainder_tree_v1(Vec<ZZ> &A, Vec<ZZ> &m){
 /*
  * Returns the value of the node on the tree at index k with leaves having value base
  */
-ZZ getNode(int k, Vec<ZZ> &base) {
+ZZ getNode(int i, Vec<ZZ> &base, ZZ mod) {
 	int N = base.length();
 	int leftmost = 1 << ((int)log2(N) + 1);
-
-	if (k >= leftmost) return base[k - leftmost];
-	else if (k >= N) return base[k + N - leftmost];
+	if (mod == 0){
+		if (i >= leftmost) return base[i - leftmost];
+		else if (i >= N) return base[i + N - leftmost];
+		
+		return getNode(2*i, base)*getNode(2*i+1, base);
+	}
 	
-	return getNode(2*k, base)*getNode(2*k+1, base);
+	else {
+		if (i >= leftmost) return base[i - leftmost] % mod;
+		else if (i >= N) return base[i + N - leftmost] % mod;
+		
+		return (getNode(2*i, base, mod)*getNode(2*i+1, base, mod)) % mod;
+	}
 }
 
 /*
