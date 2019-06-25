@@ -56,9 +56,6 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1), i
 	// set default value for end
 	if (end == -1) end = C.length();
 
-	cout << "end: " << end << endl;
-	cout << "length: " << C.length() << endl;
-
 	// Assert that interval [start, end] exists in C, A and m
 	assert(end <= C.length());
 	assert(end <= A.length());
@@ -148,8 +145,6 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m){
 		return;
 	}
 
-	// Index of leaf at the bottom left
-	int leftmost = N;
 
 	// Declare Ctree (always of length 2N for any N)
 	Vec<ZZ> CTree;
@@ -181,10 +176,10 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m){
 	// Roots are CTree[2^k + i]: {CTree[2^k], ..., CTree[2^(k+1)-1]}
 	int notfirstk = ((int)log2(2*N-1) - k); // (#bits in 2*N-1) minus k
 	for(int i = 0; i < 1<<k; i++) {
-		// Number of leaves: 2^notfirstk = leftmost/2^k
-		cout << "Calculating interval: [" << (i<<notfirstk) << ", " << ((i+1)<<notfirstk) << "]" << endl; 
-		cout << "CTree length: " << CTree.length() << endl;
-		cout << "Accessing index: " << ((1<<k)+i) << endl;
+		// Number of leaves: 2^notfirstk = N/2^k
+		//DEBUG// cout << "Calculating interval: [" << (i<<notfirstk) << ", " << ((i+1)<<notfirstk) << "]" << endl; 
+		//DEBUG// cout << "CTree length: " << CTree.length() << endl;
+		//DEBUG// cout << "Accessing index: " << ((1<<k)+i) << endl;
 		remainder_tree(C, A, m, CTree[(1<<k) + i], i<<notfirstk, (i+1)<<notfirstk);
 	}
 
@@ -197,17 +192,14 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m){
  */
 ZZ getNode(int i, Vec<ZZ> &base, ZZ mod) {
 	int N = base.length();
-	int leftmost = 1 << ((int)log2(N) + 1);
 	if (mod == 0){
-		if (i >= leftmost) return base[i - leftmost];
-		else if (i >= N) return base[i + N - leftmost];
+		if (i >= N) return base[i - N];
 		
 		return getNode(2*i, base, ZZ(0))*getNode(2*i+1, base, ZZ(0));
 	}
 	
 	else {
-		if (i >= leftmost) return base[i - leftmost] % mod;
-		else if (i >= N) return base[i + N - leftmost] % mod;
+		if (i >= N) return base[i - N] % mod;
 		
 		return (getNode(2*i, base, mod)*getNode(2*i+1, base, mod)) % mod;
 	}
