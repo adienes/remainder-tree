@@ -25,7 +25,7 @@ using namespace NTL;
  * A: array of A0, A1, ...
  * m: array of m0, m1, ...
  */
-Vec<ZZ> remainder_tree(Vec<ZZ> &A, Vec<ZZ> &m);
+void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m);
 void print_tree(Vec<ZZ> &tree);
 void complexity_graph(int N, int d);
 
@@ -68,7 +68,7 @@ int main()
 	*/
 
 
-	complexity_graph(1<<24, 1);
+	complexity_graph(1<<20, 1);
 	
 
 }
@@ -78,22 +78,21 @@ int main()
  * No space optimizations
  */
 
-Vec<ZZ> remainder_tree(Vec<ZZ> &A, Vec<ZZ> &m) {
-	// Assert that lengths of A and m match
+void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m) {
+	// Assert that lengths of A, m, C match
 	assert(A.length() == m.length());
+	assert(A.length() == C.length());
 
 	// Set N = length of input arrays
 	int N = A.length();
 
-	// Return default value if N = 0
-	if (N == 0) {
-		Vec<ZZ> v;
-		v.SetLength(0);
-		return v;
+	// Don't do anything if arrays are trivial
+	if(N == 0){
+		return;
 	}
 
 	// Index of leaf at the bottom left
-	int leftmost = 1 << ((int)log2(N) + 1);
+	int leftmost = 1 << ((int)ceil(log2(N)));
 
 	// Declare trees (always of length 2N for any N)
 	Vec<ZZ> ATree;
@@ -144,9 +143,6 @@ Vec<ZZ> remainder_tree(Vec<ZZ> &A, Vec<ZZ> &m) {
 	//print_tree(ATree);
 	//print_tree(mTree);
 	//print_tree(CTree);
-	
-	Vec<ZZ> C;
-	C.SetLength(N);
 
 	for (int i = leftmost; i < 2 * N; i++) {
 		C[i - leftmost] = CTree[i];
@@ -155,7 +151,7 @@ Vec<ZZ> remainder_tree(Vec<ZZ> &A, Vec<ZZ> &m) {
 		C[i + N - leftmost] = CTree[i];
 	}
 
-	return C;
+	return;
 }
 
 /*
@@ -213,7 +209,9 @@ void complexity_graph(int N, int d){
 		*/
 
 		uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-		Vec<ZZ> test_C = remainder_tree(test_A, test_m);
+		Vec<ZZ> test_C;
+		test_C.SetLength(testSize);
+		remainder_tree(test_C, test_A, test_m);
 
 		/*for (int i = 0; i < testSize; i++) {
 			cout << test_C[i] << " ";

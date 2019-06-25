@@ -10,7 +10,4 @@ rem_tree::rem_tree(ZZ startBound, ZZ endBound, ZZ (*const startVal)(ZZ), Vec<ZZ>
 	this->A = A;
 	this->m = m;
 }
-rem_tree::~rem_tree(){
-
-}
 

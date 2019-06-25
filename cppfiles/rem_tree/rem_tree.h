@@ -15,7 +15,6 @@ private:
 
 public:
 	rem_tree(ZZ startBound, ZZ endBound, ZZ (*const startVal)(ZZ), Vec<ZZ> A, Vec<ZZ> m);
-	~rem_tree();
 
 };
 
