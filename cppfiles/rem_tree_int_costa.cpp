@@ -11,18 +11,18 @@ using namespace std::chrono;
 using namespace NTL;
 
 void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value, int start, int end);
-void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, const int k);
+void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value, const int k);
 ZZ getNode(int index, Vec<ZZ> &base, ZZ mod);
-void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m);
+void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value, const int k);
 void print_tree(Vec<ZZ> tree);
 void complexity_graph(int N, int d);
 
 int main(){
 	
-	complexity_graph(30000, 100);
+	//complexity_graph(1<<20, 3);
 
 	// Test for Wilson theorem
-	/*int bound = 1337;
+	int bound = 1<<20;
 
 	Vec<ZZ> A;
 	A.SetLength(bound);
@@ -33,7 +33,7 @@ int main(){
 		A[i] = i+1;
 		m[i] = ProbPrime(ZZ(i+1)) ? i+1 : 1;
 	}
-
+	/*
 	for(int i = 0; i < A.length(); i++){
 		cout << A[i] << " ";
 	}
@@ -43,17 +43,18 @@ int main(){
 		cout << m[i] << " ";
 	}
 	cout << endl;
-	
+	*/
 	Vec<ZZ> C;
 	C.SetLength(bound);
 
-	remainder_tree_v1(C, A, m, 4);
+	remainder_tree_v1(C, A, m, ZZ(1), 2);
 	
-
+	/*
 	for(int i = 0; i < C.length(); i++){
 		cout << C[i] << " ";
 	}
-	cout << endl;*/
+	cout << endl;
+	*/
 }
 
 /*
@@ -91,7 +92,7 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1), i
 	 * For example when N=11 the leaves are in this order:
 	 *     / \       /\   /\    /\
 	 *    /   \     /  7 8  9 10  11
-	 *   /\   /\   /\  
+	 *   /\   /\   /\
 	 *  1  2 3  4 5  6
 	 *
 	 */
@@ -144,7 +145,7 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1), i
  * Doesn't do intervals yet
  * k = layer at which we switch from recomputing to remainder tree on each subtree
  */
-void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, const int k = 3){
+void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1), const int k = 2){
 
 	// Assert that lengths of A and m match
 	assert(C.length() == A.length());
@@ -173,23 +174,30 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, const int k = 3){
 	 * For example when N=11 the leaves are in this order:
 	 *     / \       /\   /\    /\
 	 *    /   \     /  7 8  9 10  11
-	 *   /\   /\   /\  
+	 *   /\   /\   /\
 	 *  1  2 3  4 5  6
 	 *
 	 */
 
 	// Calculate the product of all the mods to keep A's small
-	ZZ mProd = getNode(1, m, ZZ(0));
+	// ZZ mProd = getNode(1, m, ZZ(0));
+
+	uint64_t start1 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
 	// Step 1: Calculate the kth layer by recomputing everything necessary
-	CTree[1] = 1;
+	CTree[1] = root_value % getNode(1, m, ZZ(0)); // this entire section is just really fucking slow
 	for (int i = 1; i < 1<<k; i++) {
 		CTree[2 * i] = CTree[i] % getNode(2*i, m, ZZ(0)); // Left branch
-		CTree[2 * i + 1] = (CTree[i] * getNode(2*i, A, mProd)) % getNode(2*i+1, m, ZZ(0)); // Right branch
+		ZZ mProd = getNode(2*i+1, m, ZZ(0)); // Calculate what modulo CTree[2i+1] reduces in
+		CTree[2 * i + 1] = (CTree[i] * getNode(2*i, A, mProd)) % mProd; // Right branch
 		CTree[i].kill();
 	}
 
+	uint64_t end1 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	cout << "Time taken for recursive step: " << (end1-start1) << endl;
 
+	uint64_t start2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	
 	// Step 2: Calculate the subproduct trees
 	// Roots are CTree[2^k + i]: {CTree[2^k], ..., CTree[2^(k+1)-1]}
 
@@ -218,6 +226,9 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, const int k = 3){
 		remainder_tree(C, A, m, CTree[(1<<k) + i], (special<<notfirstk) + specialleaves + ((i - special-1)<<(notfirstk-1)), (special<<notfirstk) + specialleaves + ((i - special)<<(notfirstk-1)));
 	}
 
+	uint64_t end2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	cout << "Time taken for subtree step: " << (end2-start2) << endl;
+
 	return;
 
 }
@@ -227,7 +238,7 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, const int k = 3){
  */
 ZZ getNode(int i, Vec<ZZ> &base, ZZ mod) {
 	int N = base.length();
-	int leftmost = 1 << ((int)log2(N) + 1);
+	int leftmost = 1 << ((int)ceil(log2(N)));
 	if (mod == 0){
 		if (i >= leftmost) return base[i - leftmost];
 		else if (i >= N) return base[i + N - leftmost];
@@ -241,14 +252,6 @@ ZZ getNode(int i, Vec<ZZ> &base, ZZ mod) {
 		
 		return (getNode(2*i, base, mod)*getNode(2*i+1, base, mod)) % mod;
 	}
-}
-
-/*
- * Implements Sutherland's optimization
- * Doesn't do intervals yet
- */
-void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m){
-	
 }
 
 /*
@@ -304,14 +307,14 @@ void complexity_graph(int N, int d){
 		uint64_t end;
 		
 		start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-		remainder_tree(test_C, test_A, test_m);
+		//remainder_tree(test_C, test_A, test_m);
 		end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
 		y.push_back(end-start);
 
 
 		start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-		remainder_tree_v1(test_C, test_A, test_m, 1);
+		remainder_tree_v1(test_C, test_A, test_m, ZZ(1), 1);
 		end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 		
 		z.push_back(end-start);
