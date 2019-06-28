@@ -122,6 +122,7 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value = Z
 	for(int i = N - 1; i > 0; i--) {
 		if ((i & (i+1)) != 0) { // Don't do calculation if on a node in right-most branch
 			ATree[i] = (ATree[2 * i] * ATree[2 * i + 1]) % mTree[1]; // parent is product of leaves mod mTree[1]
+			ATree[2 * i + 1].kill();
 		}
 	}
 
@@ -130,6 +131,7 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value = Z
 	for (int i = 1; i < N; i++) {
 		CTree[2 * i] = CTree[i] % mTree[2 * i]; // Left branch
 		CTree[2 * i + 1] = (CTree[i] * ATree[2 * i]) % mTree[2 * i + 1]; // Right branch
+		CTree[i].kill();
 	}
 
 	//DEBUG// print_tree(ATree);
