@@ -10,19 +10,25 @@ using namespace std;
 using namespace std::chrono;
 using namespace NTL;
 
-void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value, int start, int end);
-void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value, const int k);
-ZZ getNode(int index, Vec<ZZ> &base, ZZ mod);
-void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value, const int k);
+void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value, int start, int end);
+void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value, const int k);
+ZZ getNode(int index, Vec<ZZ> &base, ZZ const &mod);
+void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value, const int k);
 void print_tree(Vec<ZZ> tree);
 void complexity_graph(int N, int d);
+
+/* Tags:
+ *
+ * //DEBUG// for debug statements
+ * Optimization idea for optimizations that havent been impemented yet
+ */
 
 int main(){
 	
 	//complexity_graph(1<<20, 3);
 
 	// Test for Wilson theorem
-	int bound = 1<<20;
+	int bound = 1<<24;
 
 	Vec<ZZ> A;
 	A.SetLength(bound);
@@ -60,7 +66,7 @@ int main(){
 /*
  * Original Remainder Tree implementation
  */
-void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1), int start = 0, int end = -1) {
+void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value = ZZ(1), int start = 0, int end = -1) {
 	// set default value for end
 	if (end == -1) end = C.length();
 
@@ -145,7 +151,7 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1), i
  * Doesn't do intervals yet
  * k = layer at which we switch from recomputing to remainder tree on each subtree
  */
-void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1), const int k = 2){
+void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value = ZZ(1), const int k = 2){
 
 	// Assert that lengths of A and m match
 	assert(C.length() == A.length());
@@ -185,7 +191,7 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1)
 	uint64_t start1 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
 	// Step 1: Calculate the kth layer by recomputing everything necessary
-	CTree[1] = root_value % getNode(1, m, ZZ(0)); // this entire section is just really fucking slow
+	CTree[1] = root_value % getNode(1, m, ZZ(0));
 	for (int i = 1; i < 1<<k; i++) {
 		CTree[2 * i] = CTree[i] % getNode(2*i, m, ZZ(0)); // Left branch
 		ZZ mProd = getNode(2*i+1, m, ZZ(0)); // Calculate what modulo CTree[2i+1] reduces in
@@ -236,7 +242,7 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ root_value = ZZ(1)
 /*
  * Returns the value of the node on the tree at index k with leaves having value base
  */
-ZZ getNode(int i, Vec<ZZ> &base, ZZ mod) {
+ZZ getNode(int i, Vec<ZZ> &base, ZZ const &mod = ZZ(0)) { // Optimization idea: pass in what you're taking a mod of as well so if the modulus ever gets bigger than the value, just return the value
 	int N = base.length();
 	int leftmost = 1 << ((int)ceil(log2(N)));
 	if (mod == 0){
