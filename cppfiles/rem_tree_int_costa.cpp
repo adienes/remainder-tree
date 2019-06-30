@@ -25,8 +25,8 @@ void complexity_graph(int N, int d);
 
 int main(){
 	
-	//complexity_graph(1<<20, 3);
-
+	// complexity_graph(1<<20, 100);
+	// return 0;
 	// Test for Wilson theorem
 	int bound = 1<<24;
 
@@ -39,7 +39,8 @@ int main(){
 		A[i] = i+1;
 		m[i] = ProbPrime(ZZ(i+1)) ? i+1 : 1;
 	}
-	/*
+
+	/*	
 	for(int i = 0; i < A.length(); i++){
 		cout << A[i] << " ";
 	}
@@ -50,6 +51,7 @@ int main(){
 	}
 	cout << endl;
 	*/
+
 	Vec<ZZ> C;
 	C.SetLength(bound);
 
@@ -67,6 +69,8 @@ int main(){
  * Original Remainder Tree implementation
  */
 void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value = ZZ(1), int start = 0, int end = -1) {
+	
+	//DEBUG// cout << "root_value: " << root_value << endl;
 	// set default value for end
 	if (end == -1) end = C.length();
 
@@ -128,6 +132,7 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value = Z
 
 	// Calculate accumulating remainder tree
 	CTree[1] = root_value % mTree[1];
+	//DEBUG// cout << "CTree root: " << CTree[1] << endl;
 	for (int i = 1; i < N; i++) {
 		CTree[2 * i] = CTree[i] % mTree[2 * i]; // Left branch
 		CTree[2 * i + 1] = (CTree[i] * ATree[2 * i]) % mTree[2 * i + 1]; // Right branch
@@ -154,7 +159,7 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value = Z
  * k = layer at which we switch from recomputing to remainder tree on each subtree
  */
 void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value = ZZ(1), const int k = 2){
-
+	
 	// Assert that lengths of A and m match
 	assert(C.length() == A.length());
 	assert(C.length() == m.length());
@@ -190,7 +195,7 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value 
 	// Calculate the product of all the mods to keep A's small
 	// ZZ mProd = getNode(1, m, ZZ(0));
 
-	uint64_t start1 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	//DEBUG// uint64_t start1 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
 	// Step 1: Calculate the kth layer by recomputing everything necessary
 	CTree[1] = root_value % getNode(1, m, ZZ(0));
@@ -201,10 +206,10 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value 
 		CTree[i].kill();
 	}
 
-	uint64_t end1 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-	cout << "Time taken for recursive step: " << (end1-start1) << endl;
+	//DEBUG// uint64_t end1 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	//DEBUG// cout << "Time taken for recursive step: " << (end1-start1) << endl;
 
-	uint64_t start2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	//DEBUG// uint64_t start2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 	
 	// Step 2: Calculate the subproduct trees
 	// Roots are CTree[2^k + i]: {CTree[2^k], ..., CTree[2^(k+1)-1]}
@@ -234,8 +239,8 @@ void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value 
 		remainder_tree(C, A, m, CTree[(1<<k) + i], (special<<notfirstk) + specialleaves + ((i - special-1)<<(notfirstk-1)), (special<<notfirstk) + specialleaves + ((i - special)<<(notfirstk-1)));
 	}
 
-	uint64_t end2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-	cout << "Time taken for subtree step: " << (end2-start2) << endl;
+	//DEBUG// uint64_t end2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	//DEBUG// cout << "Time taken for subtree step: " << (end2-start2) << endl;
 
 	return;
 
@@ -315,7 +320,7 @@ void complexity_graph(int N, int d){
 		uint64_t end;
 		
 		start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-		//remainder_tree(test_C, test_A, test_m);
+		remainder_tree(test_C, test_A, test_m);
 		end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
 		y.push_back(end-start);
