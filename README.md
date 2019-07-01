@@ -54,3 +54,6 @@ Starting work on Sutherland's space-saving optimization. Found the fix of the sl
 
 6/29/19
 Completed Sutherland's space-saving optimization, and created graphs of how much time and space it takes when choosing different layers to form the subtrees in. This algorithm looks very promising based on the numbers; it outperforms Costa's optimization that we implemented.
+
+6/30/19
+Fixed Sutherland's algorithm to work for all moduli (there was a int overflow bug) and added a graph of runtime for finding Wilson Primes. Found that using my computer, calculating all primes from 1 to 2^41 will take 26069 hours, so there is still optimizations to be done.
