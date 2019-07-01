@@ -25,8 +25,8 @@ void complexity_graph(int N, int d);
 
 int main(){
 	
-	//complexity_graph(1<<20, 3);
-
+	complexity_graph(1<<24, 10);
+	/*
 	// Test for Wilson theorem
 	int bound = 1<<24;
 
@@ -34,13 +34,14 @@ int main(){
 	A.SetLength(bound);
 	Vec<ZZ> m;
 	m.SetLength(bound);
-	
+
+	// make sure implicit ints don't overflow	
 	for(int i = 0; i < bound; i++){
-		A[i] = i+1;
-		m[i] = ProbPrime(ZZ(i+1)) ? i+1 : 1;
+		A[i] = ZZ(i+1);
+		m[i] = ProbPrime(ZZ(i+1)) ? ZZ(i+1)*ZZ(i+1) : ZZ(1);
 	}
 	
-	/*
+	
 	for(int i = 0; i < A.length(); i++){
 		cout << A[i] << " ";
 	}
@@ -50,16 +51,16 @@ int main(){
 		cout << m[i] << " ";
 	}
 	cout << endl;
-	*/
+	
 
 	Vec<ZZ> C;
 	C.SetLength(bound);
 
 	remainder_tree_v2(C, A, m, ZZ(1), 4);
 	
-	/*
+		
 	for(int i = 0; i < C.length(); i++){
-		cout << C[i] << " ";
+		cout << (i+1) << ": " << C[i] << endl;
 	}
 	cout << endl;
 	*/

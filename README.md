@@ -52,5 +52,5 @@ Daniel: started learning vim
 6/28/19
 Starting work on Sutherland's space-saving optimization. Found the fix of the slowness in Costa's algorithm, which was accidentally passing by value instead of by reference (always pass big things by reference!!). Updated the README.md to log all the progress we've done so far.
 
-6/30/19
+6/29/19
 Completed Sutherland's space-saving optimization, and created graphs of how much time and space it takes when choosing different layers to form the subtrees in. This algorithm looks very promising based on the numbers; it outperforms Costa's optimization that we implemented.
