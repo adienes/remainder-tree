@@ -10,9 +10,12 @@ using namespace std;
 using namespace std::chrono;
 using namespace NTL;
 
+void test_wilson(int bound);
+void test_wolstenholme(int bound);
+
 void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ &AProd, ZZ &mProd, ZZ const &root_value, int start, int end);
 void remainder_tree_v1(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value, const int k);
-ZZ getNode(int index, Vec<ZZ> &base, ZZ const &mod);
+ZZ get_node(int index, Vec<ZZ> &base, ZZ const &mod);
 void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value, const int k);
 void print_tree(Vec<ZZ> tree);
 void complexity_graph(int N, int d);
@@ -26,9 +29,10 @@ void complexity_graph(int N, int d);
 int main(){
 	
 	complexity_graph(1<<24, 10);
-	/*
-	// Test for Wilson theorem
-	int bound = 1<<24;
+}
+
+// Test for Wilson Primes
+void test_wilson(int bound){
 
 	Vec<ZZ> A;
 	A.SetLength(bound);
@@ -36,12 +40,12 @@ int main(){
 	m.SetLength(bound);
 
 	// make sure implicit ints don't overflow	
-	for(int i = 0; i < bound; i++){
-		A[i] = ZZ(i+1);
-		m[i] = ProbPrime(ZZ(i+1)) ? ZZ(i+1)*ZZ(i+1) : ZZ(1);
+	for(int i = 1; i <= bound; i++){
+		A[i-1] = ZZ(i);
+		m[i-1] = ProbPrime(ZZ(i)) ? ZZ(i)*ZZ(i) : ZZ(1);
 	}
 	
-	
+	/*	
 	for(int i = 0; i < A.length(); i++){
 		cout << A[i] << " ";
 	}
@@ -51,20 +55,75 @@ int main(){
 		cout << m[i] << " ";
 	}
 	cout << endl;
-	
+	*/
 
 	Vec<ZZ> C;
 	C.SetLength(bound);
 
 	remainder_tree_v2(C, A, m, ZZ(1), 4);
 	
-		
+	/*	
 	for(int i = 0; i < C.length(); i++){
 		cout << (i+1) << ": " << C[i] << endl;
 	}
 	cout << endl;
 	*/
 }
+
+// Test for Wolstenholme Primes
+void test_wolstenholme(int bound){
+	
+	Vec<ZZ> Anum; 
+	Anum.SetLength(bound);
+	Vec<ZZ> m;
+	m.SetLength(bound);
+	
+	for(int i = 1; i <= bound; i++){
+		Anum[i-1] = 4*i+2;
+		m[i-1] = ProbPrime(ZZ(i)) ? ZZ(i)*ZZ(i)*ZZ(i)*ZZ(i)*ZZ(i) : ZZ(1);
+
+	}		
+	
+	Vec<ZZ> Cnum;
+	Cnum.SetLength(bound);
+
+	remainder_tree_v2(Cnum, Anum, m, ZZ(1), 4);
+
+	for(int i = 1; i <= bound; i++){
+		Cnum[i-1] /= i; // i = prime at this index
+	}
+
+	
+	Vec<ZZ> Adem;
+	Adem.SetLength(bound);
+
+	for(int i = 1; i <= bound; i++){
+		Adem[i-1] = i+1;
+	}
+
+	Vec<ZZ> Cdem;
+	Cdem.SetLength(bound);
+
+	remainder_tree_v2(Cdem, Adem, m, ZZ(1), 4);
+
+	for(int i = 1; i <= bound; i++){
+		Cdem[i-1] /= i;
+		ZZ d;
+		ZZ k;
+		XGCD(d, Cdem[i-1], k, Cdem[i-1], ZZ(i)*ZZ(i)*ZZ(i)*ZZ(i)); // changes Cdem[i-1] to its inverse mod p^4
+		if (Cdem[i-1] < 0) Cdem[i-1] += ZZ(i)*ZZ(i)*ZZ(i)*ZZ(i); // make residue positive
+
+		Cnum[i-1] = (Cnum[i-1] * Cdem[i-1]) % (ZZ(i)*ZZ(i)*ZZ(i)*ZZ(i));
+	}
+
+	for(int i = 1; i <= bound; i++){
+		if (Cnum[i-1] == 1){
+			cout << i << ": " << Cnum[i-1] << endl;
+		}
+	}
+
+}
+
 
 /*
  * Original Remainder Tree implementation
@@ -155,7 +214,7 @@ void remainder_tree(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ &AProd, ZZ &mProd, ZZ
 	for (int i = N; i < leftmost; i++) {
 		C[i + N - leftmost + start] = CTree[i];
 	}
-	
+
 	return;
 }
 
@@ -199,7 +258,7 @@ void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value 
 	 */
 
 	// Calculate the product of all the mods to keep A's small
-	// ZZ mProd = getNode(1, m, ZZ(0));
+	// ZZ mProd = get_node(1, m, ZZ(0));
 
 	uint64_t start2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 	
@@ -211,7 +270,7 @@ void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value 
 	int special = (2*N-1 - leftmost) >> notfirstk; // firstk digits excluding the most significant digit
 
 	ZZ AProd = ZZ(1);
-	ZZ mProd = getNode(1, m, ZZ(0));	
+	ZZ mProd = get_node(1, m, ZZ(0));	
 	CTree[1<<k] = root_value % mProd;
 	// Subtrees with leaves in first layer
 	for(int i = 0; i < special; i++) {
@@ -239,7 +298,7 @@ void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value 
 	}
 
 	uint64_t end2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-	cout << "Time taken for subtree step: " << (end2-start2) << endl;
+	//DEBUG// cout << "Time taken for subtree step: " << (end2-start2) << endl;
 
 	return;
 
@@ -248,21 +307,21 @@ void remainder_tree_v2(Vec<ZZ> &C, Vec<ZZ> &A, Vec<ZZ> &m, ZZ const &root_value 
 /*
  * Returns the value of the node on the tree at index k with leaves having value base
  */
-ZZ getNode(int i, Vec<ZZ> &base, ZZ const &mod = ZZ(0)) { // Optimization idea: pass in what you're taking a mod of as well so if the modulus ever gets bigger than the value, just return the value
+ZZ get_node(int i, Vec<ZZ> &base, ZZ const &mod = ZZ(0)) { // Optimization idea: pass in what you're taking a mod of as well so if the modulus ever gets bigger than the value, just return the value
 	int N = base.length();
 	int leftmost = 1 << ((int)ceil(log2(N)));
 	if (mod == 0){
 		if (i >= leftmost) return base[i - leftmost];
 		else if (i >= N) return base[i + N - leftmost];
 		
-		return getNode(2*i, base, ZZ(0))*getNode(2*i+1, base, ZZ(0));
+		return get_node(2*i, base, ZZ(0))*get_node(2*i+1, base, ZZ(0));
 	}
 	
 	else {
 		if (i >= leftmost) return base[i - leftmost] % mod;
 		else if (i >= N) return base[i + N - leftmost] % mod;
 		
-		return (getNode(2*i, base, mod)*getNode(2*i+1, base, mod)) % mod;
+		return (get_node(2*i, base, mod)*get_node(2*i+1, base, mod)) % mod;
 	}
 }
 
@@ -297,7 +356,8 @@ void complexity_graph(int N, int d){
 	int interval = N/d;
 	int B = 0;
 	while(B <= N){
-
+		cout << "Testing: " << B << endl;
+		/*
 		int testSize = B;
 		int numSize = B;
 		
@@ -310,11 +370,13 @@ void complexity_graph(int N, int d){
 			test_m[i] = rand() % numSize + 1;
 		}
 
-		x.push_back(B);
-
 		Vec<ZZ> test_C;
 		test_C.SetLength(testSize);
+		*/
 
+		x.push_back(B);
+		
+		
 		uint64_t start;
 		uint64_t end;
 		
@@ -326,7 +388,7 @@ void complexity_graph(int N, int d){
 
 
 		start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-		remainder_tree_v2(test_C, test_A, test_m, ZZ(1), 1);
+		test_wolstenholme(B);
 		end = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 		
 		z.push_back(end-start);
@@ -335,8 +397,16 @@ void complexity_graph(int N, int d){
 	}
 
 	for(int i = 0; i < x.size(); i++){
-		cout << x[i] << ": " << y[i] << ", " << z[i] << endl;
+		cout << x[i] << ", ";
 	}
-
+	cout << endl;
+	for(int i = 0; i < y.size(); i++){
+		cout << y[i] << ", ";
+	}
+	cout << endl;
+	for(int i = 0; i < z.size(); i++){
+		cout << z[i] << ", ";
+	}
+	cout << endl;
 
 }
