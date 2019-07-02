@@ -57,3 +57,6 @@ Completed Sutherland's space-saving optimization, and created graphs of how much
 
 6/30/19
 Fixed Sutherland's algorithm to work for all moduli (there was a int overflow bug) and added a graph of runtime for finding Wilson Primes. Found that using my computer, calculating all primes from 1 to 2^41 will take 26069 hours, so there is still optimizations to be done.
+
+7/1/19
+Implemented Sutherland's algorithm for Wolstenholme primes, and found that it will take around 5.3 hours to calculate to the current record of 10^9, so there is a lot of hope in this regard. Also added graph of calculation up to 2^24.
