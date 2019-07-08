@@ -3,6 +3,7 @@
 
 #include "Element.hpp"
 #include <string>
+#include <memory>
 
 int add(int a, int b)
 {
@@ -17,7 +18,7 @@ template <typename T, typename A>
 static void declare_element(py::module &m, const std::string& suffix)
 {	
 	using Class = Elt<T, A>;
-	using PyClass = py::class_<Class>;
+	using PyClass = py::class_<Class, std::unique_ptr<Class> >;
 	PyClass cls (m, ("Elt_"+suffix).c_str());
 
 	cls.def(py::init<A&&>());
@@ -30,6 +31,8 @@ static void declare_element(py::module &m, const std::string& suffix)
 	cls.def("mul", &Class::mul);
 	cls.def("mod", &Class::mod);
 	cls.def("mulmod", &Class::mulmod);
+
+	cls.def("__repr__", [](const Class &a) -> std::string { return std::to_string(a.t); });
 }
 
 
