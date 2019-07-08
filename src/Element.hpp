@@ -1,20 +1,34 @@
 #ifndef REMAINDERTREE_SRC_ELEMENT_H_
 #define REMAINDERTREE_SRC_ELEMENT_H_
 
-class Element
+#include <utility>
+
+
+template <typename T, typename A>
+class Elt
 {
 	public:
-		virtual ~Element() = default;
-	protected:
-		Element() = default;
-		
-		virtual void mul(const Element*) = 0;
-		virtual void mod(const Element*) = 0;
+		T t;
 
-		virtual Element* operator * (const Element* const) const = 0;
-		virtual Element* operator % (const Element* const) const = 0;
+		Elt(A&& a) : t(std::forward<A>(a)) {}
+		//~elt() { delete t; }
 
-		virtual void print(void) const = 0;
+		Elt operator * (const Elt& x) const { return Elt(this->t*x.t); }
+		Elt operator % (const Elt& x) const { return Elt(this->t%x.t); }
+
+		void operator *= (const Elt& x) { this->mul(x); }
+		void operator %= (const Elt& x) { this->mod(x); }
+
+		//Probably wanna specialize these in most cases so
+		//that it is actually done in-place.
+		void mul(const Elt& x) { this->t *= x.t; }
+		void mod(const Elt& x) { this->t %= x.t; }
+		void mulmod(const Elt& x, const Elt& y) { this->t = (this->t*x.t)%y.t; }
+
+		//I recommend adding a specialized print function to display
 };
+
+
+//#include "Element_NTL.tpp"
 
 #endif // REMAINDERTREE_SRC_ELEMENT_H_
