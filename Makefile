@@ -18,5 +18,5 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 .PHONY : clean
 clean:
-	-rm $(OBJ_FILES)
 	-rm $(BIN_DIR)/*
+	-rm $(OBJ_DIR)/*
