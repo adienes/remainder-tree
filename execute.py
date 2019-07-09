@@ -25,7 +25,7 @@ def make_output_dir() -> Path:
 	return output_dir
 
 def clean_output():
-	for d in glob.glob("./build_*/"):
+	for d in glob.glob("./build*/"):
 		print ("Removed ", d)
 		shutil.rmtree(d)
 
@@ -61,9 +61,4 @@ if __name__ == "__main__":
 
 		#print (sys.path)
 
-		try:
-			import pyexe
-
-		except ModuleNotFoundError as e:
-			print ("You may need to build the module first! Add a --compile flag.\n")
-			raise e
+		import pyexe

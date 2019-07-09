@@ -4,14 +4,15 @@
 #include <utility>
 
 
-template <typename T, typename A>
+template <typename T>
 class Elt
 {
 	public:
 		T t;
 
+		template <typename A>
 		Elt(A&& a) : t(std::forward<A>(a)) {}
-		//~elt() { delete t; }
+		//~Elt() { delete t; }
 
 		Elt operator * (const Elt& x) const { return Elt(this->t*x.t); }
 		Elt operator % (const Elt& x) const { return Elt(this->t%x.t); }
@@ -29,6 +30,5 @@ class Elt
 };
 
 
-//#include "Element_NTL.tpp"
-
+#include "Element_NTL.tpp"
 #endif // REMAINDERTREE_SRC_ELEMENT_H_
