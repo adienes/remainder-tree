@@ -16,6 +16,7 @@ class Elt
 
 		Elt operator * (const Elt& x) const { return Elt(this->t*x.t); }
 		Elt operator % (const Elt& x) const { return Elt(this->t%x.t); }
+		bool operator == (const Elt& x) { return this->t == x.t; }
 
 		void operator *= (const Elt& x) { this->mul(x); }
 		void operator %= (const Elt& x) { this->mod(x); }

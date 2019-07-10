@@ -12,7 +12,7 @@ class Elt <NTL::ZZ>
 
 		Elt operator * (const Elt& x) const { return Elt(this->t*x.t); }
 		Elt operator % (const Elt& x) const { return Elt(this->t%x.t); }
-
+		bool operator == (const Elt& x) const { return this->t == x.t; }
 		void operator *= (const Elt& x) { this->mul(x); }
 		void operator %= (const Elt& x) { this->mod(x); }
 
