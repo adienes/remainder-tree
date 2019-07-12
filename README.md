@@ -67,3 +67,12 @@ I also added an interface for Python. I considered tools such as CFFI (seems to 
 For example, at the top layers of the tree, the time to call functions is massively dominated by the time to store and compute on those huge numbers, so it's fine to do 'high levels' in Python and call the C++ arithmetic. As the numbers get smaller it will make sense to call a C++ subroutine on the entire subtree (once it can fit in memory) to alleviate the function call overhead.
 I have made it relatively easy to add modules and types, so I would like to put in NTT and various matrix / polynomial libraries (perhaps GMP or FLINT). I still haven't totally figured out how to link the libraries into pybind11 sadly, but this is my next priority.
 Things to do: Integrate Daniel's algs into my interface. Implement a seive / way to generate the A and m. Implement BSGS as a way to verify answers. Implement the sqrt(N) time 'factorial' calc on the linear recurrence.
+
+7/8/19
+Working on learning how to parallelize C++ code with OpenMP to apply it to the remainder tree algorithm. Two places are required to parallelize: the obvious tree structure part, as well as multiplying big numbers near the roots of the trees. The former can be done with a simple omp parallel construct, and the latter should be done with NTT. 
+
+7/11/19
+Working on incorporating Daniel's algorithm code with Andy's template code.
+
+7/12/19
+Working on sqrt N algorithm for verifying a single value for a rem tree calculation
