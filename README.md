@@ -71,8 +71,11 @@ Things to do: Integrate Daniel's algs into my interface. Implement a seive / way
 7/8/19
 Working on learning how to parallelize C++ code with OpenMP to apply it to the remainder tree algorithm. Two places are required to parallelize: the obvious tree structure part, as well as multiplying big numbers near the roots of the trees. The former can be done with a simple omp parallel construct, and the latter should be done with NTT. 
 
-7/11/19
+7/10/19
 Working on incorporating Daniel's algorithm code with Andy's template code.
 
+7/11/19
+Working on sqrt N algorithm for verifying a single value for a rem tree calculation.
+
 7/12/19
-Working on sqrt N algorithm for verifying a single value for a rem tree calculation
+Finished sqrt N algorithm for verifying a single value for a rem tree calculation, and checked it worked for Wilson Primes
