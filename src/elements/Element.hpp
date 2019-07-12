@@ -1,5 +1,5 @@
-#ifndef REMAINDERTREE_SRC_ELEMENT_H_
-#define REMAINDERTREE_SRC_ELEMENT_H_
+#ifndef REMAINDERTREE_SRC_ELEMENTS_ELEMENT_H_
+#define REMAINDERTREE_SRC_ELEMENTS_ELEMENT_H_
 
 #include <utility>
 
@@ -10,6 +10,8 @@ class Elt
 	public:
 		T t;
 
+		Elt() : t() {}
+
 		template <typename A>
 		Elt(A&& a) : t(std::forward<A>(a)) {}
 		//~Elt() { delete t; }
@@ -18,8 +20,9 @@ class Elt
 		Elt operator % (const Elt& x) const { return Elt(this->t%x.t); }
 		bool operator == (const Elt& x) { return this->t == x.t; }
 
-		void operator *= (const Elt& x) { this->mul(x); }
-		void operator %= (const Elt& x) { this->mod(x); }
+//		void operator = (const Elt& x) { this->t = x.t; }
+		void operator *= (const Elt& x) { this->t *= x.t; }
+		void operator %= (const Elt& x) { this->t %= x.t; }
 
 		//Probably wanna specialize these in most cases so
 		//that it is actually done in-place.
@@ -28,8 +31,9 @@ class Elt
 		void mulmod(const Elt& x, const Elt& y) { this->t = (this->t*x.t)%y.t; }
 
 		//I recommend adding a specialized print function to display
+
 };
 
 
-#include "Element_NTL.tpp"
-#endif // REMAINDERTREE_SRC_ELEMENT_H_
+#include "elt_all.tpp"
+#endif // REMAINDERTREE_SRC_ELEMENTS_ELEMENT_H_

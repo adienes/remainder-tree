@@ -4,14 +4,18 @@
 #include "Element.hpp"
 #include <string>
 #include <memory>
+#include <NTL/ZZ.h>
+
+Elt<NTL::ZZ> sq(int a)
+{
+	Elt<NTL::ZZ> x(a);
+	return x*x;
+}
 
 int add(int a, int b)
 {
-	Elt<NTL::ZZ> x(5);
 	return a+b;
 }
-
-
 
 namespace py = pybind11;
 
@@ -28,6 +32,7 @@ namespace py = pybind11;
 // 	cls.def(py::self % py::self);
 // 	cls.def(py::self *= py::self);
 // 	cls.def(py::self %= py::self);
+// 	cls.def(py::self == py::self);
 
 // 	cls.def("mul", &Class::mul);
 // 	cls.def("mod", &Class::mod);
@@ -44,5 +49,5 @@ PYBIND11_MODULE(cppremtree, m)
 
 	m.def("add", &add, "A function which adds two numbers");
 
-	//declare_element<int, int>(m, "int");
+	//declare_element<NTL::ZZ>(m, "ZZ");
 }
