@@ -2,6 +2,7 @@
 #define REMAINDERTREE_SRC_ELEMENTS_ELEMENT_H_
 
 #include <utility>
+#include <ostream>
 
 
 template <typename T>
@@ -20,7 +21,7 @@ class Elt
 		Elt operator % (const Elt& x) const { return Elt(this->t%x.t); }
 		bool operator == (const Elt& x) { return this->t == x.t; }
 
-//		void operator = (const Elt& x) { this->t = x.t; }
+		//void operator = (const Elt& x) { this->t = x.t; }
 		void operator *= (const Elt& x) { this->t *= x.t; }
 		void operator %= (const Elt& x) { this->t %= x.t; }
 
@@ -29,11 +30,11 @@ class Elt
 		void mul(const Elt& x) { this->t *= x.t; }
 		void mod(const Elt& x) { this->t %= x.t; }
 		void mulmod(const Elt& x, const Elt& y) { this->t = (this->t*x.t)%y.t; }
-
-		//I recommend adding a specialized print function to display
-
 };
 
+//I recommend adding a specialized print function to display
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Elt<T>& x) { return os<<x.t; }
 
 #include "elt_all.tpp"
 #endif // REMAINDERTREE_SRC_ELEMENTS_ELEMENT_H_
