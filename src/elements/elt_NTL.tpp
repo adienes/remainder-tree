@@ -25,4 +25,5 @@ class Elt <NTL::ZZ>
 		void mod(const Elt& x) { NTL::QuickRem(this->t, x.t); }
 		void div(const Elt& x) { NTL::div(this->t, this->t, x.t); }
 		void mulmod(const Elt& x, const Elt& y) { NTL::MulMod(this->t, this->t, x.t, y.t); }
+
 };
