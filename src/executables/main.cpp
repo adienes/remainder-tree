@@ -1,9 +1,9 @@
 #include <NTL/ZZ.h>
-#include "elements/Element.hpp"
+#include "../elements/Element.hpp"
 #include <vector>
 #include <string>
-#include "algorithms/RemTree_basic.hpp"
-#include "algorithms/RemTree_utils.hpp"
+#include "../algorithms/RemTree_basic.hpp"
+#include "../algorithms/RemTree_utils.hpp"
 #include <random>
 
 using std::vector;

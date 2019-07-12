@@ -1,5 +1,5 @@
 CXX := g++
-SRC_DIR := ./src
+SRC_DIR := ./src/executables
 OBJ_DIR := ./obj
 BIN_DIR := ./bin
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
@@ -9,12 +9,12 @@ LDLIBS := -lntl -lgmp -lgmpxx -pthread
 #CPPFLAGS := ...
 CXXFLAGS := -Wall -g -march=native -O3
 
-$(BIN_DIR)/main: $(OBJ_FILES)
-	g++ $^ -o $@ $(LDFLAGS) $(LDLIBS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
+$(BIN_DIR)/main: $(OBJ_FILES)
+	g++ $^ -o $@ $(LDFLAGS) $(LDLIBS)
 
 .PHONY : clean
 clean:
