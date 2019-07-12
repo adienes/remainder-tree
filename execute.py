@@ -61,4 +61,6 @@ if __name__ == "__main__":
 
 		#print (sys.path)
 
+		#WARNING: will want to change this to the location of NTL!Q
+		os.environ['LD_LIBRARY_PATH'] = '/usr/local/lib'
 		import pyexe

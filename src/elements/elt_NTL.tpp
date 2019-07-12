@@ -6,6 +6,8 @@ class Elt <NTL::ZZ>
 	public:
 		NTL::ZZ t;
 
+		Elt() : t() {};
+		
 		template <typename A>
 		Elt(A&& a) : t(std::forward<A>(a)) {}
 		//~elt() { delete t; }
@@ -14,6 +16,7 @@ class Elt <NTL::ZZ>
 		Elt operator % (const Elt& x) const { return Elt(this->t%x.t); }
 		bool operator == (const Elt& x) const { return this->t == x.t; }
 
+		//void operator = (const Elt& x) { this->t = x.t; }
 		void operator *= (const Elt& x) { this->mul(x); }
 		void operator %= (const Elt& x) { this->mod(x); }
 		void operator /= (const Elt& x) { this->div(x); }
