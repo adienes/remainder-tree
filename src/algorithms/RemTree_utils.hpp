@@ -1,21 +1,32 @@
 #ifndef REMAINDERTREE_SRC_ALGORITHMS_REMTREEUTILS_H_
 #define REMAINDERTREE_SRC_ALGORITHMS_REMTREEUTILS_H_
 
-#include <iostream>
 #include <vector>
-#include <string>
+#include <assert>
 
-inline int flatten(int, int);
-
-template <typename T>
-void print_tree(std::vector<T>&);
-
-template <typename T>
-void print_tree_formatted(const std::string&, const std::vector<T>&, int, int, bool);
+inline int flatten(int i , int j) {
+	return (1<<i)+j;
+}
 
 template <typename T>
-void print_tree_formatted(const std::vector<T>&);
+T get_product_node(std::vector<T>& vals, int k) {
+	int N = vals.size();
 
-#include "RemTree_utils.tpp"
+	assert (k < 2*N);
 
-#endif // REMAINDERTREE_SRC_ALGORITHMS_REMTREEUTILS_H_
+	if (k >= N) { //aka a leaf node
+		return vals[k-N];
+	}
+
+	else {
+		return get_product_node(vals, 2*k)*get_product_node(vals, 2*k+1);
+	}
+}
+
+template <typename T>
+T get_product_node(std::vector<T>& vals, int i, int j) {
+	assert (j < (1<<i));
+	return get_product_node(vals, flatten(i,j));
+}
+
+#endif //REMAINDERTREE_SRC_ALGORITHMS_REMTREEUTILS_H_

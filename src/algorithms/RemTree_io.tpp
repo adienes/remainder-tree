@@ -2,10 +2,6 @@
 #include <vector>
 #include <string>
 
-inline int flatten(int i , int j) {
-	return (1<<i)+j;
-}
-
 template <typename T>
 void print_tree(std::vector<T>& tree) {
 	int nextrightmost = 1;
