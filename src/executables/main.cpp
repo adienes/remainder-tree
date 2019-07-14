@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include "../algorithms/RemTree_basic.hpp"
-#include "../algorithms/RemTree_utils.hpp"
+#include "../algorithms/RemTree_io.hpp"
 #include <random>
 
 using std::vector;
@@ -32,7 +32,6 @@ int main()
 
 	vector< Elt<NTL::ZZ> > ans = remainder_tree_power2< Elt<NTL::ZZ> >(A, m);
 	
-	print_tree_formatted(ans);
 
 	// int i = 0;
 	// for (int x = 0; x < 5; ++x)
@@ -47,13 +46,14 @@ int main()
 	// }
 
 
-	// std::cout << std::endl;
-	// for (auto&& x: st)
-	// {
-	// 	std::cout << x.t << std::endl;
-	// }
+	std::cout << std::endl;
+	for (auto&& x: ans)
+	{
+		std::cout << x.t << "\n";
+	}
+	std::cout << std::endl;
 
-	long int N = (1<<16);
+	long int N = (1<<8);
 	vector <Elt<NTL::ZZ> > A_rand (N);
 	vector <Elt<NTL::ZZ> > m_rand (N);
 
