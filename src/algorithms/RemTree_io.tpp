@@ -26,8 +26,9 @@ void print_tree(std::vector<T>& tree) {
 	std::cout << std::endl;
 }
 
+//for internal use only
 template <typename T>
-void print_tree_formatted(const std::string& prefix, const std::vector<T>& tree, int i, int j, bool isLeft)
+void _print_tree_formatted(const std::string& prefix, const std::vector<T>& tree, int i, int j, bool isLeft)
 {
 
 	int loc = flatten(i,j);
@@ -42,12 +43,12 @@ void print_tree_formatted(const std::string& prefix, const std::vector<T>& tree,
     std::cout << tree[flatten(i,j)] << std::endl;
 
     // enter the next tree level - left and right branch
-    print_tree_formatted( prefix + (isLeft ? "│   " : "    "), tree, i+1, 2*j, true);
-    print_tree_formatted( prefix + (isLeft ? "│   " : "    "), tree, i+1, 2*j+1,false);
+    _print_tree_formatted( prefix + (isLeft ? "│   " : "    "), tree, i+1, 2*j, true);
+    _print_tree_formatted( prefix + (isLeft ? "│   " : "    "), tree, i+1, 2*j+1,false);
 }
 
 template <typename T>
 void print_tree_formatted(const std::vector<T>& tree)
 {
-    print_tree_formatted<T>("", tree, 0, 0, false);
+    _print_tree_formatted<T>("", tree, 0, 0, false);
 }

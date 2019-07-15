@@ -41,7 +41,7 @@ T get_product_node_askew(std::vector<T>& vals, int k, U& modulus) { //typically 
 		return vals[k-N]%modulus;
 	}
 
-	else if (isPowerTwo(k)) {
+	else if (is_power2(k)) {
 		return vals[0]%modulus;
 	}
 
@@ -63,7 +63,7 @@ T _get_product_node_askew_nomod(std::vector<T>& vals, int k) { //typically used 
 		return vals[k-N];
 	}
 
-	else if (isPowerTwo(k)) {
+	else if (is_power2(k)) {
 		return vals[0];
 	}
 

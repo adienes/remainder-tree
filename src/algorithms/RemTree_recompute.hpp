@@ -1,5 +1,5 @@
-#ifndef REMAINDERTREE_SRC_ALGORITHMS_REMTREEPRECOMPUTE_H_
-#define REMAINDERTREE_SRC_ALGORITHMS_REMTREEPRECOMPUTE_H_
+#ifndef REMAINDERTREE_SRC_ALGORITHMS_REMTREERECOMPUTE_H_
+#define REMAINDERTREE_SRC_ALGORITHMS_REMTREERECOMPUTE_H_
 
 #include <vector>
 
@@ -35,6 +35,6 @@ T get_accumulated_remainder(std::vector<T>&, std::vector<U>&, int);
 template <typename T>
 T get_accumulated_remainder(std::vector<T>&, std::vector<T>&, int);
 
-#include "RemTree_precompute.tpp"
+#include "RemTree_recompute.tpp"
 
-#endif //REMAINDERTREE_SRC_ALGORITHMS_REMTREEPRECOMPUTE_H_
+#endif //REMAINDERTREE_SRC_ALGORITHMS_REMTREERECOMPUTE_H_

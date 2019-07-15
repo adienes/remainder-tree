@@ -18,6 +18,7 @@ template <typename T>
 vector<T> remainder_tree_power2(const vector<T>&, const vector<T>&, const T& V = T(1));
 
 
+//TODO
 //This adds the ability to call remtree on arrays which are not size a power of 2.
 //it does this by padding the arrays with zeros up to a power of 2, so will be a tiny
 //bit less efficient than just calling it on a power of 2 originally.

@@ -8,9 +8,6 @@ template <typename T>
 void print_tree(std::vector<T>&);
 
 template <typename T>
-void print_tree_formatted(const std::string&, const std::vector<T>&, int, int, bool);
-
-template <typename T>
 void print_tree_formatted(const std::vector<T>&);
 
 #include "RemTree_io.tpp"
