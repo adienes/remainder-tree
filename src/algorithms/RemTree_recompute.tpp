@@ -11,7 +11,7 @@
  */
 
 template <typename T>
-T get_product_node(std::vector<T>& vals, int k) { //typically used to get the value for the m tree
+T get_product_node(const std::vector<T>& vals, int k) { //typically used to get the value for the m tree
 	int N = vals.size();
 
 	assert (k < 2*N);
@@ -27,11 +27,10 @@ T get_product_node(std::vector<T>& vals, int k) { //typically used to get the va
 
 
 template <typename T, typename U>
-T get_product_node_askew(std::vector<T>& vals, int k, U& modulus) { //typically used to get the value for the A tree
+T get_product_node_askew(const std::vector<T>& vals, const U& modulus, int k) { //typically used to get the value for the A tree
 	if (modulus == 0) { //DEBUG: default value only, should never be passed in!
-		return _get_product_node_askew_nomod(vals, k);
+		return T();
 	}
-
 
 	int N = vals.size();
 
@@ -52,34 +51,14 @@ T get_product_node_askew(std::vector<T>& vals, int k, U& modulus) { //typically 
 	}	
 }
 
-//for INTERNAL USE only---this is to handle when no modulus is passed in.
-template <typename T, typename U>
-T _get_product_node_askew_nomod(std::vector<T>& vals, int k) { //typically used to get the value for the A tree
-	int N = vals.size();
-
-	assert (k < 2*N);
-
-	if (k >= N) { //aka a leaf node
-		return vals[k-N];
-	}
-
-	else if (is_power2(k)) {
-		return vals[0];
-	}
-
-	else {
-		return get_product_node_askew(vals, 2*k-1)*get_product_node_askew(vals, 2*k, modulus);
-	}	
-}
-
 //as always, for nicer notation
 template <typename T>
-T get_product_node_askew(std::vector<T>& vals, int k, T& modulus) {
+T get_product_node_askew(const std::vector<T>& vals, const T& modulus, int k) {
 	return get_product_node_askew<T, T>(vals, k, modulus);
 }
 
 template <typename T, typename U>
-T get_accumulated_remainder(std::vector<T>& A, std::vector<U>& m, int k) {
+T get_accumulated_remainder(const std::vector<T>& A, const std::vector<U>& m, int k) {
 	assert (A.size() == m.size());
 
 	if (k == 1) { //return A[0] mod mProd
@@ -100,7 +79,7 @@ T get_accumulated_remainder(std::vector<T>& A, std::vector<U>& m, int k) {
 }
 
 template <typename T>
-T get_accumulated_remainder(std::vector<T>& A, std::vector<T>& m, int k) {
+T get_accumulated_remainder(const std::vector<T>& A, const std::vector<T>& m, int k) {
 	return get_accumulated_remainder<T, T>(A, m, k);
 }
 

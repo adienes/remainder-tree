@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <assert.h>
+#include "../elements/Element.hpp"
+
+using std::vector;
 
 bool is_power2(int x) {
 	return (x != 0) && ((x & (x - 1)) == 0);
@@ -21,10 +24,10 @@ int flatten(int i , int j) {
  * how it interacts with incomplete trees.
  */
 template <typename T>
-std::vector<T> get_subtree (std::vector<T>& tree, int k) {
+vector<T> get_subtree (const vector<T>& tree, int k) {
 	int N = tree.size();
 
-	std::vector<T> subtree(N);
+	vector<T> subtree(N);
 
 	int i = 0;
 	while ((1<<i)*(k+1) <= N) { //up through the leaves 
@@ -42,19 +45,29 @@ std::vector<T> get_subtree (std::vector<T>& tree, int k) {
 
 
 template<typename T>
-void elt_to_base(vector<T> &b, vector<Elt<T>> &e){
-	assert(b.size() == e.size());
-	for(int i = 0; i < b.size(); i++){
+vector<T> elt_to_base(const vector<Elt<T>> &e) {
+	int N = e.size();
+
+	vector<T> b(N);
+
+	for(int i = 0; i < N; ++i) {
 		b[i] = e[i].t;
 	}
+
+	return b;
 }
 
 template<typename T>
-void base_to_elt(vector<Elt<T>> &e, vector<T> &b){
-	assert(e.size() == b.size());
-	for(int i = 0; i < e.size(); i++){
+vector<Elt<T>> base_to_elt(const vector<T>& b) {
+	int N = b.size();
+
+	vector<Elt<T>> e(N);
+
+	for(int i = 0; i < N; ++i) {
 		e[i] = b[i];
 	}
+
+	return e;
 }
 
 #endif //REMAINDERTREE_SRC_ALGORITHMS_REMTREEUTILS_H_
