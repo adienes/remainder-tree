@@ -51,11 +51,6 @@ T get_product_node_askew(const std::vector<T>& vals, const U& modulus, int k) { 
 	}	
 }
 
-//as always, for nicer notation
-template <typename T>
-T get_product_node_askew(const std::vector<T>& vals, const T& modulus, int k) {
-	return get_product_node_askew<T, T>(vals, k, modulus);
-}
 
 template <typename T, typename U>
 T get_accumulated_remainder(const std::vector<T>& A, const std::vector<U>& m, int k) {
@@ -78,9 +73,5 @@ T get_accumulated_remainder(const std::vector<T>& A, const std::vector<U>& m, in
 	}
 }
 
-template <typename T>
-T get_accumulated_remainder(const std::vector<T>& A, const std::vector<T>& m, int k) {
-	return get_accumulated_remainder<T, T>(A, m, k);
-}
 
 #endif //REMAINDERTREE_SRC_ALGORITHMS_REMTREEUTILS_H_

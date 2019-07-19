@@ -21,19 +21,11 @@ T get_product_node(const std::vector<T>&, int);
 template <typename T, typename U>
 T get_product_node_askew(const std::vector<T>&, const U& modulus, int);
 
-//same as the above, but if the modulus and the multiplicands are the same type
-//as will happen frequently, then you don't have to type in both
-template <typename T, typename U>
-T get_product_node_askew(const std::vector<T>&, const T& modulus, int);
 
 //Computes a position of the accumulating remainder tree using the above two functions
 //with minimal memory.
 template <typename T, typename U>
 T get_accumulated_remainder(const std::vector<T>&, const std::vector<U>&, int);
-
-//like before, this is for shorter notation
-template <typename T>
-T get_accumulated_remainder(const std::vector<T>&, const std::vector<T>&, int);
 
 #include "RemTree_recompute.tpp"
 

@@ -30,8 +30,9 @@ int main()
 	vector< Elt<NTL::ZZ> > A = {1,1,2,3,4,5,6,7};
 	vector< Elt<NTL::ZZ> > m = {1,2,3,1,5,1,7,1};
 
-	vector< Elt<NTL::ZZ> > ans = remainder_tree_power2< Elt<NTL::ZZ> >(A, m);
+	vector< Elt<NTL::ZZ> > ans = remainder_tree< Elt<NTL::ZZ> >(A, m);
 	
+	print_tree(ans);
 
 	// int i = 0;
 	// for (int x = 0; x < 5; ++x)
@@ -46,14 +47,16 @@ int main()
 	// }
 
 
-	std::cout << std::endl;
-	for (auto&& x: ans)
-	{
-		std::cout << x.t << "\n";
-	}
-	std::cout << std::endl;
+	// std::cout << std::endl;
+	// for (auto&& x: ans)
+	// {
+	// 	std::cout << x.t << "\n";
+	// }
+	// std::cout << std::endl;
 
-	long int N = (1<<8);
+
+ 	////////
+	long int N = (1<<4);
 	vector <Elt<NTL::ZZ> > A_rand (N);
 	vector <Elt<NTL::ZZ> > m_rand (N);
 
@@ -72,12 +75,11 @@ int main()
 	}
 
 	auto start = chrono::high_resolution_clock::now();
-	vector< Elt<NTL::ZZ> > ans_rand = remainder_tree_power2(A_rand, m_rand);
+	vector< Elt<NTL::ZZ> > ans_rand = remainder_tree(A_rand, m_rand);
 	auto finish = chrono::high_resolution_clock::now();
 	chrono::duration<double> runtime = finish-start;
 
 	print_tree_formatted(ans_rand);
 
 	cout << endl << runtime.count() << endl;
-
 }

@@ -15,9 +15,6 @@ vector<T> subproduct_tree(const vector<T>& vals, int P = 1);
 template <typename T, typename U>
 vector<T> subproduct_tree_askew(const vector<T>& vals, const U& modulus, int P = 1);
 
-//notation
-template <typename T>
-vector<T> subproduct_tree_askew(const vector<T>& vals, const T& modulus, int P = 1);
 
 //The most bare-bones remainder tree possible.
 //No space-time tradeoffs implemented, no parallelization, no hard drive mem, etc.
@@ -25,11 +22,6 @@ vector<T> subproduct_tree_askew(const vector<T>& vals, const T& modulus, int P =
 //WARNING: array length is stored in int, so very large trees may overflow.
 template <typename T, typename U>
 vector<T> remainder_tree(const vector<T>&, const vector<U>&, const T& V = T(1));
-
-
-//This only exists for convenient notation
-template <typename T>
-vector<T> remainder_tree(const vector<T>&, const vector<T>&, const T& V = T(1));
 
 
 //TODO
@@ -42,10 +34,6 @@ vector<T> remainder_tree(const vector<T>&, const vector<T>&, const T& V = T(1));
 template <typename T, typename U>
 vector<T> remainder_tree_padded(vector<T>, vector<U>, const T& V = T(1));
 
-
-//This only exists for convenient notation
-template <typename T>
-vector<T> remainder_tree_padded(const vector<T>&, const vector<T>&, const T& V = T(1));
 
 
 #include "RemTree_basic.tpp"
