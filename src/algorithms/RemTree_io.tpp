@@ -4,7 +4,7 @@
 #include "RemTree_utils.hpp"
 
 template <typename T>
-void print_tree(std::vector<T>& tree) {
+void print_tree(const std::vector<T>& tree) {
 	int nextrightmost = 1;
 	int N = tree.size();
 

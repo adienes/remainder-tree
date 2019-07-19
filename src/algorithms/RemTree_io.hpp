@@ -5,7 +5,7 @@
 #include <string>
 
 template <typename T>
-void print_tree(std::vector<T>&);
+void print_tree(const std::vector<T>&);
 
 template <typename T>
 void print_tree_formatted(const std::vector<T>&);
