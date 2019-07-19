@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <assert.h>
+#include <functional>
+
 #include "../elements/Element.hpp"
 
 using std::vector;
@@ -68,6 +70,49 @@ vector<Elt<T>> base_to_elt(const vector<T>& b) {
 	}
 
 	return e;
+}
+
+
+/* TODO: It is slightly dangerous to cast milliseconds to int.
+ * TODO: Does not make any checks for powers of 2 etc. Please only pass in powers of 2.
+ *
+ * This function is a bit of a weird one. I'm assuming that passed in is an upper bound,
+ * a number of datapoints, and a vector of search functions which take a range and return
+ * a vector of bools (found item or not). The search functions passed in might want more
+ * arguments than just an upper bound. Use std::bind for this purpose to pass in fixed arguments.
+ * Return value is a vector containing the x-value, and then the y-values for each function,
+ * plus any other data we may want to collect (dunno what yet) all collected in a vector.
+ */
+std::vector <std::vector<int>> complexity_graph(int N, int d, std::vector <std::function< std::vector<bool> (int N)>> search_funcs) {
+	int s = search_funcs.size();
+
+	std::vector<std::vector<int>> graph;
+	graph.reserve(d);
+	graph[0] = std::vector<int> (s+1, 0); //Corresponds to origin---make s+1 larger if there are other data collected.
+	
+	int interval = N/d;
+	int B = interval;
+	while (B <= N) {
+
+		std::vector<int> datum;
+		datum.reserve(s+1);
+		datum.push_back(B); //this is the x-value
+
+		for (auto f : search_funcs) {
+			auto start = std::chrono::high_resolution_clock::now();
+			f(B);
+			auto end = std::chrono::high_resolution_clock::now();
+
+			auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds> (end-start).count();
+			datum.push_back(elapsed);
+		}
+
+		graph.push_back(datum);
+
+		B += interval;
+	}
+
+	return graph;
 }
 
 #endif //REMAINDERTREE_SRC_ALGORITHMS_REMTREEUTILS_H_
