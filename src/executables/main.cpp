@@ -1,7 +1,7 @@
 #include <vector>
 #include <functional>
 
-#include "../searches/timewaster.cpp"
+#include "../searches/benchmarks.hpp"
 #include "../algorithms/RemTree_utils.hpp"
 
 
