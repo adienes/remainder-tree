@@ -2,7 +2,9 @@
 #include <functional>
 
 #include "../searches/benchmarks.hpp"
-#include "../algorithms/RemTree_utils.hpp"
+#include "../algorithms/utils.hpp"
+#include "../algorithms/RemTree_io.hpp"
+#include "../searches/complexity.hpp"
 
 
 int main()
@@ -20,5 +22,6 @@ int main()
 		std::cout << std::endl;
 	}
 
+	write_complexity_graph(cg);
 
 }

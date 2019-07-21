@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <assert.h>
-#include "RemTree_utils.hpp"
+#include "utils.hpp"
 
 /*
  * TODO: the get_accumulated_remainder will recompute EVERYTHING

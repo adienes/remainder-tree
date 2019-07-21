@@ -2,7 +2,6 @@
 #define REMAINDERTREE_SRC_ALGORITHMS_REMTREEIO_H_
 
 #include <vector>
-#include <string>
 
 template <typename T>
 void print_tree(const std::vector<T>&);

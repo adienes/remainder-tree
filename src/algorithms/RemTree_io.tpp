@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "RemTree_utils.hpp"
+
+#include "utils.hpp"
 
 template <typename T>
 void print_tree(const std::vector<T>& tree) {
