@@ -149,14 +149,32 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
         mul(out[i], out[i], coeff(PS, i+d));
     }
 }
-// calculate h = f(g(x))
-void poly_eval(ZZ_pX &h, ZZ_pX &f, ZZ_pX &g){
-    ZZ_pX out(LeadCoeff(f));
-    for(int i = deg(f)-1; i >= 0; i--){
-        mul(out, out, g);
-        add(out, out, coeff(f, i));
+
+/*
+ * Takes in the values of matrices of polynomials M(r), M(r+b), ..., M(r+db) and outputs M(r+a), M(r+b+a), ... M(r+db+a)
+ */
+void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &p){
+    assert(out.size() == values.size());
+    assert(values[0].NumRows() == values[0].NumCols());
+    for(long i = 0; i < out.size(); i++){
+        assert(values[i].NumRows() == values[0].NumRows());
+        assert(values[i].NumCols() == values[0].NumCols());
+        out[i].SetDims(values[0].NumRows(), values[0].NumCols());
     }
-    h = out;
+
+    for(long row = 0; row < values[0].NumRows(); row++){
+        for(long col = 0; col < values[0].NumCols(); col++){
+            vector<ZZ_p> vals(values.size());
+            for(long i = 0; i < values.size(); i++){
+                vals[i] = values[i].get(row, col);
+            }
+            vector<ZZ_p> shifted_vals(vals.size());
+            shift_values(shifted_vals, vals, a, b, p);
+            for(long i = 0; i < shifted_vals.size(); i++){
+                out[i].put(row, col, shifted_vals[i]);
+            }
+        }
+    }
 }
 
 int main(){
@@ -168,15 +186,27 @@ int main(){
     b.init(p);
     b = 2;
 
-    vector<ZZ_p> vals(3);
-    vector<ZZ_p> out(3);
+    vector<ZZ_p> regvals(3);
+    vector<Mat<ZZ_p>> vals(3);
+    vector<Mat<ZZ_p>> out(3);
     for(int i = 0; i < 3; i++){
-        vals[i].init(p);
+        regvals[i].init(p);
     }
-    vals[0] = 2;
-    vals[1] = 2;
-    vals[2] = 3;
+    regvals[0] = 2;
+    regvals[1] = 2;
+    regvals[2] = 3;
+    for(int i = 0; i < 3; i++){
+        vals[i].SetDims(2, 2);
+        vals[i].put(0, 0, regvals[i]);
+        vals[i].put(1, 0, regvals[i]);
+        vals[i].put(0, 1, regvals[i]);
+        vals[i].put(1, 1, regvals[i]);
+    }
 
+    for(int i = 0; i < 3; i++){
+        cout << vals[i] << endl;
+    }
+    cout << "fucl" << endl;
     shift_values(out, vals, a, b, p);
 
     for(int i = 0; i < 3; i++){
