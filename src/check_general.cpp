@@ -18,7 +18,7 @@ void print(vector<T> vec);
  * [DONE] Create function that take inputs a0, a1, ..., an-1 and outputs 1/a0, ..., 1/an-1
  * [DONE] Create function that takes input d and outputs 1/prod(0-j), 1/prod(1-j), ..., 1/prod(d-j)
  * [DONE] Create function that takes input a, d and outputs prod(a+0-j), prod(a+1-j), ..., prod(a+d-j)
- * Create function that take inputs M(a), M(a+b), ..., M(a+kb) and outputs M(a+i), M(a+b+i), ..., M(a+kb+i)
+ * [DONE] Create function that take inputs M(a), M(a+b), ..., M(a+kb) and outputs M(a+i), M(a+b+i), ..., M(a+kb+i)
  * Create function to calculate M_sqrt(p-1)(0), ..., M_sqrt(p-1)(p-1)
  * Create main function to calculate M(1)...M(p-1) = M_sqrt(p-1)(0)...M_sqrt(p-1)(p-1-sqrt(p-1))
  */
@@ -98,10 +98,9 @@ void find_delta(vector<ZZ_p> &out, ZZ_p &a, ZZ &p){
     
     vector<ZZ_p> Deltas(d+1);
     Deltas[0] = a;
-    for(long i = 1; i < inv_ints.size(); i++){
+    for(long i = 0; i < inv_ints.size(); i++){
         mul(Deltas[0], Deltas[0], ints[i]);
     } // Deltas[0] = (a-d)...(a-1)(a)
-    
     for(long i = 1; i < Deltas.size(); i++){
         mul(Deltas[i], Deltas[i-1], a+i);
         mul(Deltas[i], Deltas[i], inv_ints[i-1]);
