@@ -251,7 +251,7 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p){
 /*
  * Calculate M(1)M(2)...M(n) mod p
  */
-void matrix_factorial(Mat<ZZ_p> &out, long n, ZZ &p){
+void matrix_factorial(Mat<ZZ_p> &out, long n, void (*M)(Mat<ZZ_p>&, ZZ_p&), ZZ &p){
     long rtn = sqrt(n);
     
     vector<Mat<ZZ_p>> seg_prods(rtn+1);
@@ -306,11 +306,13 @@ void M(Mat<ZZ_p> &out, ZZ_p &x){
 
 int main(){
     ZZ p(1099511627791);
+    
+    void (*M_func)(Mat<ZZ_p>&, ZZ_p&) = M;
 
     Mat<ZZ_p> answer;
 
     uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    matrix_factorial(answer, 1099511627791, p);
+    matrix_factorial(answer, 1099511627791, M_func, p);
     uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start;
 
     cout << "final answer: " << answer << endl;
