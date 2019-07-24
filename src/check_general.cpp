@@ -10,6 +10,11 @@ using namespace NTL;
 void invert_all(vector<ZZ_p> &out, vector<ZZ_p> &a);
 void find_delta(vector<ZZ_p> &out, ZZ &p);
 void find_delta(vector<ZZ_p> &out, ZZ &p, ZZ_p &a);
+void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ &p);
+void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &p);
+void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ &p);
+void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p);
+void M(Mat<ZZ_p> &out, ZZ_p &x);
 template <typename T>
 void print(vector<T> vec);
 
@@ -19,8 +24,8 @@ void print(vector<T> vec);
  * [DONE] Create function that takes input d and outputs 1/prod(0-j), 1/prod(1-j), ..., 1/prod(d-j)
  * [DONE] Create function that takes input a, d and outputs prod(a+0-j), prod(a+1-j), ..., prod(a+d-j)
  * [DONE] Create function that take inputs M(a), M(a+b), ..., M(a+kb) and outputs M(a+i), M(a+b+i), ..., M(a+kb+i)
- * Create function to calculate M_sqrt(p-1)(0), ..., M_sqrt(p-1)(p-1)
- * Create main function to calculate M(1)...M(p-1) = M_sqrt(p-1)(0)...M_sqrt(p-1)(p-1-sqrt(p-1))
+ * [DONE] Create function to calculate M_k(0), M_k(k), ..., M_k(k^2)
+ * Create main function to calculate M(1)...M(k^2) = M_k(0)M_k(k)...M_k(k^2-k)
  */
 
 /*
@@ -111,6 +116,7 @@ void find_delta(vector<ZZ_p> &out, ZZ_p &a, ZZ &p){
 
 /*
  * Takes in the values of polynomials F(r), F(r+b), ..., F(r+db) and outputs F(r+a), F(r+b+a), ... F(r+db+a)
+ * Requires deg(F) <= d to work mathematically, since it will interpolate based on the given evaluations of F.
  */
 void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ &p){
     assert(out.size() == values.size());
@@ -152,6 +158,7 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
 
 /*
  * Takes in the values of matrices of polynomials M(r), M(r+b), ..., M(r+db) and outputs M(r+a), M(r+b+a), ... M(r+db+a)
+ * Requires the maximal degree of any element of M(x) to be <= d to successfully interpolate
  */
 void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &p){
     assert(out.size() == values.size());
@@ -160,7 +167,7 @@ void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ
         assert(values[i].NumRows() == values[0].NumRows());
         assert(values[i].NumCols() == values[0].NumCols());
         out[i].SetDims(values[0].NumRows(), values[0].NumCols());
-    }
+    } 
 
     for(long row = 0; row < values[0].NumRows(); row++){
         for(long col = 0; col < values[0].NumCols(); col++){
@@ -177,41 +184,106 @@ void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ
     }
 }
 
+/*
+ * k := out.size()-1
+ * Calculates M_k(x) at 0, k, ..., k^2 recursively
+ * M_k(x) = M(x+1)M(x+2)...M(x+k)
+ * To calculate M_m(x) at 0, k, ..., mk, use the value M_m/2(x) at 0, k, ..., (m/2)k
+ */
+void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ &p){
+    ZZ_p kp;
+    kp.init(p);
+    kp = out.size()-1;
+    multieval_prod(out, kp, p);
+}
+/*
+ * m := out.size()-1
+ */
+void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p){
+    long m = out.size()-1;
+    
+    if(m == 1){
+        ZZ_p one;
+        one.init(p);
+        one = 1;
+        ZZ_p kone = k+1;
+        M(out[0], one);
+        M(out[1], kone);
+        return;
+    }
+
+    vector<Mat<ZZ_p>> lower_layer(m/2+1);
+    multieval_prod(lower_layer, k, p);
+   
+    print(lower_layer);
+
+    vector<Mat<ZZ_p>> ll_extend(lower_layer.size());
+    ZZ_p m21k = k*(m/2+1);
+    cout << "k*(m/2+1)" << m21k << endl;
+    shift_values(ll_extend, lower_layer, m21k, k, p);
+
+    print(ll_extend);
+
+    vector<Mat<ZZ_p>> ll_total;
+    ll_total.reserve(lower_layer.size() + ll_extend.size());
+    ll_total.insert(ll_total.end(), lower_layer.begin(), lower_layer.end());
+    ll_total.insert(ll_total.end(), ll_extend.begin(), ll_extend.end());
+
+    print(ll_total);
+
+    vector<Mat<ZZ_p>> ll_shift(ll_total.size());
+    ZZ_p m2;
+    m2.init(p);
+    m2 = m/2;
+    shift_values(ll_shift, ll_total, m2, k, p);
+
+    for(long i = 0; i < out.size(); i++){
+        mul(out[i], ll_shift[i], ll_total[i]);
+    }
+    if(m % 2 == 1){
+        for(long i = 0; i < out.size(); i++){
+            ZZ_p ikm = k*i + m;
+            Mat<ZZ_p> extra;
+            M(extra, ikm);
+            mul(out[i], extra, out[i]);
+        }
+    }
+
+}
+
+/*
+ * Evaluate M(x), returned in out
+ */
+void M(Mat<ZZ_p> &out, ZZ_p &x){
+    ZZ_p zero;
+    zero.init(x.modulus());
+    zero = 0;
+    ZZ_p one;
+    one.init(x.modulus());
+    one = 1;
+    out.SetDims(2, 2);
+    out.put(0, 0, x+1);
+    out.put(0, 1, zero);
+    out.put(1, 0, one);
+    out.put(1, 1, one);
+    
+}
+
 int main(){
-    ZZ p(7);
-    ZZ_p a;
-    a.init(p);
-    a = 1;
-    ZZ_p b;
-    b.init(p);
-    b = 2;
+    ZZ p(127);
+    vector<Mat<ZZ_p>> output(3);
 
-    vector<ZZ_p> regvals(3);
-    vector<Mat<ZZ_p>> vals(3);
-    vector<Mat<ZZ_p>> out(3);
-    for(int i = 0; i < 3; i++){
-        regvals[i].init(p);
-    }
-    regvals[0] = 2;
-    regvals[1] = 2;
-    regvals[2] = 3;
-    for(int i = 0; i < 3; i++){
-        vals[i].SetDims(2, 2);
-        vals[i].put(0, 0, regvals[i]);
-        vals[i].put(1, 0, regvals[i]);
-        vals[i].put(0, 1, regvals[i]);
-        vals[i].put(1, 1, regvals[i]);
-    }
+    multieval_prod(output, p);
 
-    for(int i = 0; i < 3; i++){
-        cout << vals[i] << endl;
+    for(int i = 0; i < output.size(); i++){
+        cout << "output["<<i<<"]: " << output[i] << endl;
     }
-    cout << "fucl" << endl;
-    shift_values(out, vals, a, b, p);
-
-    for(int i = 0; i < 3; i++){
-        cout << out[i] << endl;
+    
+    for(int i = output.size()-2; i > 0; i--){
+        cout << "multiplying: " << output[i] << " and " << output[i-1] << endl;
+        mul(output[i-1], output[i], output[i-1]);
     }
+    cout << "final answer: " << output[0] << endl;
 }
 
 template<typename T>
