@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include <cmath>
 #include <NTL/matrix.h>
 #include <NTL/ZZ_pX.h> // includes ZZ_p.h and ZZ.h as well
 
@@ -14,6 +15,7 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
 void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &p);
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ &p);
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p);
+void matrix_factorial(Mat<ZZ_p> &out, long n, ZZ &p);
 void M(Mat<ZZ_p> &out, ZZ_p &x);
 template <typename T>
 void print(vector<T> vec);
@@ -25,7 +27,7 @@ void print(vector<T> vec);
  * [DONE] Create function that takes input a, d and outputs prod(a+0-j), prod(a+1-j), ..., prod(a+d-j)
  * [DONE] Create function that take inputs M(a), M(a+b), ..., M(a+kb) and outputs M(a+i), M(a+b+i), ..., M(a+kb+i)
  * [DONE] Create function to calculate M_k(0), M_k(k), ..., M_k(k^2)
- * Create main function to calculate M(1)...M(k^2) = M_k(0)M_k(k)...M_k(k^2-k)
+ * [DONE] Create main function to calculate M(1)...M(k^2) = M_k(0)M_k(k)...M_k(k^2-k)
  */
 
 /*
@@ -215,21 +217,14 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p){
     vector<Mat<ZZ_p>> lower_layer(m/2+1);
     multieval_prod(lower_layer, k, p);
    
-    print(lower_layer);
-
     vector<Mat<ZZ_p>> ll_extend(lower_layer.size());
     ZZ_p m21k = k*(m/2+1);
-    cout << "k*(m/2+1)" << m21k << endl;
     shift_values(ll_extend, lower_layer, m21k, k, p);
-
-    print(ll_extend);
 
     vector<Mat<ZZ_p>> ll_total;
     ll_total.reserve(lower_layer.size() + ll_extend.size());
     ll_total.insert(ll_total.end(), lower_layer.begin(), lower_layer.end());
     ll_total.insert(ll_total.end(), ll_extend.begin(), ll_extend.end());
-
-    print(ll_total);
 
     vector<Mat<ZZ_p>> ll_shift(ll_total.size());
     ZZ_p m2;
@@ -252,6 +247,44 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p){
 }
 
 /*
+ * Calculate M(1)M(2)...M(n) mod p
+ */
+void matrix_factorial(Mat<ZZ_p> &out, long n, ZZ &p){
+    long rtn = sqrt(n);
+    
+    vector<Mat<ZZ_p>> seg_prods(rtn+1);
+    multieval_prod(seg_prods, p);
+
+    if(n < rtn*rtn + rtn){
+        for(long i = seg_prods.size()-2; i > 0; i--){
+            mul(seg_prods[i-1], seg_prods[i], seg_prods[i-1]);
+        }
+        for(long i = rtn*rtn+1; i <= n; i++){
+            Mat<ZZ_p> extra;
+            ZZ_p x;
+            x.init(p);
+            x = i;
+            M(extra, x);
+            mul(seg_prods[0], extra, seg_prods[0]);
+        }
+    }
+    else{
+        for(long i = seg_prods.size()-1; i > 0; i--){
+            mul(seg_prods[i-1], seg_prods[i], seg_prods[i-1]);
+        }
+        for(long i = rtn*rtn+rtn+1; i <= n; i++){
+            Mat<ZZ_p> extra;
+            ZZ_p x;
+            x.init(p);
+            x = i;
+            M(extra, x);
+            mul(seg_prods[0], extra, seg_prods[0]);
+        }
+    }
+    out = seg_prods[0];
+}
+
+/*
  * Evaluate M(x), returned in out
  */
 void M(Mat<ZZ_p> &out, ZZ_p &x){
@@ -271,19 +304,12 @@ void M(Mat<ZZ_p> &out, ZZ_p &x){
 
 int main(){
     ZZ p(127);
-    vector<Mat<ZZ_p>> output(3);
 
-    multieval_prod(output, p);
+    Mat<ZZ_p> answer;
+    matrix_factorial(answer, 10, p);
 
-    for(int i = 0; i < output.size(); i++){
-        cout << "output["<<i<<"]: " << output[i] << endl;
-    }
+    cout << "final answer: " << answer << endl;
     
-    for(int i = output.size()-2; i > 0; i--){
-        cout << "multiplying: " << output[i] << " and " << output[i-1] << endl;
-        mul(output[i-1], output[i], output[i-1]);
-    }
-    cout << "final answer: " << output[0] << endl;
 }
 
 template<typename T>
