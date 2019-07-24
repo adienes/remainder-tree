@@ -2,10 +2,12 @@
 #include <vector>
 #include <cassert>
 #include <cmath>
+#include <chrono>
 #include <NTL/matrix.h>
 #include <NTL/ZZ_pX.h> // includes ZZ_p.h and ZZ.h as well
 
 using namespace std;
+using namespace std::chrono;
 using namespace NTL;
 
 void invert_all(vector<ZZ_p> &out, vector<ZZ_p> &a);
@@ -303,12 +305,16 @@ void M(Mat<ZZ_p> &out, ZZ_p &x){
 }
 
 int main(){
-    ZZ p(127);
+    ZZ p(1099511627791);
 
     Mat<ZZ_p> answer;
-    matrix_factorial(answer, 10, p);
+
+    uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    matrix_factorial(answer, 1099511627791, p);
+    uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start;
 
     cout << "final answer: " << answer << endl;
+    cout << "time taken: " << time << endl;
     
 }
 
