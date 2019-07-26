@@ -10,15 +10,24 @@ using namespace std;
 using namespace std::chrono;
 using namespace NTL;
 
+// Reference: https://www.dropbox.com/home/urop2019/literature?preview=Bostan%2C+Gaudry%2C+Schost+-+Linear+recurrences+with+polynomial+coefficients+and+application+to+integer+factorization+and+Cartier-Manin+operator.pdf
+// Page 1781 (Lemma 1)
 void invert_all(vector<ZZ_p> &out, vector<ZZ_p> &a);
+// Page 1781 (Lemma 2)
 void find_delta(vector<ZZ_p> &out, ZZ &p);
 void find_delta(vector<ZZ_p> &out, ZZ &p, ZZ_p &a);
+// Page 1784-5 (Theorem 5)
 void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ &p);
 void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &p);
+// Page 1786-8 (Section 4)
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ &p);
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p);
+// Page 1792 (Equation (5))
 void matrix_factorial(Mat<ZZ_p> &out, long n, ZZ &p);
+// Following functions for testing:
+// matrix definition
 void M(Mat<ZZ_p> &out, ZZ_p &x);
+// print contents of a vector
 template <typename T>
 void print(vector<T> vec);
 
