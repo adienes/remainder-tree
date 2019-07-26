@@ -23,13 +23,62 @@ void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ &p);
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p);
 // Page 1792 (Equation (5))
-void matrix_factorial(Mat<ZZ_p> &out, long n, ZZ &p);
+void matrix_factorial(Mat<ZZ_p> &out, long n, void (*M)(Mat<ZZ_p>&, ZZ_p&), ZZ &p);
 // Following functions for testing:
 // matrix definition
 void M(Mat<ZZ_p> &out, ZZ_p &x);
 // print contents of a vector
 template <typename T>
 void print(vector<T> vec);
+
+
+/*
+ * Evaluate M(x), returned in out
+ */
+void M(Mat<ZZ_p> &out, ZZ_p &x){
+    ZZ_p zero;
+    zero.init(x.modulus());
+    zero = 0;
+    ZZ_p one;
+    one.init(x.modulus());
+    one = 1;
+    /*out.SetDims(2, 2);
+    out.put(0, 0, x+1);
+    out.put(0, 1, zero);
+    out.put(1, 0, one);
+    out.put(1, 1, one);
+    */
+    out.SetDims(1, 1);
+    out.put(0, 0, x);
+
+}
+
+int main(){
+    ZZ p(1099511627791);
+    
+    void (*M_func)(Mat<ZZ_p>&, ZZ_p&) = M;
+
+    Mat<ZZ_p> answer;
+
+    uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    matrix_factorial(answer, 1099511627790, M_func, p);
+    uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start;
+
+    cout << "final answer: " << answer << endl;
+    cout << "time taken: " << time << endl;
+    
+}
+
+template<typename T>
+void print(vector<T> vec){
+    for(long i = 0; i < vec.size(); i++){
+        cout << vec[i];
+        if(i < vec.size()-1){
+            cout << ", ";
+        }
+    }
+    cout << endl;
+}
 
 /* 
  * Steps:
@@ -40,6 +89,7 @@ void print(vector<T> vec);
  * [DONE] Create function to calculate M_k(0), M_k(k), ..., M_k(k^2)
  * [DONE] Create main function to calculate M(1)...M(k^2) = M_k(0)M_k(k)...M_k(k^2-k)
  */
+
 
 /*
  * Takes a list of elements a and returns their inversions mod p
@@ -293,50 +343,5 @@ void matrix_factorial(Mat<ZZ_p> &out, long n, void (*M)(Mat<ZZ_p>&, ZZ_p&), ZZ &
         }
     }
     out = seg_prods[0];
-}
-
-/*
- * Evaluate M(x), returned in out
- */
-void M(Mat<ZZ_p> &out, ZZ_p &x){
-    ZZ_p zero;
-    zero.init(x.modulus());
-    zero = 0;
-    ZZ_p one;
-    one.init(x.modulus());
-    one = 1;
-    out.SetDims(2, 2);
-    out.put(0, 0, x+1);
-    out.put(0, 1, zero);
-    out.put(1, 0, one);
-    out.put(1, 1, one);
-    
-}
-
-int main(){
-    ZZ p(1099511627791);
-    
-    void (*M_func)(Mat<ZZ_p>&, ZZ_p&) = M;
-
-    Mat<ZZ_p> answer;
-
-    uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    matrix_factorial(answer, 1099511627791, M_func, p);
-    uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start;
-
-    cout << "final answer: " << answer << endl;
-    cout << "time taken: " << time << endl;
-    
-}
-
-template<typename T>
-void print(vector<T> vec){
-    for(long i = 0; i < vec.size(); i++){
-        cout << vec[i];
-        if(i < vec.size()-1){
-            cout << ", ";
-        }
-    }
-    cout << endl;
 }
 
