@@ -6,13 +6,17 @@
 #include "../algorithms/RemTree_io.hpp"
 #include "../searches/complexity.hpp"
 
+#include <NTL/ZZ.h>
+
 
 int main()
 {
+	std::vector<NTL::ZZ> v;
+	std::cout << log2(v.max_size()) << std::endl;
 
 	std::vector<std::function< std::vector<bool> (int N)>> searchfns = {constant_slow, random_zz};
 
-	auto cg = complexity_graph(1<<22, 1<<7, searchfns);
+	auto cg = complexity_graph(1<<6, 1<<4, searchfns);
 
 	for (auto&& i : cg) {
 
