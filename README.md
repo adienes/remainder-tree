@@ -79,3 +79,9 @@ Working on sqrt N algorithm for verifying a single value for a rem tree calculat
 
 7/12/19
 Finished sqrt N algorithm for verifying a single value for a rem tree calculation, and checked it worked for Wilson Primes
+
+7/21/19
+Finally finished the matrix factorial algorithm for verifying a single value for a rem tree calculation where the terms are matrices instead of polynomials. This algorithm was particularly challenging to implement because there were 6 parts to it, and each part had to work perfectly for the algorithm to work at all. Debugging was painful because if the numbers the program outputted didn't make sense, then I had to do the calculations by hand and figure out where the algorithm messed up. Also, it took several days for me to parse the algorithm in the first place from the paper, since they decided to define a lot of new notation. 
+
+7/26/19
+Progress on the main project is going okay. Ran some timing tests on the matrix factorial algorithm vs the polynomial factorial algorithm to see which one would perform better; the matrix one clearly won by a factor of 2. Will try to include this part of the algorithm to the main code in order for calculating intervals to work out as soon as possible.
