@@ -1,11 +1,13 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <chrono>
 #include <NTL/ZZ.h>
 #include <NTL/ZZ_p.h>
 #include <NTL/ZZ_pX.h>
 
 using namespace std;
+using namespace std::chrono;
 using namespace NTL;
 
 void check_p(ZZ_p &ans, long p, vector<ZZ_p> coeffs);
@@ -13,22 +15,31 @@ void findF(ZZ_pX &F, ZZ_pX &f, long rtp);
 void poly_eval(ZZ_pX &h, ZZ_pX &f, ZZ_pX &g);
 void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, long rtp, long prtp);
 
-long p = 563;
-ZZ mod = ZZ(p)*ZZ(p);
+ZZ p;
+ZZ mod;
 
 int main(){
-    vector<ZZ_p> coeffs(2);
-    coeffs[0].init(mod);
-    coeffs[1].init(mod);
-    coeffs[0] = 0;
-    coeffs[1] = 1;
     
-    ZZ_p ans;
-    ans.init(mod);
+    for(long i = 1024; i <= 1099511627776; i*=2){
+        NextPrime(p, ZZ(i));
+        long p1;
+        conv(p1, p);
+        mul(mod, p, p);
+        ZZ_p ans;
+        ans.init(mod);
+        vector<ZZ_p> coeffs(2);
+        coeffs[0].init(mod);
+        coeffs[1].init(mod);
+        coeffs[0] = 0;
+        coeffs[1] = 1;
+        uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        check_p(ans, p1, coeffs);
+        uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start;
 
-    check_p(ans, p, coeffs);
-
-    cout << "Answer: " << ans << endl;
+        //cout << "final answer: " << answer << endl;
+        cout << time << ", ";
+    }
+    cout << endl;
 }
 // TODO: init all ZZ_p variables
 void check_p(ZZ_p &ans, long p, vector<ZZ_p> coeffs){

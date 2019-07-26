@@ -54,18 +54,25 @@ void M(Mat<ZZ_p> &out, ZZ_p &x){
 }
 
 int main(){
-    ZZ p(1099511627791);
     
     void (*M_func)(Mat<ZZ_p>&, ZZ_p&) = M;
 
     Mat<ZZ_p> answer;
+    for(long i = 1024; i <= 1099511627776; i*=2){
+        ZZ p;
+        NextPrime(p, ZZ(i));
+        long p1;
+        conv(p1, p-1);
+        mul(p, p, p);
+        uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        matrix_factorial(answer, p1, M_func, p);
+        uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start;
 
-    uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    matrix_factorial(answer, 1099511627790, M_func, p);
-    uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start;
+        //cout << "final answer: " << answer << endl;
+        cout << time << ", ";
+    }
+    cout << endl;
 
-    cout << "final answer: " << answer << endl;
-    cout << "time taken: " << time << endl;
     
 }
 
