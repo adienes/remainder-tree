@@ -17,9 +17,22 @@ void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, long rtp, long prtp);
 
 ZZ p;
 ZZ mod;
+uint64_t start;
+bool stopchecking;
 
+void dumb_check(ZZ_p &ans, long p){
+    for(long i = 0; i < p; i++){
+        mul(ans, ans, i);
+        if(i % 1024 == 0){
+            if(80000 < duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start){
+                stopchecking = true;
+                return;
+            }
+        }
+    }
+}
 int main(){
-    
+    stopchecking = false;
     for(long i = 1024; i <= 1099511627776; i*=2){
         NextPrime(p, ZZ(i));
         long p1;
@@ -32,15 +45,20 @@ int main(){
         coeffs[1].init(mod);
         coeffs[0] = 0;
         coeffs[1] = 1;
-        uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-        check_p(ans, p1, coeffs);
+        start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+        dumb_check(ans, p1);
         uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start;
-
+        if(stopchecking){
+            break;
+        }
         //cout << "final answer: " << answer << endl;
         cout << time << ", ";
     }
     cout << endl;
 }
+
+
+
 // TODO: init all ZZ_p variables
 void check_p(ZZ_p &ans, long p, vector<ZZ_p> coeffs){
     ZZ_pX f;
