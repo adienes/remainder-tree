@@ -19,8 +19,13 @@ int flatten(int, int);
 template <typename T>
 std::vector<T> get_subtree (const std::vector<T>&, int);
 
+//Similar to above. Returns the slice of the input vector which corresponds to
+//the leaves of a subtree rooted at k.
+template <typename T>
+std::vector<T> get_shade(const std::vector<T>&, int);
+
 template<typename T>
-std::vector<T> elt_to_base(const std::vector<Elt<T>> &);
+std::vector<T> elt_to_base(const std::vector<Elt<T>>&);
 
 template<typename T>
 std::vector<Elt<T>> base_to_elt(const std::vector<T>&);

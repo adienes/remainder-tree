@@ -33,6 +33,35 @@ vector<T> get_subtree (const vector<T>& tree, int k) {
 	return subtree;
 }
 
+template <typename T>
+vector<T> get_shade(const vector<T>& vals, int k) {
+	int N = vals.size();
+
+	assert (k < 2*N);
+
+	if (k >= N) { //aka a leaf node
+		vector<T> slice(1);
+		slice[0] = vals[k-N];
+		return slice;
+	}
+
+	int left = k; //this will be the leftmost leaf under the subtree rooted at P
+	int right = k; //similarly the rightmost leaf under subtree rooted at P
+	while (left < N) { //stops when left_span is a leaf
+		left = 2*left;
+		right = 2*right + 1;
+
+	}
+	left -= N;
+	right -= N;
+
+	typename vector<T>::const_iterator first = vals.begin() + left;
+	typename vector<T>::const_iterator last = vals.begin() + right;
+	vector<T> slice(first, last);
+
+	return slice;
+}
+
 
 template<typename T>
 vector<T> elt_to_base(const vector<Elt<T>> &e) {

@@ -13,6 +13,8 @@ class Elt
 
 		Elt() : t() {}
 
+		Elt(const Elt& x) : t(x.t) {}
+
 		template <typename A>
 		Elt(A&& a) : t(std::forward<A>(a)) {}
 		//~Elt() { delete t; }
@@ -30,6 +32,10 @@ class Elt
 		void mul(const Elt& x) { this->t *= x.t; }
 		void mod(const Elt& x) { this->t %= x.t; }
 		void mulmod(const Elt& x, const Elt& y) { this->t = (this->t*x.t)%y.t; }
+
+		//This must be overwritten! Not every type is guaranteed to have nice division
+		//TODO: maybe actually put something here lol
+		void div(const Elt& x) { }
 };
 
 //I recommend adding a specialized print function to display

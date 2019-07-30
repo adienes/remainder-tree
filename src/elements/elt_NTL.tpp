@@ -8,6 +8,8 @@ class Elt <NTL::ZZ>
 
 		Elt() : t() {};
 		
+		//Elt(const Elt<NTL::ZZ>& e) : t(e.t) {}
+
 		template <typename A>
 		Elt(A&& a) : t(std::forward<A>(a)) {}
 		//~elt() { delete t; }
