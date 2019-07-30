@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <functional>
 #include <cassert>
 #include <cmath>
 #include <chrono>
@@ -23,7 +24,7 @@ void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ &p);
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p);
 // Page 1792 (Equation (5))
-void matrix_factorial(Mat<ZZ_p> &out, long n, void (*M)(Mat<ZZ_p>&, ZZ_p&), ZZ &p);
+void matrix_factorial(Mat<ZZ_p> &out, long n, function<void (Mat<ZZ_p>&, ZZ_p&)> M, ZZ &p);
 // Following functions for testing:
 // matrix definition
 void M(Mat<ZZ_p> &out, ZZ_p &x);
@@ -55,7 +56,7 @@ void M(Mat<ZZ_p> &out, ZZ_p &x){
 
 int main(){
     
-    void (*M_func)(Mat<ZZ_p>&, ZZ_p&) = M;
+    function<void (Mat<ZZ_p>&, ZZ_p&)> M_func = M;
 
     Mat<ZZ_p> answer;
     for(long i = 1024; i <= 1099511627776; i*=2){
@@ -317,7 +318,7 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p){
 /*
  * Calculate M(1)M(2)...M(n) mod p
  */
-void matrix_factorial(Mat<ZZ_p> &out, long n, void (*M)(Mat<ZZ_p>&, ZZ_p&), ZZ &p){
+void matrix_factorial(Mat<ZZ_p> &out, long n, function<void (Mat<ZZ_p>&, ZZ_p&)> M, ZZ &p){
     long rtn = sqrt(n);
     
     vector<Mat<ZZ_p>> seg_prods(rtn+1);
