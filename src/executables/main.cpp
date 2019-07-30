@@ -26,7 +26,7 @@ int main()
 	std::vector<Elt<int>> parent_layer;
 	parent_layer = {V};
 
-	std::vector<Elt<int>> ans = test_rforest<Elt<int>, Elt<int>>(A, m);
+	std::vector<Elt<int>> ans = remainder_forest<Elt<int>, Elt<int>>(A, m);
 	print_tree_formatted(mTree);
 
 	print_tree_formatted(stree);
