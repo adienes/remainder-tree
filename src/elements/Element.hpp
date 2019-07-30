@@ -3,6 +3,18 @@
 
 #include <utility>
 #include <ostream>
+#include <type_traits>
+
+//Got this from the following blog:
+//http://ericniebler.com/2013/08/07/universal-references-and-the-copy-constructo/
+//Deals with copy constructor and perfect forwarding problem
+template<typename A, typename B>
+using disable_if_same_or_derived =
+    typename std::enable_if<
+        !std::is_base_of<A,typename
+             std::remove_reference<B>::type
+        >::value
+    >::type;
 
 
 template <typename T>
@@ -13,9 +25,7 @@ class Elt
 
 		Elt() : t() {}
 
-		Elt(const Elt& x) : t(x.t) {}
-
-		template <typename A>
+		template <typename A, typename X = disable_if_same_or_derived<Elt, A>>
 		Elt(A&& a) : t(std::forward<A>(a)) {}
 		//~Elt() { delete t; }
 
