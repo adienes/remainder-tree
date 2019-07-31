@@ -4,6 +4,9 @@
 #include <vector>
 
 template <typename T>
+void print_row(const std::vector<T>&);
+
+template <typename T>
 void print_tree(const std::vector<T>&);
 
 template <typename T>

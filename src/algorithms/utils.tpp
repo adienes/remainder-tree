@@ -56,7 +56,7 @@ vector<T> get_shade(const vector<T>& vals, int k) {
 	right -= N;
 
 	typename vector<T>::const_iterator first = vals.begin() + left;
-	typename vector<T>::const_iterator last = vals.begin() + right;
+	typename vector<T>::const_iterator last = vals.begin() + right + 1;
 	vector<T> slice(first, last);
 
 	return slice;

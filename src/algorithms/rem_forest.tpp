@@ -10,7 +10,6 @@
 #include <vector>
 using std::vector;
 
-
 template <typename T, typename U>
 vector<T> compute_remainder_tree_layer(const vector<T>& A, const vector<U>& m, int l, T& V, U& Y, bool update_forest_vals) {
 	//level is 0-indexed, so the left most is (1<<l)
@@ -77,6 +76,8 @@ vector<T> remainder_tree_in_forest(const vector<T>& A, const vector<U>& m, int r
 	int N = A.size(); //Size of entire segment
 	int M = (N>>recompute_param); //Number of leaves in one subtree
 
+	assert (1<<recompute_param <= N); //Ensures the recompute parameter is not deeper than the tree
+
 	vector<T> C(N); //This will be the final output vector
 	int C_offset = 0;
 
@@ -88,9 +89,6 @@ vector<T> remainder_tree_in_forest(const vector<T>& A, const vector<U>& m, int r
 	} else {
 		//Normally Y will be modified when the top is computed in here!
 		parent_layer = compute_remainder_tree_layer<T,U>(A, m, recompute_param-1, V, Y, update_forest_vals);
-		if (update_forest_vals) {
-			V.mulmod(compute_product_node<T>(A, Y, 1), Y);
-		}
 	}
 
 	//Iterates through the subtrees at layer k
@@ -105,7 +103,6 @@ vector<T> remainder_tree_in_forest(const vector<T>& A, const vector<U>& m, int r
 		//Will only be executed once if recompute_param == 0
 		if ((recompute_param == 0) && update_forest_vals) {
 			Y.div(mTree[1]);
-			V.mulmod(compute_product_node<T>(A, Y, 1), Y);
 		}
 
 
@@ -114,7 +111,13 @@ vector<T> remainder_tree_in_forest(const vector<T>& A, const vector<U>& m, int r
 		//First value of subtree is a little annoying to get to
 		//Note that parent_layer already contains V
 		CTree[1] = parent_layer[C_parent];
-		CTree[1].mulmod(compute_product_node_askew<T,U>(A, mTree[1], sub_root), mTree[1]);
+
+		if (sub_root%2 == 0) {//aka left child
+			CTree[1].mod(mTree[1]);
+		}
+		else {//aka right child
+			CTree[1].mulmod(compute_product_node_askew<T,U>(A, mTree[1], sub_root), mTree[1]);
+		}
 
 		for (int i = 1; i < M; ++i) { //only go up to second-lowest layer
 			CTree[2*i] = CTree[i]%mTree[2*i];
@@ -135,6 +138,9 @@ vector<T> remainder_tree_in_forest(const vector<T>& A, const vector<U>& m, int r
 		C_offset += M;
 	}
 
+	if (update_forest_vals) {
+		V.mulmod(compute_product_node<T>(A, Y, 1), Y);
+	}
 	return C;
 }
 
@@ -147,6 +153,7 @@ vector<T> remainder_forest(const vector<T>& A, const vector<U>& m, int forest_pa
 	int N = A.size(); //Size of entire segment
 	int M = (N>>forest_param); //Number of leaves in one tree
 
+	assert (M <= N); //Ensures that the forest_param is not too deep
 
 	//Ignore all the extra stuff if we just want basic remainder tree
 	if (forest_param == 0) {
@@ -158,7 +165,6 @@ vector<T> remainder_forest(const vector<T>& A, const vector<U>& m, int forest_pa
 	vector<T> C(N); //This will be the final output vector
 	int C_offset = 0;
 
-
 	//Iterates through the subtrees at depth forest_param
 	for (int s = 0; s < (1<<forest_param); ++s) {
 		int sub_root = flatten(forest_param, s);
@@ -167,10 +173,11 @@ vector<T> remainder_forest(const vector<T>& A, const vector<U>& m, int forest_pa
 		vector<U> m_slice = get_shade<U>(m, sub_root);
 
 		vector<T> C_slice = remainder_tree_in_forest<T,U>(A_slice, m_slice, recompute_param, V, Y, true);
-		
-		for (int i = M; i < 2*M; ++i) { //For each leaf in the sub CTree
-			C[i-M + C_offset] = C_slice[i]; //Slot into output vector
+
+		for (int i = 0; i < M; ++i) { //For each leaf in the sub CTree
+			C[i + C_offset] = C_slice[i]; //Slot into output vector, Indexing is slightly different than recompute paradigm
 		}
+
 		C_offset += M;
 	}
 

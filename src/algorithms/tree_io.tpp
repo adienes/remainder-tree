@@ -5,6 +5,15 @@
 #include "utils.hpp"
 
 template <typename T>
+void print_row(const std::vector<T>& row) {
+	for (auto&& i : row) {
+		std::cout << i << " ";
+	}
+	std::cout << std::endl;
+}
+
+
+template <typename T>
 void print_tree(const std::vector<T>& tree) {
 	int nextrightmost = 1;
 	int N = tree.size();

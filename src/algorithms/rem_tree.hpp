@@ -1,5 +1,5 @@
-#ifndef REMAINDERTREE_SRC_ALGORITHMS_REMTREEBASIC_H_
-#define REMAINDERTREE_SRC_ALGORITHMS_REMTREEBASIC_H_
+#ifndef REMAINDERTREE_SRC_ALGORITHMS_REMTREE_H_
+#define REMAINDERTREE_SRC_ALGORITHMS_REMTREE_H_
 
 #include<vector>
 using std::vector;
@@ -24,6 +24,6 @@ vector<T> remainder_tree_padded(vector<T>, vector<U>, const T& V = T(1));
 
 
 
-#include "RemTree_basic.tpp"
+#include "rem_tree.tpp"
 
-#endif // REMAINDERTREE_SRC_ALGORITHMS_REMTREEBASIC_H_
+#endif // REMAINDERTREE_SRC_ALGORITHMS_REMTREE_H_

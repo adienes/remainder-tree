@@ -34,8 +34,9 @@ class Elt
 		bool operator == (const Elt& x) const { return this->t == x.t; }
 
 		//void operator = (const Elt& x) { this->t = x.t; }
-		void operator *= (const Elt& x) { this->t *= x.t; }
-		void operator %= (const Elt& x) { this->t %= x.t; }
+		void operator *= (const Elt& x) { this->mul(x); }
+		void operator %= (const Elt& x) { this->mod(x); }
+		void operator /= (const Elt& x) { this->div(x); }
 
 		//Probably wanna specialize these in most cases so
 		//that it is actually done in-place.
@@ -44,8 +45,7 @@ class Elt
 		void mulmod(const Elt& x, const Elt& y) { this->t = (this->t*x.t)%y.t; }
 
 		//This must be overwritten! Not every type is guaranteed to have nice division
-		//TODO: maybe actually put something here lol
-		void div(const Elt& x) { }
+		void div(const Elt& x) { this->t /= x.t; }
 };
 
 //I recommend adding a specialized print function to display

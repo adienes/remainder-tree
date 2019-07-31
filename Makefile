@@ -7,7 +7,7 @@ OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 LDLIBS := -lntl -lgmp -lgmpxx -pthread
 #LDFLAGS := ...
 #CPPFLAGS := ...
-CXXFLAGS := -Wall -g -march=native -O3
+CXXFLAGS := -Wall -Wextra -g -march=native -O3
 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
