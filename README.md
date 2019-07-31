@@ -85,3 +85,6 @@ Finally finished the matrix factorial algorithm for verifying a single value for
 
 7/26/19
 Progress on the main project is going okay. Ran some timing tests on the matrix factorial algorithm vs the polynomial factorial algorithm to see which one would perform better; the matrix one clearly won by a factor of 2. Will try to include this part of the algorithm to the main code in order for calculating intervals to work out as soon as possible.
+
+7/31/19
+(Andy) spent really quite a lot of time setting up the RemainderForest algorithm to be able to be used concurrently with recomputing the top. Unfortunately I had to break the paradigm a bit of "only pass parameters by value or const references," but the algorithm works now at least. remainder_forest(..) should be used for basically all purposes. I also added chunkify which segements the range into various chunks. In order of 'highest level' space-saving to 'lowest level' it goes approximately Chunk Segmentation --> Remainder Forest --> Recompute Top. We are pretty much ready to do some real computations I think.

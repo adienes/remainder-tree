@@ -24,7 +24,7 @@ vector<bool> random_zz(int B) {
 	vector <Elt<NTL::ZZ> > A_rand (B);
 	vector <Elt<NTL::ZZ> > m_rand (B);
 
-	using namespace std;
+	//using namespace std;
 
 	std::random_device rd;
 	std::mt19937 mt(rd());

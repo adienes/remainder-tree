@@ -3,7 +3,10 @@
 
 #include "../algorithms/intermediate_computation.hpp"
 #include "../algorithms/rem_forest.hpp"
-#include "../searches/benchmarks.hpp"
+
+//#include "../searches/benchmarks.hpp"
+#include <random>
+
 #include "../algorithms/utils.hpp"
 #include "../algorithms/tree_io.hpp"
 #include "../searches/complexity.hpp"
@@ -16,27 +19,27 @@
 
 int main()
 {
+	int B = (1<<6);
 
-	std::vector<Elt<NTL::ZZ>> A = {1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
-	std::vector<Elt<NTL::ZZ>> m = {1, 2, 3, 1, 5, 1, 7, 1, 1, 1, 11, 1, 13, 1, 1, 1};
+	vector <Elt<NTL::ZZ> > A_rand (B);
+	vector <Elt<NTL::ZZ> > m_rand (B);
 
-	auto mTree = subproduct_tree(m);
-	auto stree = subproduct_tree_askew(A, mTree);
+	using namespace std;
 
-	Elt<NTL::ZZ> V = Elt<NTL::ZZ>(14);
-	std::vector<Elt<NTL::ZZ>> parent_layer;
-	parent_layer = {V};
+	random_device rd;
+	mt19937 mt(rd());
+	uniform_int_distribution<int> dist(1, B);
 
-	std::vector<Elt<NTL::ZZ>> ans = remainder_forest<Elt<NTL::ZZ>, Elt<NTL::ZZ>>(A, m, 0, 2);
+	for(int i = 0; i < B; i++){
+		//int bitsize = log2(i+1)+2;	
+		A_rand[i] = dist(mt);
+		m_rand[i] = dist(mt);
+	}
 
-	std::cout << "\n";
-
-	print_tree_formatted(mTree);
-
-	print_tree_formatted(stree);
+	std::vector<Elt<NTL::ZZ>> ans = remainder_forest<Elt<NTL::ZZ>, Elt<NTL::ZZ>>(A_rand, m_rand, 5, 1);
 
 	print_row(ans);
-	print_row(remainder_tree_basic(A,m));
+	print_row(remainder_tree_basic(A_rand,m_rand));
 
 	// std::vector<NTL::ZZ> v;
 	// std::cout << log2(v.max_size()) << std::endl;

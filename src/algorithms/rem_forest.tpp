@@ -76,8 +76,6 @@ vector<T> remainder_tree_in_forest(const vector<T>& A, const vector<U>& m, int r
 	int N = A.size(); //Size of entire segment
 	int M = (N>>recompute_param); //Number of leaves in one subtree
 
-	assert (1<<recompute_param <= N); //Ensures the recompute parameter is not deeper than the tree
-
 	vector<T> C(N); //This will be the final output vector
 	int C_offset = 0;
 
@@ -153,7 +151,7 @@ vector<T> remainder_forest(const vector<T>& A, const vector<U>& m, int forest_pa
 	int N = A.size(); //Size of entire segment
 	int M = (N>>forest_param); //Number of leaves in one tree
 
-	assert (M <= N); //Ensures that the forest_param is not too deep
+	assert ((M>>recompute_param) > 0); //Ensures that the params are not too deep
 
 	//Ignore all the extra stuff if we just want basic remainder tree
 	if (forest_param == 0) {
