@@ -7,9 +7,15 @@
 #include <NTL/matrix.h>
 #include <NTL/ZZ_pX.h> // includes ZZ_p.h and ZZ.h as well
 
-using namespace std;
+using std::vector;
 using namespace std::chrono;
-using namespace NTL;
+using NTL::Mat;
+using NTL::ZZ_p;
+using NTL::ZZ_pX;
+using NTL::ZZ;
+
+
+// TODO: add return type to final algorithm
 
 // Reference: https://www.dropbox.com/home/urop2019/literature?preview=Bostan%2C+Gaudry%2C+Schost+-+Linear+recurrences+with+polynomial+coefficients+and+application+to+integer+factorization+and+Cartier-Manin+operator.pdf
 // Page 1781 (Lemma 1)
@@ -21,13 +27,13 @@ void find_delta(vector<ZZ_p> &out, ZZ &p, ZZ_p &a);
 void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ &p);
 void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &p);
 // Page 1786-8 (Section 4)
-void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ &p);
-void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p);
+void multieval_prod(vector<Mat<ZZ_p>> &out, std::function<void (Mat<ZZ_p>&, ZZ_p&)> A, ZZ &p);
+void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, std::function<void (Mat<ZZ_p>&, ZZ_p&)> A, ZZ &p);
 // Page 1792 (Equation (5))
-void matrix_factorial(Mat<ZZ_p> &out, long n, function<void (Mat<ZZ_p>&, ZZ_p&)> M, ZZ &p);
+void matrix_factorial(Mat<ZZ_p> &out, long n, std::function<void (Mat<ZZ_p>&, ZZ_p&)> A, ZZ &p);
 // Following functions for testing:
 // matrix definition
-void M(Mat<ZZ_p> &out, ZZ_p &x);
+void A(Mat<ZZ_p> &out, ZZ_p &x);
 // print contents of a vector
 template <typename T>
 void print(vector<T> vec);
@@ -36,7 +42,7 @@ void print(vector<T> vec);
 /*
  * Evaluate M(x), returned in out
  */
-void M(Mat<ZZ_p> &out, ZZ_p &x){
+void A(Mat<ZZ_p> &out, ZZ_p &x){
     ZZ_p zero;
     zero.init(x.modulus());
     zero = 0;
@@ -56,23 +62,23 @@ void M(Mat<ZZ_p> &out, ZZ_p &x){
 
 int main(){
     
-    function<void (Mat<ZZ_p>&, ZZ_p&)> M_func = M;
+    std::function<void (Mat<ZZ_p>&, ZZ_p&)> A_func = A;
 
     Mat<ZZ_p> answer;
-    for(long i = 1024; i <= 1099511627776; i*=2){
+    for(long i = 1073741824; i <= 1073741824; i*=2){
         ZZ p;
         NextPrime(p, ZZ(i));
         long p1;
         conv(p1, p-1);
         mul(p, p, p);
         uint64_t start = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-        matrix_factorial(answer, p1, M_func, p);
+        matrix_factorial(answer, p1, A_func, p);
         uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count() - start;
 
-        //cout << "final answer: " << answer << endl;
-        cout << time << ", ";
+        std::cout << "final answer: " << answer << std::endl;
+        //std::cout << time << ", ";
     }
-    cout << endl;
+    std::cout << std::endl;
 
     
 }
@@ -80,12 +86,12 @@ int main(){
 template<typename T>
 void print(vector<T> vec){
     for(long i = 0; i < vec.size(); i++){
-        cout << vec[i];
+        std::cout << vec[i];
         if(i < vec.size()-1){
-            cout << ", ";
+            std::cout << ", ";
         }
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
 /* 
@@ -261,16 +267,16 @@ void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ
  * M_k(x) = M(x+1)M(x+2)...M(x+k)
  * To calculate M_m(x) at 0, k, ..., mk, use the value M_m/2(x) at 0, k, ..., (m/2)k
  */
-void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ &p){
+void multieval_prod(vector<Mat<ZZ_p>> &out, std::function<void (Mat<ZZ_p>&, ZZ_p&)> A, ZZ &p){
     ZZ_p kp;
     kp.init(p);
     kp = out.size()-1;
-    multieval_prod(out, kp, p);
+    multieval_prod(out, kp, A, p);
 }
 /*
  * m := out.size()-1
  */
-void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p){
+void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, std::function<void (Mat<ZZ_p>&, ZZ_p&)> A, ZZ &p){
     long m = out.size()-1;
     
     if(m == 1){
@@ -278,13 +284,13 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p){
         one.init(p);
         one = 1;
         ZZ_p kone = k+1;
-        M(out[0], one);
-        M(out[1], kone);
+        A(out[0], one);
+        A(out[1], kone);
         return;
     }
 
     vector<Mat<ZZ_p>> lower_layer(m/2+1);
-    multieval_prod(lower_layer, k, p);
+    multieval_prod(lower_layer, k, A, p);
    
     vector<Mat<ZZ_p>> ll_extend(lower_layer.size());
     ZZ_p m21k = k*(m/2+1);
@@ -308,7 +314,7 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p){
         for(long i = 0; i < out.size(); i++){
             ZZ_p ikm = k*i + m;
             Mat<ZZ_p> extra;
-            M(extra, ikm);
+            A(extra, ikm);
             mul(out[i], extra, out[i]);
         }
     }
@@ -318,11 +324,11 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, ZZ &p){
 /*
  * Calculate M(1)M(2)...M(n) mod p
  */
-void matrix_factorial(Mat<ZZ_p> &out, long n, function<void (Mat<ZZ_p>&, ZZ_p&)> M, ZZ &p){
+void matrix_factorial(Mat<ZZ_p> &out, long n, std::function<void (Mat<ZZ_p>&, ZZ_p&)> A, ZZ &p){
     long rtn = sqrt(n);
     
     vector<Mat<ZZ_p>> seg_prods(rtn+1);
-    multieval_prod(seg_prods, p);
+    multieval_prod(seg_prods, A, p);
 
     if(n < rtn*rtn + rtn){
         for(long i = seg_prods.size()-2; i > 0; i--){
@@ -333,7 +339,7 @@ void matrix_factorial(Mat<ZZ_p> &out, long n, function<void (Mat<ZZ_p>&, ZZ_p&)>
             ZZ_p x;
             x.init(p);
             x = i;
-            M(extra, x);
+            A(extra, x);
             mul(seg_prods[0], extra, seg_prods[0]);
         }
     }
@@ -346,7 +352,7 @@ void matrix_factorial(Mat<ZZ_p> &out, long n, function<void (Mat<ZZ_p>&, ZZ_p&)>
             ZZ_p x;
             x.init(p);
             x = i;
-            M(extra, x);
+            A(extra, x);
             mul(seg_prods[0], extra, seg_prods[0]);
         }
     }

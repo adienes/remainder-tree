@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 
+#include "utils.hpp"
 
 /*
  * Inputs: a function that generates A in a given range, a function that generates m in a given range,
@@ -19,10 +20,12 @@
  */
 
 template <typename T, typename U>
-vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (int, int)>&,
-											const std::function<vector<U> (int, int)>&,
-											const std::function<T (int, U)>&,
-											int, int, int,
-											int forest_param = 0, int recompute_param = 0, T V = T(1));
+vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>&,
+											const std::function<vector<U> (long, long)>&,
+											const std::function<T (long, U, const std::function<T (long)>&, const PolyMatrix&)>&,
+											long, long, long,
+											long forest_param = 0, long recompute_param = 0, const PolyMatrix& formula = {});
+
+#include "rem_chunk.tpp"
 
 #endif //REMAINDERTREE_SRC_ALGORITHMS_REMCHUNK_H_

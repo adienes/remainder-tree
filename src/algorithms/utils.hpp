@@ -4,6 +4,14 @@
 #include <vector>
 #include "../elements/Element.hpp"
 
+/* PolyMatrix: Matrix of polys w/ coeffs represented by binary arrays
+ * []: row index
+ * [][]: column index
+ * [][][]: polynomial coefficient at x^index
+ * [][][][]: ith least significant digit base 2 of coefficient
+ */
+typedef std::vector<std::vector<std::vector<std::vector<bool>>>> PolyMatrix; 
+
 bool is_power2(int);
 
 int flatten(int, int);

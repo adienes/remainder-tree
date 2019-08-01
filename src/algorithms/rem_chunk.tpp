@@ -10,11 +10,11 @@ using std::vector;
 
 
 template <typename T, typename U>
-vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (int, int)>& A_gen,
-											const std::function<vector<U> (int, int)>& m_gen,
-											const std::function<T (int, U)>& V_gen,
-											int lower_bound, int upper_bound, int chunk_size,
-											int forest_param, int recompute_param, T V) {
+vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>& A_gen,
+											const std::function<vector<U> (long, long)>& m_gen,
+											const std::function<T (long, U, const std::function<T (long)>&, const PolyMatrix&)>& V_gen,
+											long lower_bound, long upper_bound, long chunk_size,
+											long forest_param, long recompute_param, const PolyMatrix& formula) {
 
 
 	assert (is_power2(upper_bound-lower_bound+1) && is_power2(chunk_size));
@@ -23,17 +23,19 @@ vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (int,
 
 	vector<std::function<vector<T> ()>> chunk_generators();
 	chunk_generators.reserve((upper_bound-lower_bound+1)/chunk_size);
-
+    
+    auto plus1 = [](long x)->long{return x+1;};
+    std::function<T (long)> A_single_gen = std::bind(A_gen, _1, std::bind(plus1, _1));
 	
-	int _UB = lower_bound+chunk_size-1; //UB stands for upper bound
-	int _LB = lower_bound;
+	long _UB = lower_bound+chunk_size-1; //UB stands for upper bound
+	long _LB = lower_bound;
 
-	while (_UB <= upper_bound) {
+	while (_UB <= upper_bound) { // TODO: calculate the extra bit between last valid _UB and upper_bound
 		vector<T> _A = A_gen(_LB, _UB);
 		vector<U> _m = m_gen(_LB, _UB);
 
 		U _Y = compute_product_node<U> (_m, 1);
-		T _V = V_gen<T,U>(chunk_LB-1, _Y); //TODO: maybe the -1 should be gone on first parameter
+		T _V = V_gen<T,U>(_LB, _Y, A_single_gen, formula);
 
 	
 		std::function<vector<T> ()> chunk_func = std::bind(remainder_forest<T,U>, _A, _m, forest_param, recompute_param, _V, _Y);
