@@ -6,6 +6,7 @@
 
 #include "utils.hpp"
 
+
 /*
  * Inputs: 
  * long n: the upper bound of the factorial calculation, 
@@ -17,9 +18,10 @@
  * The value of the factorial A[0]A[1]...A[n-1] mod m
  *
  */
-
 template <typename T, typename U>
-T calculate_initial(long n, U m, std::function<T (long)> get_A, const PolyMatrix& formula = {});
+T calculate_initial(long n, U m, std::function<vector<T> (long, long)> get_A, const PolyMatrix& formula = {});
+
+void get_formula_matrix(Mat<ZZ_pX>& out, long dim, const PolyMatrix& formula);    
 
 
 

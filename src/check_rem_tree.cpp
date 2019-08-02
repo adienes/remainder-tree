@@ -2,9 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <chrono>
-#include <NTL/ZZ.h>
-#include <NTL/ZZ_p.h>
-#include <NTL/ZZ_pX.h>
+#include <NTL/ZZ_pX.h> // contains ZZ_p.h and ZZ.h
 
 using namespace std;
 using namespace std::chrono;

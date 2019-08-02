@@ -22,7 +22,7 @@
 template <typename T, typename U>
 vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>&,
 											const std::function<vector<U> (long, long)>&,
-											const std::function<T (long, U, const std::function<T (long)>&, const PolyMatrix&)>&,
+											const std::function<T (long, U, const std::function<vector<vector<T> (long)>&, const PolyMatrix&)>&,
 											long, long, long,
 											long forest_param = 0, long recompute_param = 0, const PolyMatrix& formula = {});
 

@@ -61,7 +61,6 @@ void A(Mat<ZZ_p> &out, ZZ_p &x){
 }
 
 int main(){
-    
     std::function<void (Mat<ZZ_p>&, ZZ_p&)> A_func = A;
 
     Mat<ZZ_p> answer;
@@ -79,7 +78,6 @@ int main(){
         //std::cout << time << ", ";
     }
     std::cout << std::endl;
-
     
 }
 
