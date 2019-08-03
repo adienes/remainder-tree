@@ -1,9 +1,6 @@
-#include <vector>
-#include <functional>
 #include <cassert>
 
-#include "utils.hpp"
-#include "factorial_algs.cpp"
+#include "factorial_algs.h"
 
 #include <NTL/matrix.h>
 #include <NTL/ZZ_pX.h> // includes ZZ_p.h and ZZ.h
@@ -14,9 +11,10 @@ using NTL::ZZ_pX;
 
 
 template <typename T, typename U>
-T calculate_initial(long n, U m, std::function<vector<T> (long, long)> get_A, const PolyMatrix& formula = {}) {
+T calculate_factorial(long n, U m, std::function<vector<T> (long, long)> get_A, const PolyMatrix& formula = {}) {
     return naive_factorial(n, m, get_A); // TODO: replace temporary measure with something better
-
+}
+#include "custom_factorials.tpp"
 /*
     if(formula == {}){
         return naive_factorial(n, m, get_A); // TODO: include factorial formulas
@@ -76,8 +74,6 @@ void get_formula_matrix(Mat<ZZ_pX>& out, long dim, const PolyMatrix& formula){
             out.put(poly, row, col);
         }
     }
-*/
 }
+*/
 
-
-// #include "custom_factorial.tpp"

@@ -19,7 +19,7 @@
  *
  */
 template <typename T, typename U>
-T calculate_initial(long n, U m, std::function<vector<T> (long, long)> get_A, const PolyMatrix& formula = {});
+T calculate_factorial(long n, U m, std::function<vector<T> (long, long)> get_A, const PolyMatrix& formula = {});
 
 void get_formula_matrix(Mat<ZZ_pX>& out, long dim, const PolyMatrix& formula);    
 
