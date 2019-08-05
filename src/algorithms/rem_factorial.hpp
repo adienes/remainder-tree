@@ -24,7 +24,6 @@ T calculate_factorial(long n, U m, std::function<vector<T> (long, long)> get_A, 
 void get_formula_matrix(Mat<ZZ_pX>& out, long dim, const PolyMatrix& formula);    
 
 
-
 #include "rem_factorial.tpp"
 
 #endif // REMAINDERTREE_SRC_ALGORITHMS_REMFACTORIAL_H_

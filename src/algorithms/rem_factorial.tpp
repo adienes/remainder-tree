@@ -14,7 +14,8 @@ template <typename T, typename U>
 T calculate_factorial(long n, U m, std::function<vector<T> (long, long)> get_A, const PolyMatrix& formula = {}) {
     return naive_factorial(n, m, get_A); // TODO: replace temporary measure with something better
 }
-#include "custom_factorials.tpp"
+
+#include "factorial_custom.tpp"
 /*
     if(formula == {}){
         return naive_factorial(n, m, get_A); // TODO: include factorial formulas

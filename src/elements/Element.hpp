@@ -52,5 +52,5 @@ class Elt
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const Elt<T>& x) { return os<<x.t; }
 
-#include "elt_all.tpp"
+#include "elt_custom.tpp"
 #endif // REMAINDERTREE_SRC_ELEMENTS_ELEMENT_H_

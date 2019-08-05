@@ -1,6 +1,13 @@
-#include "factorial_algs.h"
+#include "factorial_algs.hpp"
 
-#include "utils.h"
+#include "utils.hpp"
+
+using std::vector;
+
+using NTL::ZZ_pX;
+using NTL::ZZ_p;
+using NTL::ZZ;
+using NTL::Mat;
 
 /*
  * Finds the product A[0]A[1]...A[n-1] using:
@@ -10,7 +17,7 @@
  */
 
 template<typename T, typename U>
-T naive_factorial(long n, U m, std::function<vector<T> (long, long)>& get_A){
+T naive_factorial(long n, U& m, std::function<vector<T> (long, long)>& get_A){
     // use get node method in utils.h
     return compute_product_node<T, U>(get_A(0, n), m, 1);
 }
