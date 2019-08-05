@@ -8,10 +8,10 @@ using std::vector;
 
 
 template <typename T, typename U>
-vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>& A_gen, // lower and upper bounds are inclusive-exclusive
-											const std::function<vector<U> (long, long)>& m_gen, // lower and upper bounds are inclusive-exclusive
-											long lower_bound, long upper_bound, long chunk_size,
-											long forest_param, long recompute_param, const PolyMatrix& formula) {
+vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long long, long long)>& A_gen, // lower and upper bounds are inclusive-exclusive
+											const std::function<vector<U> (long long, long long)>& m_gen, // lower and upper bounds are inclusive-exclusive
+											long long lower_bound, long long upper_bound, long long chunk_size,
+											long long forest_param, long long recompute_param, const PolyMatrix& formula) {
 
 
 	assert (is_power2(upper_bound-lower_bound) && is_power2(chunk_size));
@@ -21,8 +21,8 @@ vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long
 	vector<std::function<vector<T> ()>> chunk_generators();
 	chunk_generators.reserve((upper_bound-lower_bound)/chunk_size);
     
-	long _UB = lower_bound+chunk_size; //UB stands for upper bound
-	long _LB = lower_bound;
+	long long _UB = lower_bound+chunk_size; //UB stands for upper bound
+	long long _LB = lower_bound;
 
 	while (_UB <= upper_bound) { // TODO: calculate the extra bit between last valid _UB and upper_bound
 		vector<T> _A = A_gen(_LB, _UB);

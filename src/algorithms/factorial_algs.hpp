@@ -12,11 +12,11 @@
 
 
 template<typename T, typename U>
-T naive_factorial(long n, U& m, std::function<std::vector<T> (long, long)>& get_A);
+T naive_factorial(long long n, U& m, std::function<std::vector<T> (long long, long long)>& get_A);
 
-NTL::ZZ_p poly_factorial(long n, NTL::ZZ& m, NTL::ZZ_pX& poly);
+NTL::ZZ_p poly_factorial(long long n, NTL::ZZ& m, NTL::ZZ_pX& poly);
 
-NTL::Mat<NTL::ZZ_p> matrix_factorial(long n, NTL::ZZ& m, NTL::Mat<NTL::ZZ_pX>& matrix);
+NTL::Mat<NTL::ZZ_p> matrix_factorial(long long n, NTL::ZZ& m, NTL::Mat<NTL::ZZ_pX>& matrix);
 
 
 #endif //REMAINDERTREE_SRC_ALGORITHMS_FACTORIALALGS_H_

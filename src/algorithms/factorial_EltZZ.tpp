@@ -11,7 +11,7 @@ using NTL::Mat;
 
 
 template<>
-Elt<ZZ> calculate_factorial(long n, Elt<ZZ> m, std::function<vector<Elt<ZZ>> (long, long)> get_A, const PolyMatrix& formula = {}){
+Elt<ZZ> calculate_factorial(long long n, Elt<ZZ> m, std::function<vector<Elt<ZZ>> (long long, long long)> get_A, const PolyMatrix& formula = {}){
     assert(("Element given is not a square matrix.", formula.size() == formula[0].size()));
     
     // Matrix-type elements
@@ -29,11 +29,11 @@ Elt<ZZ> calculate_factorial(long n, Elt<ZZ> m, std::function<vector<Elt<ZZ>> (lo
         
         // Otherwise, do poly_factorial
         ZZ_pX poly;
-        for(long exp = 0; exp < formula[0][0].size(); exp++){                                                                                                     
+        for(long long exp = 0; exp < formula[0][0].size(); exp++){                                                                                                     
             ZZ_p coeff;
             coeff.init(m.t);
             coeff = 0;
-            for(long digit = formula[0][0][exp].size()-1; digit >= 0; digit--){
+            for(long long digit = formula[0][0][exp].size()-1; digit >= 0; digit--){
                 coeff *= 2;
                 coeff += formula[0][0][exp][digit] ? 1 : 0;
             }
@@ -53,11 +53,11 @@ Elt<ZZ> calculate_factorial(long n, Elt<ZZ> m, std::function<vector<Elt<ZZ>> (lo
         Mat<ZZ_pX> matrix;
         matrix.SetDims(1, 1);
         ZZ_pX poly;
-        for(long exp = 0; exp < formula[0][0].size(); exp++){
+        for(long long exp = 0; exp < formula[0][0].size(); exp++){
             ZZ_p coeff;
             coeff.init(m.t); 
             coeff = 0;
-            for(long digit = formula[0][0][exp].size()-1; digit >= 0; digit--){
+            for(long long digit = formula[0][0][exp].size()-1; digit >= 0; digit--){
                 coeff *= 2;
                 coeff += formula[0][0][exp][digit] ? 1 : 0;
             }
