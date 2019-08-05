@@ -151,6 +151,7 @@ vector<T> remainder_forest(const vector<T>& A, const vector<U>& m, int forest_pa
 	int N = A.size(); //Size of entire segment
 	int M = (N>>forest_param); //Number of leaves in one tree
 
+	assert (is_power2(N)); //This alg is not built for non-powers of 2.
 	assert ((M>>recompute_param) > 0); //Ensures that the params are not too deep
 
 	//Ignore all the extra stuff if we just want basic remainder tree

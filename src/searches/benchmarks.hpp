@@ -7,7 +7,7 @@
 
 std::vector<bool> constant_slow(int);
 
-std::vector<bool> random_zz(int);
+std::vector<bool> random_zz(int, int, int);
 
 #include "benchmarks.cpp" //TODO: this is horrible form! not necessary as before because not templates
 

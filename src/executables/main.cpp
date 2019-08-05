@@ -4,12 +4,11 @@
 #include "../algorithms/intermediate_computation.hpp"
 #include "../algorithms/rem_forest.hpp"
 
-//#include "../searches/benchmarks.hpp"
+#include "../searches/benchmarks.hpp"
 #include <random>
 
 #include "../algorithms/utils.hpp"
 #include "../algorithms/tree_io.hpp"
-#include "../searches/complexity.hpp"
 #include "../algorithms/rem_tree.hpp"
 
 #include "../elements/Element.hpp"
@@ -17,9 +16,15 @@
 #include <NTL/ZZ.h>
 
 
+#include "../searches/benchmarks.hpp"
+#include "../searches/complexity.hpp"
+
+#include <chrono>
+
+
 int main()
 {
-	int B = (1<<6);
+	int B = (1<<25);
 
 	vector <Elt<NTL::ZZ> > A_rand (B);
 	vector <Elt<NTL::ZZ> > m_rand (B);
@@ -36,15 +41,27 @@ int main()
 		m_rand[i] = dist(mt);
 	}
 
-	std::vector<Elt<NTL::ZZ>> ans = remainder_forest<Elt<NTL::ZZ>, Elt<NTL::ZZ>>(A_rand, m_rand, 5, 1);
 
-	print_row(ans);
-	print_row(remainder_tree_basic(A_rand,m_rand));
 
-	// std::vector<NTL::ZZ> v;
-	// std::cout << log2(v.max_size()) << std::endl;
+	auto start = std::chrono::high_resolution_clock::now();
 
-	// std::vector<std::function< std::vector<bool> (int N)>> searchfns = {constant_slow, random_zz};
+	vector<Elt<NTL::ZZ>> ans = remainder_forest<Elt<NTL::ZZ>, Elt<NTL::ZZ>>(A_rand, m_rand, 0, 0);
+	vector<Elt<NTL::ZZ>> control (1);
+	//auto control = remainder_tree_basic(A_rand, m_rand);
+
+	auto end = std::chrono::high_resolution_clock::now();
+	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds> (end-start).count();
+	
+	//print_row(ans);
+	if (ans == control) {
+		std::cout << "VERIFIED TO BE CORRECT" << std::endl;
+	}
+
+	std::cout << "TIME TAKEN: " << elapsed << " MILISECONDS" << std::endl;
+
+	// auto temp = random_zz(8);
+
+	// std::vector<std::function< std::vector<bool> (int N)>> searchfns = {random_zz};
 
 	// auto cg = complexity_graph(1<<6, 1<<4, searchfns);
 
@@ -58,6 +75,6 @@ int main()
 
 	// write_complexity_graph(cg);
 
-	return 1;
+	// return 1;
 
 }

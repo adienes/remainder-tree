@@ -3,10 +3,12 @@
 #include <chrono>
 #include <fstream>
 
+using std::vector;
+
 vector <vector<int>> complexity_graph(int N, int d, vector <std::function< vector<bool> (int N)>> search_funcs) {
 	int s = search_funcs.size();
 
-	vector<vector<int>> graph;
+	vector<vector<int>> graph(1);
 	graph.reserve(d);
 	graph[0] = vector<int> (s+1, 0); //Corresponds to origin---make s+1 larger if there are other data collected.
 	

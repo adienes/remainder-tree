@@ -1,6 +1,8 @@
 //std::function< std::vector<bool> (int N)> remember this is what is being passed in!
 #include <NTL/ZZ.h>
+
 #include "../elements/Element.hpp"
+#include "../algorithms/rem_forest.hpp"
 
 #include <vector>
 #include <random>
@@ -19,7 +21,7 @@ vector<bool> constant_slow(int B) {
 }
 
 
-vector<bool> random_zz(int B) {
+vector<bool> random_zz(int B, int forest_param, int recompute_param) {
 
 	vector <Elt<NTL::ZZ> > A_rand (B);
 	vector <Elt<NTL::ZZ> > m_rand (B);
@@ -30,13 +32,14 @@ vector<bool> random_zz(int B) {
 	std::mt19937 mt(rd());
 	std::uniform_int_distribution<int> dist(1, B);
 
-	for(int i = 0; i < B; i++){
+	for(int i = 0; i < B; ++i){
 		//int bitsize = log2(i+1)+2;
-
-		
 		A_rand[i] = dist(mt);
 		m_rand[i] = dist(mt);
 	}
 
-	return vector<bool> ();
+	remainder_forest(A_rand, m_rand, forest_param, recompute_param);
+
+	vector<bool> ret(1);
+	return ret;
 }
