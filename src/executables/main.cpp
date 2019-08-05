@@ -24,7 +24,7 @@
 
 int main()
 {
-	long long B = (1<<25);
+	long long B = (1<<19);
 
 	vector <Elt<NTL::ZZ> > A_rand (B);
 	vector <Elt<NTL::ZZ> > m_rand (B);

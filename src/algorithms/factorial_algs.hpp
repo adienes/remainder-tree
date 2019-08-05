@@ -10,13 +10,15 @@
 #include <NTL/ZZ_pX.h>
 #include <NTL/matrix.h>
 
-
+//TODO: make these all const
 template<typename T, typename U>
-T naive_factorial(long long n, U& m, std::function<std::vector<T> (long long, long long)>& get_A);
+T naive_factorial(long long n, U& m, const std::function<std::vector<T> (long long, long long)>& get_A);
 
-NTL::ZZ_p poly_factorial(long long n, NTL::ZZ& m, NTL::ZZ_pX& poly);
+NTL::ZZ_p poly_factorial(long long n, const NTL::ZZ& m, const NTL::ZZ_pX& poly);
 
-NTL::Mat<NTL::ZZ_p> matrix_factorial(long long n, NTL::ZZ& m, NTL::Mat<NTL::ZZ_pX>& matrix);
+NTL::Mat<NTL::ZZ_p> matrix_factorial(long long n, const NTL::ZZ& m, const NTL::Mat<NTL::ZZ_pX>& matrix);
 
+
+#include "factorial_custom.tpp"
 
 #endif //REMAINDERTREE_SRC_ALGORITHMS_FACTORIALALGS_H_

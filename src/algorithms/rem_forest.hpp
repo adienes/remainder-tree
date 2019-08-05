@@ -45,11 +45,6 @@ std::vector<T> remainder_forest(const std::vector<T>&, const std::vector<U>&, lo
 template <typename T, typename U>
 std::vector<T> remainder_forest(const std::vector<T>&, const std::vector<U>&);
 
-template <typename T, typename U>
-std::vector<T> test_rforest(const std::vector<T>& vals, const std::vector<U>& none) {
-	std::vector<T> ret(5);
-	return ret;
-}
 
 #include "rem_forest.tpp"
 
