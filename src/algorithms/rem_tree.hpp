@@ -7,7 +7,6 @@ using std::vector;
 //The most bare-bones remainder tree possible.
 //No space-time tradeoffs implemented, no parallelization, no hard drive mem, etc.
 //It assumes the types are Elt<>, so wrapping your object in Elt is strongly recommended.
-//WARNING: array length is stored in int, so very large trees may overflow.
 template <typename T, typename U>
 vector<T> remainder_tree_basic(const vector<T>&, const vector<U>&, const T& V = T(1));
 

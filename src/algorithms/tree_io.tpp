@@ -15,10 +15,10 @@ void print_row(const std::vector<T>& row) {
 
 template <typename T>
 void print_tree(const std::vector<T>& tree) {
-	int nextrightmost = 1;
-	int N = tree.size();
+	long nextrightmost = 1;
+	long N = tree.size();
 
-	for(int i = 1; i < N; ++i) {
+	for(long i = 1; i < N; ++i) {
 		std::cout << tree[i];
 
 		if (i == nextrightmost) {
@@ -38,11 +38,11 @@ void print_tree(const std::vector<T>& tree) {
 
 //for internal use only
 template <typename T>
-void _print_tree_formatted(const std::string& prefix, const std::vector<T>& tree, int i, int j, bool isLeft)
+void _print_tree_formatted(const std::string& prefix, const std::vector<T>& tree, long i, long j, bool isLeft)
 {
 
-	int loc = flatten(i,j);
-	int N = tree.size();
+	long loc = flatten(i,j);
+	long N = tree.size();
 	if (loc >= N) { return; }
 
     std::cout << prefix;

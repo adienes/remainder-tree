@@ -24,7 +24,7 @@
 
 int main()
 {
-	int B = (1<<25);
+	long B = (1<<25);
 
 	vector <Elt<NTL::ZZ> > A_rand (B);
 	vector <Elt<NTL::ZZ> > m_rand (B);
@@ -33,9 +33,9 @@ int main()
 
 	random_device rd;
 	mt19937 mt(rd());
-	uniform_int_distribution<int> dist(1, B);
+	uniform_int_distribution<long> dist(1, B);
 
-	for(int i = 0; i < B; i++){
+	for(long i = 0; i < B; i++){
 		//int bitsize = log2(i+1)+2;	
 		A_rand[i] = dist(mt);
 		m_rand[i] = dist(mt);
@@ -61,7 +61,7 @@ int main()
 
 	// auto temp = random_zz(8);
 
-	// std::vector<std::function< std::vector<bool> (int N)>> searchfns = {random_zz};
+	// std::vector<std::function< std::vector<bool> (long N)>> searchfns = {random_zz};
 
 	// auto cg = complexity_graph(1<<6, 1<<4, searchfns);
 

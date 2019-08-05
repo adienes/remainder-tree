@@ -11,11 +11,11 @@
 //This computes the entire layer rather than a specific value, as there are better ways to
 //compute single values of a accumulating remainder tree! (aka the V algorithm)
 template <typename T, typename U>
-std::vector<T> compute_remainder_tree_layer(const std::vector<T>&, const std::vector<U>&, int, T&, U&, bool update_forest_vals = false);
+std::vector<T> compute_remainder_tree_layer(const std::vector<T>&, const std::vector<U>&, long, T&, U&, bool update_forest_vals = false);
 
 
 template <typename T, typename U>
-std::vector<T> remainder_tree_in_forest(const std::vector<T>&, const std::vector<U>&, int, T&, U&, bool update_forest_vals = false);
+std::vector<T> remainder_tree_in_forest(const std::vector<T>&, const std::vector<U>&, long, T&, U&, bool update_forest_vals = false);
 
 /*
  * Like before, pass in A, m as vectors. Also pass in a starting V and a parameter 'k'
@@ -34,12 +34,12 @@ std::vector<T> remainder_tree_in_forest(const std::vector<T>&, const std::vector
  * If you just want to call remainder forest not chunkified, make sure to use the overloaded version below.
  */
 template <typename T, typename U>
-std::vector<T> remainder_forest(const std::vector<T>&, const std::vector<U>&, int, int, T& V, U& Y);
+std::vector<T> remainder_forest(const std::vector<T>&, const std::vector<U>&, long, long, T& V, U& Y);
 
 //Overloaded purposefully. This one passes in V by value and does not need Y. It does not modify any parameters.
 //This is the one that should be used 'standalone,' rather than inside chunkify.
 template <typename T, typename U>
-std::vector<T> remainder_forest(const std::vector<T>&, const std::vector<U>&, int, int, T V = T(1));
+std::vector<T> remainder_forest(const std::vector<T>&, const std::vector<U>&, long, long, T V = T(1));
 
 //Provides some default arguments (forest_param = 0, recompute_param = 0, V = T(1))
 template <typename T, typename U>

@@ -45,7 +45,7 @@ class Elt
 		void mulmod(const Elt& x, const Elt& y) { this->t = (this->t*x.t)%y.t; }
 
 		//This must be overwritten! Not every type is guaranteed to have nice division
-		void div(const Elt& x) { this->t /= x.t; }
+		void div(const Elt& x) { }//this->t /= x.t; }
 };
 
 //I recommend adding a specialized print function to display

@@ -16,7 +16,6 @@
  *
  * Output: a vector of function pointer which, when run, return a vector of remainders for their assigned range
  * TODO: Maybe I should attach a value of how large each vector of remainders is.
- * TODO: Uses only ints, and is likely to overflow!
  */
 
 template <typename T, typename U>
@@ -24,7 +23,7 @@ vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long
 											const std::function<vector<U> (long, long)>&,
 											const std::function<T (long, U, const std::function<vector<vector<T> (long)>&, const PolyMatrix&)>&,
 											long, long, long,
-											long forest_param = 0, long recompute_param = 0, const PolyMatrix& formula = {});
+											int forest_param = 0, long recompute_param = 0, const PolyMatrix& formula = {});
 
 #include "rem_chunk.tpp"
 

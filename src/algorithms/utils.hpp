@@ -12,9 +12,9 @@
  */
 typedef std::vector<std::vector<std::vector<std::vector<bool>>>> PolyMatrix; 
 
-bool is_power2(int);
+bool is_power2(long);
 
-int flatten(int, int);
+long flatten(long, long);
 
 /*
  * TODO: this returns a smaller vector of just the subtree rooted at that node.
@@ -25,12 +25,12 @@ int flatten(int, int);
  * how it interacts with incomplete trees.
  */
 template <typename T>
-std::vector<T> get_subtree (const std::vector<T>&, int);
+std::vector<T> get_subtree (const std::vector<T>&, long);
 
 //Similar to above. Returns the slice of the input vector which corresponds to
 //the leaves of a subtree rooted at k.
 template <typename T>
-std::vector<T> get_shade(const std::vector<T>&, int);
+std::vector<T> get_shade(const std::vector<T>&, long);
 
 template<typename T>
 std::vector<T> elt_to_base(const std::vector<Elt<T>>&);
