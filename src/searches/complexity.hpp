@@ -5,7 +5,7 @@
 #include <functional>
 #include <string>
 
-/* TODO: It is slightly dangerous to cast milliseconds to long long.
+/* TODO: It is slightly dangerous to cast milliseconds to long.
  * TODO: Does not make any checks for powers of 2 etc. Please only pass in powers of 2.
  *
  * This function is a bit of a weird one. I'm assuming that passed in is an upper bound,
@@ -15,9 +15,9 @@
  * Return value is a vector containing the x-value, and then the y-values for each function,
  * plus any other data we may want to collect (dunno what yet) all collected in a vector.
  */
-std::vector <std::vector<long long>> complexity_graph(long long, long long, std::vector <std::function< std::vector<bool> (long long N)>>);
+std::vector <std::vector<long>> complexity_graph(long, long, std::vector <std::function< std::vector<bool> (long N)>>);
 
-void write_complexity_graph (const std::vector<std::vector<long long>>&, std::string);
+void write_complexity_graph (const std::vector<std::vector<long>>&, std::string);
 
 
 #endif //REMAINDERTREE_SRC_SEARCHES_COMPLEXITY_H_

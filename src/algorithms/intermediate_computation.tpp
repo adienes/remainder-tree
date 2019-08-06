@@ -6,11 +6,11 @@ using std::vector;
 
 //used primarily for the m values
 template <typename T>
-vector<T> subproduct_tree(const vector<T>& vals, long long P) {
-	long long N = vals.size(); //N is number of leaves
+vector<T> subproduct_tree(const vector<T>& vals, long P) {
+	long N = vals.size(); //N is number of leaves
 
-	long long left = P; //this will be the leftmost leaf under the subtree rooted at P
-	long long right = P; //similarly the rightmost leaf under subtree rooted at P
+	long left = P; //this will be the leftmost leaf under the subtree rooted at P
+	long right = P; //similarly the rightmost leaf under subtree rooted at P
 	while (left < N) { //stops when left is a leaf. Same as 2*left < 2*N (since have to stop one before)
 		left = 2*left;
 		right = 2*right + 1;
@@ -21,15 +21,15 @@ vector<T> subproduct_tree(const vector<T>& vals, long long P) {
 	//the the span of the chosen subtree
 
 
-	long long M = right - left + 1; //number of leaves in subtree (should still be power2)
+	long M = right - left + 1; //number of leaves in subtree (should still be power2)
 	vector<T> subp_tree(2*M);
 
-	for (long long i = M; i < 2*M; ++i) { // leaves on lowest layer
+	for (long i = M; i < 2*M; ++i) { // leaves on lowest layer
 		subp_tree[i] = vals[left + (i - M)]; //at i = M this gives left, and i = 2*M - 1 gives right
 	}
 
 	// Calculate the rest of the product tree mTree
-	for (long long i = M - 1; i > 0; --i) {
+	for (long i = M - 1; i > 0; --i) {
 		//mTree[i] = (mTree[2*i]*mTree[2*i + 1]);
 
 		subp_tree[i] = subp_tree[2*i]*subp_tree[2*i + 1];
@@ -41,11 +41,11 @@ vector<T> subproduct_tree(const vector<T>& vals, long long P) {
 }
 
 template <typename T, typename U>
-vector<T> subproduct_tree_askew(const vector<T>& vals, const vector<U>& mod_tree, long long P) {
-	long long N = vals.size(); //N is number of leaves
+vector<T> subproduct_tree_askew(const vector<T>& vals, const vector<U>& mod_tree, long P) {
+	long N = vals.size(); //N is number of leaves
 
-	long long left = P; //this will be the leftmost leaf under the subtree rooted at P
-	long long right = P; //similarly the rightmost leaf under subtree rooted at P
+	long left = P; //this will be the leftmost leaf under the subtree rooted at P
+	long right = P; //similarly the rightmost leaf under subtree rooted at P
 	while (left < N) { //stops when left_span is a leaf
 		left = 2*left;
 		right = 2*right + 1;
@@ -56,17 +56,17 @@ vector<T> subproduct_tree_askew(const vector<T>& vals, const vector<U>& mod_tree
 	//now left, right store the indices in the ORIGINAL vector which correspond
 	//the the span of the chosen subtree
 
-	long long M = right - left + 1; //number of leaves in subtree (should still be power2)
+	long M = right - left + 1; //number of leaves in subtree (should still be power2)
 	vector<T> subp_tree_askew(2*M);
 
-	for (long long i = M; i < 2*M; ++i) { // leaves on lowest layer
+	for (long i = M; i < 2*M; ++i) { // leaves on lowest layer
 		subp_tree_askew[i] = vals[left + (i - M)]; //at i = M this gives left, and i = 2*M - 1 gives right
 	}
 
 	// Calculate the rest of the product tree aTree, taking mod mTree[1] = m[0]*...*m[N-1]
-	// Using Andy's modified structure such that the notation is more long longuitive and no elements wasted.
-	long long nextleftmost = (M >> 1);
-	for (long long i = M - 1; i > 0; --i) { //alternatively could be Atree[N]
+	// Using Andy's modified structure such that the notation is more longuitive and no elements wasted.
+	long nextleftmost = (M >> 1);
+	for (long i = M - 1; i > 0; --i) { //alternatively could be Atree[N]
 		if (i == nextleftmost) {
 			//TODO: could add something that kills the A[0] value but really might be overkill
 			nextleftmost >>= 1; //traverse up the tree once to the right.
@@ -92,8 +92,8 @@ vector<T> subproduct_tree_askew(const vector<T>& vals, const vector<U>& mod_tree
 
 
 template <typename T>
-T compute_product_node(const vector<T>& vals, long long k) { //typically used to get the value for the m tree
-	long long N = vals.size();
+T compute_product_node(const vector<T>& vals, long k) { //typically used to get the value for the m tree
+	long N = vals.size();
 
 	assert (k < 2*N);
 
@@ -108,8 +108,8 @@ T compute_product_node(const vector<T>& vals, long long k) { //typically used to
 
 //In case we need product with a modulus
 template <typename T, typename U>
-T compute_product_node(const vector<T>& vals, const U& modulus, long long k) { //typically used to get the value for the m tree
-	long long N = vals.size();
+T compute_product_node(const vector<T>& vals, const U& modulus, long k) { //typically used to get the value for the m tree
+	long N = vals.size();
 
 	assert (k < 2*N);
 
@@ -125,12 +125,12 @@ T compute_product_node(const vector<T>& vals, const U& modulus, long long k) { /
 }
 
 template <typename T, typename U>
-T compute_product_node_askew(const vector<T>& vals, const U& modulus, long long k) { //typically used to get the value for the A tree
+T compute_product_node_askew(const vector<T>& vals, const U& modulus, long k) { //typically used to get the value for the A tree
 	if (modulus == 0) { //DEBUG: default value only, 0 should never be passed in!
 		return T();
 	}
 
-	long long N = vals.size();
+	long N = vals.size();
 
 	assert (k < 2*N);
 
@@ -152,7 +152,7 @@ T compute_product_node_askew(const vector<T>& vals, const U& modulus, long long 
 
 //For internal use only, to implement the below.
 template <typename T, typename U>
-T _compute_remainder_tree_value(const vector<T>& A, const U& modulus, long long k, const T& V) {
+T _compute_remainder_tree_value(const vector<T>& A, const U& modulus, long k, const T& V) {
 	if (k == 1) { //return A[0] mod mProd
 		return ((V*A[0])%modulus);
 	}
@@ -174,7 +174,7 @@ T _compute_remainder_tree_value(const vector<T>& A, const U& modulus, long long 
 
 //This is only to test "chunks". It will be replaced, although shouldn't typically be a bottleneck.
 template <typename T, typename U>
-T compute_remainder_tree_value(const vector<T>& A, const vector<U>& m, long long k, const T& V) {
+T compute_remainder_tree_value(const vector<T>& A, const vector<U>& m, long k, const T& V) {
 	assert (A.size() == m.size());
 
 	U modulus = compute_product_node<U> (m, k);

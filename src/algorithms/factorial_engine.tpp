@@ -1,5 +1,3 @@
-#include "factorial_algs.hpp"
-
 #include "utils.hpp"
 
 using std::vector;
@@ -17,18 +15,18 @@ using NTL::Mat;
  */
 
 template<typename T, typename U>
-T naive_factorial(long long n, U& m, std::function<vector<T> (long long, long long)>& get_A){
+T naive_factorial(long n, U& m, std::function<vector<T> (long, long)>& get_A){
     // use get node method in utils.h
     return compute_product_node<T, U>(get_A(0, n), m, 1);
 }
 
 // Helper methods for poly_factorial
-void check_p(ZZ_p &ans, long long p, vector<ZZ_p> coeffs);
-void findF(ZZ_pX &F, ZZ_pX &f, long long rtp);
+void check_p(ZZ_p &ans, long p, vector<ZZ_p> coeffs);
+void findF(ZZ_pX &F, ZZ_pX &f, long rtp);
 void poly_eval(ZZ_pX &h, ZZ_pX &f, ZZ_pX &g);
-void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, long long rtp, long long prtp);
+void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, long rtp, long prtp);
 
-ZZ_p poly_factorial(long long n, ZZ& m, ZZ_pX& poly){
+ZZ_p poly_factorial(long n, ZZ& m, ZZ_pX& poly){
     ZZ_p output;
     check_p(output, n, m, poly);
     return output;
@@ -43,9 +41,9 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
 void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &m);
 void multieval_prod(vector<Mat<ZZ_p>> &out, Mat<ZZ_pX>& matrix, ZZ &m);
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, Mat<ZZ_pX>& matrix, ZZ &m);
-void matrix_factorial(Mat<ZZ_p> &out, long long n, Mat<ZZ_pX>& matrix, ZZ &m);
+void matrix_factorial(Mat<ZZ_p> &out, long n, Mat<ZZ_pX>& matrix, ZZ &m);
 
-Mat<ZZ_p> matrix_factorial(long long n, ZZ& m, Mat<ZZ_pX>& matrix){
+Mat<ZZ_p> matrix_factorial(long n, ZZ& m, Mat<ZZ_pX>& matrix){
      Mat<ZZ_p> output;
      matrix_factorial(output, n, matrix, m);
      return output;
@@ -53,8 +51,8 @@ Mat<ZZ_p> matrix_factorial(long long n, ZZ& m, Mat<ZZ_pX>& matrix){
 
 void A(Mat<ZZ_p>& out, ZZ_p& x, Mat<ZZ_pX>& in){
     out.SetDims(in.NumRows(), in.NumCols());
-    for(long long row = 0; row < in.NumRows(); row++){
-        for(long long col = 0; col < in.NumCols(); col++){
+    for(long row = 0; row < in.NumRows(); row++){
+        for(long col = 0; col < in.NumCols(); col++){
             out.put(eval(in.get(row, col), x), row, col);
         }
     }
@@ -63,22 +61,22 @@ void A(Mat<ZZ_p>& out, ZZ_p& x, Mat<ZZ_pX>& in){
 /*
  * BEGIN: poly_factorial algorithm
  */
-void check_p(ZZ_p &ans, long long n, ZZ& m, ZZ_pX& f){
+void check_p(ZZ_p &ans, long n, ZZ& m, ZZ_pX& f){
     
-    long long rtn = sqrt(n-1); // rtn = floor(sqrt(n-1))
+    long rtn = sqrt(n-1); // rtn = floor(sqrt(n-1))
     ZZ_pX F;
     findF(F, f, rtn);
 
-    long long nrtn = (n-1)/rtn;
+    long nrtn = (n-1)/rtn;
     vector<ZZ_p> FVals(nrtn);
     evalF(FVals, F, m, rtn, nrtn); // nrtn := floor((n-1)/floor(sqrt(n-1)))
 
     ZZ_p out(1);
     out.init(m);
-    for(long long i = rtn*nrtn+1; i < n; i++){
+    for(long i = rtn*nrtn+1; i < n; i++){
         mul(out, out, eval(f, ZZ_p(i)));
     }
-    for(long long i = 0; i < FVals.size(); i++){
+    for(long i = 0; i < FVals.size(); i++){
         mul(out, out, FVals[i]);
     }
 
@@ -86,20 +84,20 @@ void check_p(ZZ_p &ans, long long n, ZZ& m, ZZ_pX& f){
 }
 
 // return F = f(X+1)f(X+2)...f(X+rtn) mod m
-void findF(ZZ_pX &F, ZZ_pX &f, long long rtn){
+void findF(ZZ_pX &F, ZZ_pX &f, long rtn){
     vector<ZZ_pX> FTree(2*rtn); // rtn leaves -> 2*rtn nodes
 
-    long long leftmost = 1 << ((int)ceil(log2(rtn))); // bottom leftmost node in tree
+    long leftmost = 1 << ((int)ceil(log2(rtn))); // bottom leftmost node in tree
 
     // Initialize the leaves in FTree: [X+1, X+2, ..., X+rtn]
-    for (long long i = leftmost; i < 2 * rtn; i++) { // leaves on lowest layer
+    for (long i = leftmost; i < 2 * rtn; i++) { // leaves on lowest layer
         ZZ_pX leaf;
         SetCoeff(leaf, 0, i - leftmost + 1);
         SetCoeff(leaf, 1, 1);
         poly_eval(leaf, f, leaf); // leaf = f(leaf())
         FTree[i] = leaf;
     }
-    for (long long i = rtn; i < leftmost; i++) { // leaves on second lowest layer
+    for (long i = rtn; i < leftmost; i++) { // leaves on second lowest layer
         ZZ_pX leaf;
         SetCoeff(leaf, 0, i + rtn - leftmost + 1);
         SetCoeff(leaf, 1, 1);
@@ -108,7 +106,7 @@ void findF(ZZ_pX &F, ZZ_pX &f, long long rtn){
     }
 
     // Calculate the rest of the product tree FTree
-    for (long long i = rtn - 1; i > 0; i--) {
+    for (long i = rtn - 1; i > 0; i--) {
         FTree[i] = FTree[2*i] * FTree[2*i+1]; // parent is product of leaves
         // TODO doesn't work:
         // delete FTree[2*i];
@@ -129,19 +127,19 @@ void poly_eval(ZZ_pX &h, ZZ_pX &f, ZZ_pX &g){
 }
 
 // evaluate F at 0, rtn, ..., (nrtn-1)*rtn
-void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, ZZ& m, long long rtn, long long nrtn){
+void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, ZZ& m, long rtn, long nrtn){
     vector<ZZ_pX> FValTree(2*nrtn);
 
-    long long leftmost = 1 << ((int)ceil(log2(nrtn))); // bottom leftmost node in tree
+    long leftmost = 1 << ((int)ceil(log2(nrtn))); // bottom leftmost node in tree
 
     // Initialize the leaves in FValTree: [X, X-rtn, ..., X-rtn*(nrtn-1)]
-    for (long long i = leftmost; i < 2 * nrtn; i++) { // leaves on lowest layer
+    for (long i = leftmost; i < 2 * nrtn; i++) { // leaves on lowest layer
         ZZ_pX leaf;
         SetCoeff(leaf, 0, -rtn*(i - leftmost));
         SetCoeff(leaf, 1, 1);
         FValTree[i] = leaf;
     }
-    for (long long i = nrtn; i < leftmost; i++) { // leaves on second lowest layer
+    for (long i = nrtn; i < leftmost; i++) { // leaves on second lowest layer
         ZZ_pX leaf;
         SetCoeff(leaf, 0, -rtn*(i + nrtn - leftmost));
         SetCoeff(leaf, 1, 1);
@@ -149,22 +147,22 @@ void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, ZZ& m, long long rtn, long long nrtn){
     }
 
     // Calculate the rest of the product tree FValTree
-    for (long long i = nrtn - 1; i > 0; i--) {
+    for (long i = nrtn - 1; i > 0; i--) {
         FValTree[i] = FValTree[2*i] * FValTree[2*i+1]; // parent is product of leaves
     }
 
     // Reduce F mod polynomials in FValTree
     rem(FValTree[1], F, FValTree[1]);
-    for (long long i = 1; i < nrtn; i++) {
+    for (long i = 1; i < nrtn; i++) {
         rem(FValTree[2*i], FValTree[i], FValTree[2*i]);
         rem(FValTree[2*i+1], FValTree[i], FValTree[2*i+1]);
     }
 
-    for (long long i = leftmost; i < 2 * nrtn; i++) { // leaves on lowest layer
+    for (long i = leftmost; i < 2 * nrtn; i++) { // leaves on lowest layer
         FVals[i - leftmost].init(m);
         FVals[i - leftmost] = ConstTerm(FValTree[i]);
     }
-    for (long long i = nrtn; i < leftmost; i++) { // leaves on second lowest layer
+    for (long i = nrtn; i < leftmost; i++) { // leaves on second lowest layer
         FVals[i + nrtn - leftmost].init(m);
         FVals[i + nrtn - leftmost] = ConstTerm(FValTree[i]);
     }
@@ -180,18 +178,18 @@ void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, ZZ& m, long long rtn, long long nrtn){
 void invert_all(vector<ZZ_p> &out, vector<ZZ_p> &a){
     assert(out.size() == a.size());
 
-    long long n = a.size();
+    long n = a.size();
     vector<ZZ_p> inverses(n);
 
     vector<ZZ_p> accum_prod(n); // a0, a0a1, ..., a0a1...an-1
 
     accum_prod[0] = a[0];
-    for(long long i = 1; i < n; i++){
+    for(long i = 1; i < n; i++){
         mul(accum_prod[i], accum_prod[i-1], a[i]);
     }
 
     inv(accum_prod[n-1], accum_prod[n-1]);
-    for(long long i = n-1; i > 0; i--){
+    for(long i = n-1; i > 0; i--){
         mul(inverses[i], accum_prod[i], accum_prod[i-1]); // 1/ai = 1/(a1...ai) * a1...a(i-1)
         mul(accum_prod[i-1], accum_prod[i], a[i]); // a1...a(i-1) -> 1/(a1...a(i-1))
     }
@@ -205,9 +203,9 @@ void invert_all(vector<ZZ_p> &out, vector<ZZ_p> &a){
  * Returns 1/delta(i, d) = 1/prod(i-j) where the product goes from j=0 to d skipping i.
  */
 void find_delta(vector<ZZ_p> &out, ZZ &m){
-    long long d = out.size() - 1;
+    long d = out.size() - 1;
     vector<ZZ_p> ints(d);
-    for(long long i = 0; i < ints.size(); i++){
+    for(long i = 0; i < ints.size(); i++){
         ints[i].init(m);
         ints[i] = i+1;
     }
@@ -216,7 +214,7 @@ void find_delta(vector<ZZ_p> &out, ZZ &m){
     
     vector<ZZ_p> deltas(d+1);
     deltas[0] = inv_ints[0]; // = 1
-    for(long long i = 1; i < inv_ints.size(); i++){
+    for(long i = 1; i < inv_ints.size(); i++){
         mul(deltas[0], deltas[0], inv_ints[i]);
     } // deltas[0] = 1/d!
     
@@ -224,7 +222,7 @@ void find_delta(vector<ZZ_p> &out, ZZ &m){
         deltas[0] = -deltas[0]; // deltas[0] = 1/((-1)^d*d!)
     }
 
-    for(long long i = 1; i < deltas.size(); i++){
+    for(long i = 1; i < deltas.size(); i++){
         mul(deltas[i], deltas[i-1], i-1-d);
         mul(deltas[i], deltas[i], inv_ints[i-1]);
     }
@@ -237,10 +235,10 @@ void find_delta(vector<ZZ_p> &out, ZZ &m){
  * Returns Delta(a, i, d) = prod(a+i-j) where the product goes from j=0 to d.
  */
 void find_delta(vector<ZZ_p> &out, ZZ_p &a, ZZ &m){
-    long long d = out.size() - 1;
+    long d = out.size() - 1;
 
     vector<ZZ_p> ints(d);
-    for(long long i = 0; i < ints.size(); i++){
+    for(long i = 0; i < ints.size(); i++){
         ints[i].init(m);
         ints[i] = a-d+i;
     }
@@ -249,10 +247,10 @@ void find_delta(vector<ZZ_p> &out, ZZ_p &a, ZZ &m){
     
     vector<ZZ_p> Deltas(d+1);
     Deltas[0] = a;
-    for(long long i = 0; i < inv_ints.size(); i++){
+    for(long i = 0; i < inv_ints.size(); i++){
         mul(Deltas[0], Deltas[0], ints[i]);
     } // Deltas[0] = (a-d)...(a-1)(a)
-    for(long long i = 1; i < Deltas.size(); i++){
+    for(long i = 1; i < Deltas.size(); i++){
         mul(Deltas[i], Deltas[i-1], a+i);
         mul(Deltas[i], Deltas[i], inv_ints[i-1]);
     }
@@ -267,12 +265,12 @@ void find_delta(vector<ZZ_p> &out, ZZ_p &a, ZZ &m){
 void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ &m){
     assert(out.size() == values.size());
 
-    long long d = values.size() - 1;
+    long d = values.size() - 1;
     vector<ZZ_p> P(d+1);
     find_delta(P, m);
     
     ZZ_pX Px;
-    for(long long i = 0; i < values.size(); i++){
+    for(long i = 0; i < values.size(); i++){
         mul(P[i], P[i], values[i]);
         SetCoeff(Px, i, P[i]);
     }
@@ -283,13 +281,13 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
     mul(shift, shift, a); // shift = a/b
 
     vector<ZZ_p> S(2*d+1);
-    for(long long i = 0; i < S.size(); i++){
+    for(long i = 0; i < S.size(); i++){
         S[i] = shift + i - d;
     }
     invert_all(S, S);
 
     ZZ_pX Sx;
-    for(long long i = 0; i < S.size(); i++){
+    for(long i = 0; i < S.size(); i++){
         SetCoeff(Sx, i, S[i]);
     }   
 
@@ -297,7 +295,7 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
     mul(PS, Px, Sx);
 
     find_delta(out, shift, m);
-    for(long long i = 0; i < out.size(); i++){
+    for(long i = 0; i < out.size(); i++){
         mul(out[i], out[i], coeff(PS, i+d));
     }
 }
@@ -309,21 +307,21 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
 void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &m){
     assert(out.size() == values.size());
     assert(values[0].NumRows() == values[0].NumCols());
-    for(long long i = 0; i < out.size(); i++){
+    for(long i = 0; i < out.size(); i++){
         assert(values[i].NumRows() == values[0].NumRows());
         assert(values[i].NumCols() == values[0].NumCols());
         out[i].SetDims(values[0].NumRows(), values[0].NumCols());
     } 
 
-    for(long long row = 0; row < values[0].NumRows(); row++){
-        for(long long col = 0; col < values[0].NumCols(); col++){
+    for(long row = 0; row < values[0].NumRows(); row++){
+        for(long col = 0; col < values[0].NumCols(); col++){
             vector<ZZ_p> vals(values.size());
-            for(long long i = 0; i < values.size(); i++){
+            for(long i = 0; i < values.size(); i++){
                 vals[i] = values[i].get(row, col);
             }
             vector<ZZ_p> shifted_vals(vals.size());
             shift_values(shifted_vals, vals, a, b, m);
-            for(long long i = 0; i < shifted_vals.size(); i++){
+            for(long i = 0; i < shifted_vals.size(); i++){
                 out[i].put(row, col, shifted_vals[i]);
             }
         }
@@ -346,7 +344,7 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, Mat<ZZ_pX>& matrix, ZZ &m){
  * m := out.size()-1
  */
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, Mat<ZZ_pX>& matrix, ZZ &m){
-    long long n = out.size()-1;
+    long n = out.size()-1;
     
     if(n == 1){
         ZZ_p one;
@@ -376,11 +374,11 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, Mat<ZZ_pX>& matrix, ZZ &m){
     n2 = n/2;
     shift_values(ll_shift, ll_total, n2, k, m);
 
-    for(long long i = 0; i < out.size(); i++){
+    for(long i = 0; i < out.size(); i++){
         mul(out[i], ll_shift[i], ll_total[i]);
     }
     if(n % 2 == 1){
-        for(long long i = 0; i < out.size(); i++){
+        for(long i = 0; i < out.size(); i++){
             ZZ_p ikn = k*i + n;
             Mat<ZZ_p> extra;
             A(extra, ikn, matrix);
@@ -393,17 +391,17 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, Mat<ZZ_pX>& matrix, ZZ &m){
 /*
  * Calculate M(1)M(2)...M(n) mod p
  */
-void matrix_factorial(Mat<ZZ_p> &out, long long n, Mat<ZZ_pX>& matrix, ZZ &m){
-    long long rtn = sqrt(n);
+void matrix_factorial(Mat<ZZ_p> &out, long n, Mat<ZZ_pX>& matrix, ZZ &m){
+    long rtn = sqrt(n);
     
     vector<Mat<ZZ_p>> seg_prods(rtn+1);
     multieval_prod(seg_prods, matrix, m);
 
     if(n < rtn*rtn + rtn){
-        for(long long i = seg_prods.size()-2; i > 0; i--){
+        for(long i = seg_prods.size()-2; i > 0; i--){
             mul(seg_prods[i-1], seg_prods[i], seg_prods[i-1]);
         }
-        for(long long i = rtn*rtn+1; i <= n; i++){
+        for(long i = rtn*rtn+1; i <= n; i++){
             Mat<ZZ_p> extra;
             ZZ_p x;
             x.init(m);
@@ -413,10 +411,10 @@ void matrix_factorial(Mat<ZZ_p> &out, long long n, Mat<ZZ_pX>& matrix, ZZ &m){
         }
     }
     else{
-        for(long long i = seg_prods.size()-1; i > 0; i--){
+        for(long i = seg_prods.size()-1; i > 0; i--){
             mul(seg_prods[i-1], seg_prods[i], seg_prods[i-1]);
         }
-        for(long long i = rtn*rtn+rtn+1; i <= n; i++){
+        for(long i = rtn*rtn+rtn+1; i <= n; i++){
             Mat<ZZ_p> extra;
             ZZ_p x;
             x.init(m);

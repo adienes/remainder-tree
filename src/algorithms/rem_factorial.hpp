@@ -9,9 +9,9 @@
 
 /*
  * Inputs: 
- * long long n: the upper bound of the factorial calculation, 
+ * long n: the upper bound of the factorial calculation, 
  * U m: the mod we're working in,
- * function<T (long long)> get_A: a function to return the value of A[i] given the input i,
+ * function<T (long)> get_A: a function to return the value of A[i] given the input i,
  * PolyMatrix formula = {}: formula of the general term, set by default to an empty array.
  *
  * Output:
@@ -19,7 +19,7 @@
  *
  */
 template <typename T, typename U>
-T calculate_factorial(long long, const U&, const std::function<vector<T> (long long, long long)>&, const PolyMatrix& formula = {});
+T calculate_factorial(long, const U&, const std::function<vector<T> (long, long)>&, const PolyMatrix& formula = {});
 
 
 #include "rem_factorial.tpp"

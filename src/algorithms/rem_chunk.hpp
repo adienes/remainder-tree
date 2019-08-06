@@ -9,7 +9,7 @@
 /*
  * Inputs: a function that generates A in a given range, a function that generates m in a given range,
  * a function which computes the value of V for later chunks, the total range of values to compute,
- * the initial V, the size of each chunk, forest parameter, and the recompute parameter, along long with maybe later parameters
+ * the initial V, the size of each chunk, forest parameter, and the recompute parameter, along with maybe later parameters
  * to be added (use permanent memory, checkpoints, etc?)
  * 
  * Note that both chunk_size and upper_bound-lower_bound+1 must be powers of 2
@@ -19,11 +19,10 @@
  */
 
 template <typename T, typename U>
-vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long long, long long)>&,
-											const std::function<vector<U> (long long, long long)>&,
-											const std::function<T (long long, U, const std::function<vector<vector<T> (long long)>&, const PolyMatrix&)>&,
-											long long, long long, long long,
-											int forest_param = 0, long long recompute_param = 0, const PolyMatrix& formula = {});
+vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>&,
+											const std::function<vector<U> (long, long)>&,
+											long, long, long,
+											long forest_param = 0, long recompute_param = 0, const PolyMatrix& formula = {});
 
 #include "rem_chunk.tpp"
 

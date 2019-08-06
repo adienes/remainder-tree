@@ -5,18 +5,18 @@
 
 using std::vector;
 
-vector <vector<long long>> complexity_graph(long long N, long long d, vector <std::function< vector<bool> (long long N)>> search_funcs) {
-	long long s = search_funcs.size();
+vector <vector<long>> complexity_graph(long N, long d, vector <std::function< vector<bool> (long N)>> search_funcs) {
+	long s = search_funcs.size();
 
-	vector<vector<long long>> graph(1);
+	vector<vector<long>> graph(1);
 	graph.reserve(d);
-	graph[0] = vector<long long> (s+1, 0); //Corresponds to origin---make s+1 larger if there are other data collected.
+	graph[0] = vector<long> (s+1, 0); //Corresponds to origin---make s+1 larger if there are other data collected.
 	
-	long long interval = N/d;
-	long long B = interval;
+	long interval = N/d;
+	long B = interval;
 	while (B <= N) {
 
-		vector<long long> datum;
+		vector<long> datum;
 		datum.reserve(s+1);
 		datum.push_back(B); //this is the x-value
 
@@ -39,7 +39,7 @@ vector <vector<long long>> complexity_graph(long long N, long long d, vector <st
 
 
 
-void write_complexity_graph (const std::vector<std::vector<long long>>& cg, std::string file = "results.csv") {
+void write_complexity_graph (const std::vector<std::vector<long>>& cg, std::string file = "results.csv") {
 	std::ofstream target;
 	target.open("runtimes/data/"+file); //assuming this is run from main directory
 

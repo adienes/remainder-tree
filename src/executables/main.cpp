@@ -1,30 +1,18 @@
 #include <vector>
 #include <functional>
-
-#include "../algorithms/intermediate_computation.hpp"
-#include "../algorithms/rem_forest.hpp"
-
-#include "../searches/benchmarks.hpp"
 #include <random>
-
-#include "../algorithms/utils.hpp"
-#include "../algorithms/tree_io.hpp"
-#include "../algorithms/rem_tree.hpp"
-
-#include "../elements/Element.hpp"
+#include <chrono>
 
 #include <NTL/ZZ.h>
 
+#include "../elements/element.hpp"
+#include "../algorithms/rem_forest.hpp"
 
-#include "../searches/benchmarks.hpp"
-#include "../searches/complexity.hpp"
-
-#include <chrono>
-
+#include "../algorithms/rem_chunk.hpp"
 
 int main()
 {
-	long long B = (1<<19);
+	long B = (1<<19);
 
 	vector <Elt<NTL::ZZ> > A_rand (B);
 	vector <Elt<NTL::ZZ> > m_rand (B);
@@ -33,9 +21,9 @@ int main()
 
 	random_device rd;
 	mt19937 mt(rd());
-	uniform_int_distribution<long long> dist(1, B);
+	uniform_int_distribution<long> dist(1, B);
 
-	for(long long i = 0; i < B; i++){
+	for(long i = 0; i < B; i++){
 		//int bitsize = log2(i+1)+2;	
 		A_rand[i] = dist(mt);
 		m_rand[i] = dist(mt);
@@ -61,7 +49,7 @@ int main()
 
 	// auto temp = random_zz(8);
 
-	// std::vector<std::function< std::vector<bool> (long long N)>> searchfns = {random_zz};
+	// std::vector<std::function< std::vector<bool> (long N)>> searchfns = {random_zz};
 
 	// auto cg = complexity_graph(1<<6, 1<<4, searchfns);
 
