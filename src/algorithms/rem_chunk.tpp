@@ -10,8 +10,9 @@ using std::vector;
 template <typename T, typename U>
 vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>& A_gen, // lower and upper bounds are inclusive-exclusive
 											const std::function<vector<U> (long, long)>& m_gen, // lower and upper bounds are inclusive-exclusive
+											const std::function<T (long, U)>& V_gen, // factorial calculator
 											long lower_bound, long upper_bound, long chunk_size,
-											long forest_param, long recompute_param, const PolyMatrix& formula) {
+											long forest_param, long recompute_param) {
 
 
 	assert (is_power2(upper_bound-lower_bound) && is_power2(chunk_size));
@@ -29,8 +30,7 @@ vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long
 		vector<U> _m = m_gen(_LB, _UB);
 
 		U _Y = compute_product_node<U> (_m, 1);
-		T _V = calculate_factorial<T,U>(_LB, _Y, A_gen, formula);
-
+		T _V = V_gen<T,U>(_LB, _Y);
 	
 		std::function<vector<T> ()> chunk_func = std::bind(remainder_forest<T,U>, _A, _m, forest_param, recompute_param, _V, _Y);
 

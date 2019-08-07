@@ -4,8 +4,6 @@
 #include <vector>
 #include <functional>
 
-#include "utils.hpp"
-
 /*
  * Inputs: a function that generates A in a given range, a function that generates m in a given range,
  * a function which computes the value of V for later chunks, the total range of values to compute,
@@ -21,8 +19,9 @@
 template <typename T, typename U>
 vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>&,
 											const std::function<vector<U> (long, long)>&,
+											const std::function<T (long)>&,
 											long, long, long,
-											long forest_param = 0, long recompute_param = 0, const PolyMatrix& formula = {});
+											long forest_param = 0, long recompute_param = 0);
 
 #include "rem_chunk.tpp"
 
