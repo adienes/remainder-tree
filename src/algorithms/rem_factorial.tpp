@@ -1,4 +1,4 @@
-//#include "factorial_algs.hpp"
+#include "factorial_engine.hpp"
 
 #include "utils.hpp"
 
@@ -17,5 +17,6 @@ T calculate_factorial(long n, const U& m, const std::function<vector<T> (long, l
     return compute_product_node<T, U>(get_A(0, n), m, 1);
     //return naive_factorial(n, m, get_A); // TODO: replace temporary measure with something better
 }
+
 
 //#include "factorial_custom.tpp"

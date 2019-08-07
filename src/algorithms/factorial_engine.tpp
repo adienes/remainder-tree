@@ -76,7 +76,7 @@ void check_p(ZZ_p &ans, long n, ZZ& m, ZZ_pX& f){
     for(long i = rtn*nrtn+1; i < n; i++){
         mul(out, out, eval(f, ZZ_p(i)));
     }
-    for(long i = 0; i < FVals.size(); i++){
+    for(long i = 0, FVals_size = FVals.size(); i < FVals_size; i++){
         mul(out, out, FVals[i]);
     }
 
@@ -205,7 +205,7 @@ void invert_all(vector<ZZ_p> &out, vector<ZZ_p> &a){
 void find_delta(vector<ZZ_p> &out, ZZ &m){
     long d = out.size() - 1;
     vector<ZZ_p> ints(d);
-    for(long i = 0; i < ints.size(); i++){
+    for(long i = 0, ints_size = ints.size(); i < ints_size; i++){
         ints[i].init(m);
         ints[i] = i+1;
     }
@@ -214,7 +214,7 @@ void find_delta(vector<ZZ_p> &out, ZZ &m){
     
     vector<ZZ_p> deltas(d+1);
     deltas[0] = inv_ints[0]; // = 1
-    for(long i = 1; i < inv_ints.size(); i++){
+    for(long i = 1, inv_ints_size = inv_ints.size(); i < inv_ints_size; i++){
         mul(deltas[0], deltas[0], inv_ints[i]);
     } // deltas[0] = 1/d!
     
@@ -222,7 +222,7 @@ void find_delta(vector<ZZ_p> &out, ZZ &m){
         deltas[0] = -deltas[0]; // deltas[0] = 1/((-1)^d*d!)
     }
 
-    for(long i = 1; i < deltas.size(); i++){
+    for(long i = 1, deltas_size = deltas.size(); i < deltas_size; i++){
         mul(deltas[i], deltas[i-1], i-1-d);
         mul(deltas[i], deltas[i], inv_ints[i-1]);
     }
@@ -238,7 +238,7 @@ void find_delta(vector<ZZ_p> &out, ZZ_p &a, ZZ &m){
     long d = out.size() - 1;
 
     vector<ZZ_p> ints(d);
-    for(long i = 0; i < ints.size(); i++){
+    for(long i = 0, ints_size = ints.size(); i < ints_size; i++){
         ints[i].init(m);
         ints[i] = a-d+i;
     }
@@ -247,10 +247,10 @@ void find_delta(vector<ZZ_p> &out, ZZ_p &a, ZZ &m){
     
     vector<ZZ_p> Deltas(d+1);
     Deltas[0] = a;
-    for(long i = 0; i < inv_ints.size(); i++){
+    for(long i = 0, inv_ints_size = inv_ints.size(); i < inv_ints_size; i++){
         mul(Deltas[0], Deltas[0], ints[i]);
     } // Deltas[0] = (a-d)...(a-1)(a)
-    for(long i = 1; i < Deltas.size(); i++){
+    for(long i = 1, Deltas_size = Deltas.size(); i < Deltas_size; i++){
         mul(Deltas[i], Deltas[i-1], a+i);
         mul(Deltas[i], Deltas[i], inv_ints[i-1]);
     }
@@ -270,7 +270,7 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
     find_delta(P, m);
     
     ZZ_pX Px;
-    for(long i = 0; i < values.size(); i++){
+    for(long i = 0, values_size = values.size(); i < values_size; i++){
         mul(P[i], P[i], values[i]);
         SetCoeff(Px, i, P[i]);
     }
@@ -281,13 +281,13 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
     mul(shift, shift, a); // shift = a/b
 
     vector<ZZ_p> S(2*d+1);
-    for(long i = 0; i < S.size(); i++){
+    for(long i = 0, S_size = S.size(); i < S_size; i++){
         S[i] = shift + i - d;
     }
     invert_all(S, S);
 
     ZZ_pX Sx;
-    for(long i = 0; i < S.size(); i++){
+    for(long i = 0, S_size = S.size(); i < S_size; i++){
         SetCoeff(Sx, i, S[i]);
     }   
 
@@ -295,7 +295,7 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
     mul(PS, Px, Sx);
 
     find_delta(out, shift, m);
-    for(long i = 0; i < out.size(); i++){
+    for(long i = 0, out_size = out.size(); i < out_size; i++){
         mul(out[i], out[i], coeff(PS, i+d));
     }
 }
@@ -307,7 +307,7 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
 void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &m){
     assert(out.size() == values.size());
     assert(values[0].NumRows() == values[0].NumCols());
-    for(long i = 0; i < out.size(); i++){
+    for(long i = 0, out_size = out.size(); i < out_size; i++){
         assert(values[i].NumRows() == values[0].NumRows());
         assert(values[i].NumCols() == values[0].NumCols());
         out[i].SetDims(values[0].NumRows(), values[0].NumCols());
@@ -316,12 +316,12 @@ void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ
     for(long row = 0; row < values[0].NumRows(); row++){
         for(long col = 0; col < values[0].NumCols(); col++){
             vector<ZZ_p> vals(values.size());
-            for(long i = 0; i < values.size(); i++){
+            for(long i = 0, values_size = values.size(); i < values_size; i++){
                 vals[i] = values[i].get(row, col);
             }
             vector<ZZ_p> shifted_vals(vals.size());
             shift_values(shifted_vals, vals, a, b, m);
-            for(long i = 0; i < shifted_vals.size(); i++){
+            for(long i = 0, shifted_vals_size = shifted_vals.size(); i < shifted_vals_size; i++){
                 out[i].put(row, col, shifted_vals[i]);
             }
         }
@@ -338,7 +338,7 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, Mat<ZZ_pX>& matrix, ZZ &m){
     ZZ_p kp;
     kp.init(m);
     kp = out.size()-1;
-    multieval_prod(out, kp, matrix, p);
+    multieval_prod(out, kp, matrix, kp);
 }
 /*
  * m := out.size()-1
@@ -374,11 +374,11 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, Mat<ZZ_pX>& matrix, ZZ &m){
     n2 = n/2;
     shift_values(ll_shift, ll_total, n2, k, m);
 
-    for(long i = 0; i < out.size(); i++){
+    for(long i = 0, out_size = out.size(); i < out_size; i++){
         mul(out[i], ll_shift[i], ll_total[i]);
     }
     if(n % 2 == 1){
-        for(long i = 0; i < out.size(); i++){
+        for(long i = 0, out_size = out.size(); i < out_size; i++){
             ZZ_p ikn = k*i + n;
             Mat<ZZ_p> extra;
             A(extra, ikn, matrix);
