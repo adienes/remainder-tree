@@ -1,3 +1,3 @@
 // included by rem_factorial.tpp (in case we want to change the file location)
 
-#include "factorial_EltZZ.tpp"
+#include "rem_factorial_EltZZ.tpp"

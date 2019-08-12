@@ -12,7 +12,7 @@
 
 //TODO: make these all const
 template<typename T, typename U>
-T naive_factorial(long n, U& m, const std::function<std::vector<T> (long, long)>& get_A);
+T naive_factorial(long n, const U& m, const std::function<std::vector<T> (long, long)>& get_A);
 
 NTL::ZZ_p poly_factorial(long n, const NTL::ZZ& m, const NTL::ZZ_pX& poly);
 

@@ -15,16 +15,16 @@ using NTL::Mat;
  */
 
 template<typename T, typename U>
-T naive_factorial(long n, U& m, std::function<vector<T> (long, long)>& get_A){
+T naive_factorial(long n, const U& m, const std::function<vector<T> (long, long)>& get_A){
     // use get node method in utils.h
     return compute_product_node<T, U>(get_A(0, n), m, 1);
 }
 
 // Helper methods for poly_factorial
-void check_p(ZZ_p &ans, long p, vector<ZZ_p> coeffs);
+void check_p(ZZ_p &ans, long n, ZZ& m, ZZ_pX& f);
 void findF(ZZ_pX &F, ZZ_pX &f, long rtp);
 void poly_eval(ZZ_pX &h, ZZ_pX &f, ZZ_pX &g);
-void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, long rtp, long prtp);
+void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, ZZ& m, long rtn, long nrtn);
 
 ZZ_p poly_factorial(long n, ZZ& m, ZZ_pX& poly){
     ZZ_p output;
@@ -53,7 +53,7 @@ void A(Mat<ZZ_p>& out, ZZ_p& x, Mat<ZZ_pX>& in){
     out.SetDims(in.NumRows(), in.NumCols());
     for(long row = 0; row < in.NumRows(); row++){
         for(long col = 0; col < in.NumCols(); col++){
-            out.put(eval(in.get(row, col), x), row, col);
+            out.put(row, col, eval(in.get(row, col), x));
         }
     }
 }
@@ -338,7 +338,7 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, Mat<ZZ_pX>& matrix, ZZ &m){
     ZZ_p kp;
     kp.init(m);
     kp = out.size()-1;
-    multieval_prod(out, kp, matrix, kp);
+    multieval_prod(out, kp, matrix, m);
 }
 /*
  * m := out.size()-1

@@ -10,9 +10,49 @@
 
 #include "../algorithms/rem_chunk.hpp"
 
+using std::vector;
+using NTL::ZZ;
+
+vector<Elt<ZZ>> A_main(long lower, long upper){
+    vector<Elt<ZZ>> output(upper-lower);
+    for(long i = lower; i < upper; i++){
+        output[i-lower] = Elt<ZZ>(lower+1);
+    }
+    return output;
+}
+
+vector<Elt<ZZ>> m_main(long lower, long upper){
+    vector<Elt<ZZ>> output(upper-lower);
+    for(long i = lower; i < upper; i++){
+        ZZ num(lower+1);
+        if(ProbPrime(num)){
+            output[i-lower] = Elt<ZZ>(lower+1);
+        }
+        else{
+            output[i-lower] = Elt<ZZ>(1);
+        }
+    }
+    return output;
+}
+
+
+
 int main()
 {
-	long B = (1<<19);
+	
+    std::function<vector<Elt<ZZ>> (long, long)> A_gen = A_main;
+    std::function<vector<Elt<ZZ>> (long, long)> m_gen = m_main;
+    
+    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 32, 32, 0, 0);
+
+    for(long i = 0; i < chunks.size(); i++){
+        vector<Elt<ZZ>> chunkreturn = chunks[i]();
+        for(long j = 0; j < chunkreturn.size(); j++){
+            std::cout << chunkreturn[j] << std::endl;
+        }
+    }
+    /*
+    long B = (1<<19);
 
 	vector <Elt<NTL::ZZ> > A_rand (B);
 	vector <Elt<NTL::ZZ> > m_rand (B);
@@ -64,5 +104,5 @@ int main()
 	// write_complexity_graph(cg);
 
 	// return 1;
-
+    */
 }

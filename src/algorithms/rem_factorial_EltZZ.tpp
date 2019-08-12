@@ -1,5 +1,6 @@
-// included by factorial_custom.tpp (in case we want to change the file location)
+// included by rem_factorial_custom.tpp (in case we want to change the file location)
 
+#include "factorial_engine.hpp"
 #include <NTL/ZZ_pX.h>
 #include <NTL/matrix.h>
 #include "../elements/element.hpp"
@@ -11,7 +12,7 @@ using NTL::Mat;
 
 
 template<>
-Elt<ZZ> calculate_factorial(long n, Elt<ZZ> m, std::function<vector<Elt<ZZ>> (long, long)> get_A, const PolyMatrix& formula){
+Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector<Elt<ZZ>> (long, long)>& get_A, const PolyMatrix& formula){
     assert(("Element given is not a square matrix.", formula.size() == formula[0].size()));
     
     // Matrix-type elements
@@ -63,7 +64,7 @@ Elt<ZZ> calculate_factorial(long n, Elt<ZZ> m, std::function<vector<Elt<ZZ>> (lo
             }
             SetCoeff(poly, exp, coeff);
         }
-        matrix.put(poly, row, col);
+        matrix.put(0, 0, poly);
 
         Mat<ZZ_p> output;
         output.SetDims(1, 1);
