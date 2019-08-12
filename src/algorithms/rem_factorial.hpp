@@ -19,7 +19,7 @@
  *
  */
 template <typename T, typename U>
-T calculate_factorial(long, const U&, const std::function<vector<T> (long, long)>&, const PolyMatrix& formula = {});
+T calculate_factorial(long, const U&, const std::function<std::vector<T> (long, long)>&, const PolyMatrix& formula = {});
 
 
 #include "rem_factorial.tpp"

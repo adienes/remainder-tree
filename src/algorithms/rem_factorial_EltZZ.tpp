@@ -1,9 +1,13 @@
 // included by rem_factorial_custom.tpp (in case we want to change the file location)
 
-#include "factorial_engine.hpp"
+#include <cassert>
+
 #include <NTL/ZZ_pX.h>
 #include <NTL/matrix.h>
+
 #include "../elements/element.hpp"
+#include "factorial_engine.hpp"
+
 
 using NTL::ZZ;
 using NTL::ZZ_p;
@@ -13,24 +17,26 @@ using NTL::Mat;
 
 template<>
 Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector<Elt<ZZ>> (long, long)>& get_A, const PolyMatrix& formula){
-    assert(("Element given is not a square matrix.", formula.size() == formula[0].size()));
+    assert(("Element given is not a square matrix." && (formula.size() == formula[0].size())));
     
     // Matrix-type elements
-    assert(("ZZ's must have 1x1 matrix formulas.", formula.size() <= 1));    
+    assert(("ZZ's must have 1x1 matrix formulas." && ((long)formula.size() <= 1)));
     
+    long formula00_size = formula[0][0].size();
+
     // Do naive_factorial if n is small enough
     if(n < 30000){
         return naive_factorial<Elt<ZZ>, Elt<ZZ>>(n, m, get_A); // TODO: write naive_factorial
     }
 
     // Linear and Polynomial-type elements
-    else if(n < 1000000000 || formula[0][0].size() >= 2){
+    else if(n < 1000000000 || formula00_size >= 2){
         // TODO: convert polynomial coefficients into ZZ_p and call poly_factorial()
         
         
         // Otherwise, do poly_factorial
         ZZ_pX poly;
-        for(long exp = 0; exp < formula[0][0].size(); exp++){                                                                                                     
+        for(long exp = 0; exp < formula00_size; exp++){                                                                                                     
             ZZ_p coeff;
             coeff.init(m.t);
             coeff = 0;
@@ -54,7 +60,7 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
         Mat<ZZ_pX> matrix;
         matrix.SetDims(1, 1);
         ZZ_pX poly;
-        for(long exp = 0; exp < formula[0][0].size(); exp++){
+        for(long exp = 0; exp < formula00_size; exp++){
             ZZ_p coeff;
             coeff.init(m.t); 
             coeff = 0;

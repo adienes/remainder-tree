@@ -26,7 +26,7 @@ void findF(ZZ_pX &F, ZZ_pX &f, long rtp);
 void poly_eval(ZZ_pX &h, ZZ_pX &f, ZZ_pX &g);
 void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, ZZ& m, long rtn, long nrtn);
 
-ZZ_p poly_factorial(long n, ZZ& m, ZZ_pX& poly){
+ZZ_p poly_factorial(long n, const ZZ& m, const ZZ_pX& poly){
     ZZ_p output;
     check_p(output, n, m, poly);
     return output;
@@ -43,7 +43,7 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, Mat<ZZ_pX>& matrix, ZZ &m);
 void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, Mat<ZZ_pX>& matrix, ZZ &m);
 void matrix_factorial(Mat<ZZ_p> &out, long n, Mat<ZZ_pX>& matrix, ZZ &m);
 
-Mat<ZZ_p> matrix_factorial(long n, ZZ& m, Mat<ZZ_pX>& matrix){
+Mat<ZZ_p> matrix_factorial(long n, const ZZ& m, const Mat<ZZ_pX>& matrix){
      Mat<ZZ_p> output;
      matrix_factorial(output, n, matrix, m);
      return output;

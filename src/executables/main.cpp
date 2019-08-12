@@ -45,9 +45,9 @@ int main()
     
     vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 32, 32, 0, 0);
 
-    for(long i = 0; i < chunks.size(); i++){
+    for(long i = 0, chunks_size = chunks.size(); i < chunks_size; i++){
         vector<Elt<ZZ>> chunkreturn = chunks[i]();
-        for(long j = 0; j < chunkreturn.size(); j++){
+        for(long j = 0, chunkreturn_size = chunkreturn.size(); j < chunkreturn_size; j++){
             std::cout << chunkreturn[j] << std::endl;
         }
     }

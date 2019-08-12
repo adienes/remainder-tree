@@ -18,7 +18,7 @@ vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long
 	assert (chunk_size <= upper_bound-lower_bound);
 
 
-	vector<std::function<vector<T> ()>> chunk_generators((upper_bound-lower_bound)/chunk_size);
+	vector<std::function<vector<T> ()>> chunk_generators;
 	chunk_generators.reserve((upper_bound-lower_bound)/chunk_size);
     
 	long _UB = lower_bound+chunk_size; //UB stands for upper bound
@@ -31,8 +31,7 @@ vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long
 		U _Y = compute_product_node<U> (_m, 1);
 		T _V = calculate_factorial<T,U>(_LB, _Y, A_gen, formula);
         
-	    // std::function<vector<T> (const vector<T>&, const vector<U>&, long, long, T&, U&)> full_remainder_forest = remainder_forest<T, U>;
-		std::function<vector<T> ()> chunk_func = std::bind(remainder_forest<T,U>, _A, _m, forest_param, recompute_param, _V, _Y);
+		std::function<vector<T> ()> chunk_func = [&]() -> vector<T> { return remainder_forest<T, U> (_A, _m, forest_param, recompute_param, _V, _Y); };
 
 		chunk_generators.push_back(chunk_func);
 
