@@ -21,10 +21,10 @@ T naive_factorial(long n, const U& m, const std::function<vector<T> (long, long)
 }
 
 // Helper methods for poly_factorial
-void check_p(ZZ_p &ans, long n, ZZ& m, ZZ_pX& f);
-void findF(ZZ_pX &F, ZZ_pX &f, long rtp);
-void poly_eval(ZZ_pX &h, ZZ_pX &f, ZZ_pX &g);
-void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, ZZ& m, long rtn, long nrtn);
+void check_p(ZZ_p& ans, long n, const ZZ& m, const ZZ_pX& f);
+void findF(ZZ_pX& F, const ZZ_pX& f, long rtp);
+void poly_eval(ZZ_pX& h, const ZZ_pX& f, const ZZ_pX& g);
+void evalF(vector<ZZ_p>& FVals, const ZZ_pX& F, const ZZ& m, long rtn, long nrtn);
 
 ZZ_p poly_factorial(long n, const ZZ& m, const ZZ_pX& poly){
     ZZ_p output;
@@ -33,15 +33,15 @@ ZZ_p poly_factorial(long n, const ZZ& m, const ZZ_pX& poly){
 }
 
 // Helper methods for matrix_factorial
-void A(Mat<ZZ_p> &out, ZZ_p &x, Mat<ZZ_pX>& in);
-void invert_all(vector<ZZ_p> &out, vector<ZZ_p> &a);
-void find_delta(vector<ZZ_p> &out, ZZ &m);
-void find_delta(vector<ZZ_p> &out, ZZ &m, ZZ_p &a);
-void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ &m);
-void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &m);
-void multieval_prod(vector<Mat<ZZ_p>> &out, Mat<ZZ_pX>& matrix, ZZ &m);
-void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, Mat<ZZ_pX>& matrix, ZZ &m);
-void matrix_factorial(Mat<ZZ_p> &out, long n, Mat<ZZ_pX>& matrix, ZZ &m);
+void A(Mat<ZZ_p>& out, const ZZ_p& x, const Mat<ZZ_pX>& in);
+void invert_all(vector<ZZ_p>& out, const vector<ZZ_p>& a);
+void find_delta(vector<ZZ_p>& out, const ZZ& m);
+void find_delta(vector<ZZ_p>& out, const ZZ& m, const ZZ_p& a);
+void shift_values(vector<ZZ_p>& out, const vector<ZZ_p>& values, const ZZ_p& a, const ZZ_p& b, const ZZ& m);
+void shift_values(vector<Mat<ZZ_p>>& out, const vector<Mat<ZZ_p>>& values, const ZZ_p& a, const ZZ_p& b, const ZZ& m);
+void multieval_prod(vector<Mat<ZZ_p>>& out, const Mat<ZZ_pX>& matrix, const ZZ& m);
+void multieval_prod(vector<Mat<ZZ_p>>& out, const ZZ_p& k, const Mat<ZZ_pX>& matrix, const ZZ& m);
+void matrix_factorial(Mat<ZZ_p>& out, long n, const Mat<ZZ_pX>& matrix, const ZZ& m);
 
 Mat<ZZ_p> matrix_factorial(long n, const ZZ& m, const Mat<ZZ_pX>& matrix){
      Mat<ZZ_p> output;
@@ -49,7 +49,7 @@ Mat<ZZ_p> matrix_factorial(long n, const ZZ& m, const Mat<ZZ_pX>& matrix){
      return output;
 }
 
-void A(Mat<ZZ_p>& out, ZZ_p& x, Mat<ZZ_pX>& in){
+void A(Mat<ZZ_p>& out, const ZZ_p& x, const Mat<ZZ_pX>& in){
     out.SetDims(in.NumRows(), in.NumCols());
     for(long row = 0; row < in.NumRows(); row++){
         for(long col = 0; col < in.NumCols(); col++){
@@ -61,7 +61,7 @@ void A(Mat<ZZ_p>& out, ZZ_p& x, Mat<ZZ_pX>& in){
 /*
  * BEGIN: poly_factorial algorithm
  */
-void check_p(ZZ_p &ans, long n, ZZ& m, ZZ_pX& f){
+void check_p(ZZ_p& ans, long n, const ZZ& m, const ZZ_pX& f){
     
     long rtn = sqrt(n-1); // rtn = floor(sqrt(n-1))
     ZZ_pX F;
@@ -84,7 +84,7 @@ void check_p(ZZ_p &ans, long n, ZZ& m, ZZ_pX& f){
 }
 
 // return F = f(X+1)f(X+2)...f(X+rtn) mod m
-void findF(ZZ_pX &F, ZZ_pX &f, long rtn){
+void findF(ZZ_pX& F, const ZZ_pX& f, long rtn){
     vector<ZZ_pX> FTree(2*rtn); // rtn leaves -> 2*rtn nodes
 
     long leftmost = 1 << ((int)ceil(log2(rtn))); // bottom leftmost node in tree
@@ -117,7 +117,7 @@ void findF(ZZ_pX &F, ZZ_pX &f, long rtn){
 }
 
 // calculate h = f(g(x))
-void poly_eval(ZZ_pX &h, ZZ_pX &f, ZZ_pX &g){
+void poly_eval(ZZ_pX& h, const ZZ_pX& f, const ZZ_pX& g){
     ZZ_pX out(LeadCoeff(f));
     for(int i = deg(f)-1; i >= 0; i--){
         mul(out, out, g);
@@ -127,7 +127,7 @@ void poly_eval(ZZ_pX &h, ZZ_pX &f, ZZ_pX &g){
 }
 
 // evaluate F at 0, rtn, ..., (nrtn-1)*rtn
-void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, ZZ& m, long rtn, long nrtn){
+void evalF(vector<ZZ_p>& FVals, const ZZ_pX& F, const ZZ& m, long rtn, long nrtn){
     vector<ZZ_pX> FValTree(2*nrtn);
 
     long leftmost = 1 << ((int)ceil(log2(nrtn))); // bottom leftmost node in tree
@@ -175,7 +175,7 @@ void evalF(vector<ZZ_p> &FVals, ZZ_pX &F, ZZ& m, long rtn, long nrtn){
 /*
  * Takes a list of elements a and returns their inversions mod p
  */
-void invert_all(vector<ZZ_p> &out, vector<ZZ_p> &a){
+void invert_all(vector<ZZ_p>& out, const vector<ZZ_p>& a){
     assert(out.size() == a.size());
 
     long n = a.size();
@@ -202,7 +202,7 @@ void invert_all(vector<ZZ_p> &out, vector<ZZ_p> &a){
  * d = out.size()-1;
  * Returns 1/delta(i, d) = 1/prod(i-j) where the product goes from j=0 to d skipping i.
  */
-void find_delta(vector<ZZ_p> &out, ZZ &m){
+void find_delta(vector<ZZ_p>& out, const ZZ& m){
     long d = out.size() - 1;
     vector<ZZ_p> ints(d);
     for(long i = 0, ints_size = ints.size(); i < ints_size; i++){
@@ -234,7 +234,7 @@ void find_delta(vector<ZZ_p> &out, ZZ &m){
  * d = out.size()-1;
  * Returns Delta(a, i, d) = prod(a+i-j) where the product goes from j=0 to d.
  */
-void find_delta(vector<ZZ_p> &out, ZZ_p &a, ZZ &m){
+void find_delta(vector<ZZ_p>& out, const ZZ_p& a, const ZZ& m){
     long d = out.size() - 1;
 
     vector<ZZ_p> ints(d);
@@ -262,7 +262,7 @@ void find_delta(vector<ZZ_p> &out, ZZ_p &a, ZZ &m){
  * Takes in the values of polynomials F(r), F(r+b), ..., F(r+db) and outputs F(r+a), F(r+b+a), ... F(r+db+a)
  * Requires deg(F) <= d to work mathematically, since it will interpolate based on the given evaluations of F.
  */
-void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ &m){
+void shift_values(vector<ZZ_p>& out, const vector<ZZ_p>& values, const ZZ_p& a, const ZZ_p& b, const ZZ& m){
     assert(out.size() == values.size());
 
     long d = values.size() - 1;
@@ -304,7 +304,7 @@ void shift_values(vector<ZZ_p> &out, vector<ZZ_p> &values, ZZ_p &a, ZZ_p &b, ZZ 
  * Takes in the values of matrices of polynomials M(r), M(r+b), ..., M(r+db) and outputs M(r+a), M(r+b+a), ... M(r+db+a)
  * Requires the maximal degree of any element of M(x) to be <= d to successfully interpolate
  */
-void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ_p &b, ZZ &m){
+void shift_values(vector<Mat<ZZ_p>>& out, const vector<Mat<ZZ_p>>& values, const ZZ_p& a, const ZZ_p& b, const ZZ& m){
     assert(out.size() == values.size());
     assert(values[0].NumRows() == values[0].NumCols());
     for(long i = 0, out_size = out.size(); i < out_size; i++){
@@ -334,7 +334,7 @@ void shift_values(vector<Mat<ZZ_p>> &out, vector<Mat<ZZ_p>> &values, ZZ_p &a, ZZ
  * M_k(x) = M(x+1)M(x+2)...M(x+k)
  * To calculate M_m(x) at 0, k, ..., mk, use the value M_m/2(x) at 0, k, ..., (m/2)k
  */
-void multieval_prod(vector<Mat<ZZ_p>> &out, Mat<ZZ_pX>& matrix, ZZ &m){
+void multieval_prod(vector<Mat<ZZ_p>>& out, const Mat<ZZ_pX>& matrix, const ZZ& m){
     ZZ_p kp;
     kp.init(m);
     kp = out.size()-1;
@@ -343,7 +343,7 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, Mat<ZZ_pX>& matrix, ZZ &m){
 /*
  * m := out.size()-1
  */
-void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, Mat<ZZ_pX>& matrix, ZZ &m){
+void multieval_prod(vector<Mat<ZZ_p>>& out, const ZZ_p& k, const Mat<ZZ_pX>& matrix, const ZZ& m){
     long n = out.size()-1;
     
     if(n == 1){
@@ -391,7 +391,7 @@ void multieval_prod(vector<Mat<ZZ_p>> &out, ZZ_p &k, Mat<ZZ_pX>& matrix, ZZ &m){
 /*
  * Calculate M(1)M(2)...M(n) mod p
  */
-void matrix_factorial(Mat<ZZ_p> &out, long n, Mat<ZZ_pX>& matrix, ZZ &m){
+void matrix_factorial(Mat<ZZ_p>& out, long n, const Mat<ZZ_pX>& matrix, const ZZ& m){
     long rtn = sqrt(n);
     
     vector<Mat<ZZ_p>> seg_prods(rtn+1);
