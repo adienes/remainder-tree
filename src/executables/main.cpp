@@ -7,7 +7,6 @@
 
 #include "../elements/element.hpp"
 #include "../algorithms/rem_forest.hpp"
-
 #include "../algorithms/rem_chunk.hpp"
 
 using std::vector;
@@ -15,8 +14,12 @@ using NTL::ZZ;
 
 vector<Elt<ZZ>> A_main(long lower, long upper){
     vector<Elt<ZZ>> output(upper-lower);
-    for(long i = lower; i < upper; i++){
-        output[i-lower] = Elt<ZZ>(lower+1);
+    
+    if (lower < upper) {
+    	output[0] = Elt<ZZ>(1);
+    }
+    for(long i = lower+1; i < upper; i++){
+        output[i-lower] = Elt<ZZ>(i);
     }
     return output;
 }
@@ -24,9 +27,9 @@ vector<Elt<ZZ>> A_main(long lower, long upper){
 vector<Elt<ZZ>> m_main(long lower, long upper){
     vector<Elt<ZZ>> output(upper-lower);
     for(long i = lower; i < upper; i++){
-        ZZ num(lower+1);
+        ZZ num(i+1);
         if(ProbPrime(num)){
-            output[i-lower] = Elt<ZZ>(lower+1);
+            output[i-lower] = Elt<ZZ>(i+1);
         }
         else{
             output[i-lower] = Elt<ZZ>(1);

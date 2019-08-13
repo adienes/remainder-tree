@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include "intermediate_computation.hpp"
 
 using std::vector;
 
@@ -16,7 +17,7 @@ using NTL::Mat;
 
 template<typename T, typename U>
 T naive_factorial(long n, const U& m, const std::function<vector<T> (long, long)>& get_A){
-    // use get node method in utils.h
+    // use get node method in intermediate_computation.hpp
     return compute_product_node<T, U>(get_A(0, n), m, 1);
 }
 

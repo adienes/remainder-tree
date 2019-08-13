@@ -18,10 +18,10 @@
  */
 
 template <typename T, typename U>
-vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>&,
-											const std::function<vector<U> (long, long)>&,
+vector<std::function<vector<T> ()>> chunkify(std::function<vector<T> (long, long)>,
+											std::function<vector<U> (long, long)>,
 											long, long, long,
-											long forest_param = 0, long recompute_param = 0, PolyMatrix formula = {});
+											long forest_param = 0, long recompute_param = 0, const PolyMatrix& formula = {});
 
 #include "rem_chunk.tpp"
 
