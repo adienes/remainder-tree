@@ -15,11 +15,14 @@ using NTL::ZZ;
 vector<Elt<ZZ>> A_main(long lower, long upper){
     vector<Elt<ZZ>> output(upper-lower);
     
-    if (lower < upper) {
-    	output[0] = Elt<ZZ>(1);
-    }
-    for(long i = lower+1; i < upper; i++){
-        output[i-lower] = Elt<ZZ>(i);
+    for(long i = lower; i < upper; i++){
+    	if (i == 0) {
+    		output[0] = 1;
+    	}
+
+    	else {
+        	output[i-lower] = Elt<ZZ>(i);
+    	}
     }
     return output;
 }
@@ -29,7 +32,7 @@ vector<Elt<ZZ>> m_main(long lower, long upper){
     for(long i = lower; i < upper; i++){
         ZZ num(i+1);
         if(ProbPrime(num)){
-            output[i-lower] = Elt<ZZ>(i+1);
+            output[i-lower] = Elt<ZZ>(num*num);
         }
         else{
             output[i-lower] = Elt<ZZ>(1);
@@ -46,13 +49,14 @@ int main()
     std::function<vector<Elt<ZZ>> (long, long)> A_gen = A_main;
     std::function<vector<Elt<ZZ>> (long, long)> m_gen = m_main;
     
-    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 32, 32, 0, 0);
+    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 32, 8, 0, 0);
 
     for(long i = 0, chunks_size = chunks.size(); i < chunks_size; i++){
         vector<Elt<ZZ>> chunkreturn = chunks[i]();
         for(long j = 0, chunkreturn_size = chunkreturn.size(); j < chunkreturn_size; j++){
-            std::cout << chunkreturn[j] << std::endl;
+            std::cout << chunkreturn[j] << " ";
         }
+        std::cout << std::endl;
     }
     /*
     long B = (1<<19);
