@@ -8,7 +8,6 @@
 #include "../elements/element.hpp"
 #include "factorial_engine.hpp"
 #include <iostream>
-using namespace std;
 
 using NTL::ZZ;
 using NTL::ZZ_p;
@@ -40,7 +39,6 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
     // Linear and Polynomial-type elements
     if(n < 1000000000 || maxdeg >= 2){
         // TODO: convert polynomial coefficients into ZZ_p and call poly_factorial()        
-cout << "good" << endl;        
         // Otherwise, do poly_factorial
         ZZ_pX poly;
         for(auto const& term : formula[0][0]){
