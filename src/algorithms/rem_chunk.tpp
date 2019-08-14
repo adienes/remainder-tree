@@ -4,14 +4,13 @@
 #include "intermediate_computation.hpp"
 #include "rem_factorial.hpp"
 
-#include "tree_io.hpp" //DEBUG
 
 using std::vector;
 
 
 template <typename T, typename U>
-vector<std::function<vector<T> ()>> chunkify(std::function<vector<T> (long, long)> A_gen, // lower and upper bounds are inclusive-exclusive
-											std::function<vector<U> (long, long)> m_gen, // lower and upper bounds are inclusive-exclusive
+vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>& A_gen, // lower and upper bounds are inclusive-exclusive
+											const std::function<vector<U> (long, long)>& m_gen, // lower and upper bounds are inclusive-exclusive
 											long lower_bound, long upper_bound, long chunk_size,
 											long forest_param, long recompute_param, const PolyMatrix& formula) {
 
@@ -35,6 +34,7 @@ vector<std::function<vector<T> ()>> chunkify(std::function<vector<T> (long, long
 
 			U _Y = compute_product_node<U> (_m, 1);
 			T _V = calculate_factorial<T,U>(_LB, _Y, A_gen, formula);
+
 			//DEBUG make sure these functions don't go out of scope somehow?
 			return remainder_forest<T, U> (_A, _m, forest_param, recompute_param, _V, _Y);
 		};
