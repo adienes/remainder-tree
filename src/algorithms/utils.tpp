@@ -6,7 +6,7 @@
 using std::vector;
 
 
-std::string ReplaceAll(std::string str, const std::string& from, const std::string& to) {
+std::string replace_all_substr(std::string str, const std::string& from, const std::string& to) {
     size_t start_pos = 0;
     while((start_pos = str.find(from, start_pos)) != std::string::npos) {
         str.replace(start_pos, from.length(), to);
@@ -31,19 +31,19 @@ std::vector<std::string> split(const std::string& s, char delimiter)
 std::map<long, long> parse_matrix_entry(std::string entry) {
 	//An entry looks like "a_n*x^n + ... a_0"
     std::map<long ,long> polynomial;
-    std::string mangled = ReplaceAll(entry, " ", "");   // delete spaces
-    mangled = ReplaceAll(entry, "-", "+-");             // separate monomials with +
-    mangled = ReplaceAll(mangled, "++", "+");           // merge duplicated + signs 
-    mangled = ReplaceAll(mangled, "x", "x^1");          // add power of 1 to x term
-    mangled = ReplaceAll(mangled, "^1^", "^");          // remove power of 1 to non x terms
-    mangled = ReplaceAll(mangled, "x", "*x");           // add multiplication sign to all coefficients
-    mangled = ReplaceAll(mangled, "**", "*");           // remove duplicated multiplication signs
+    std::string mangled = replace_all_substr(entry, " ", "");   // delete spaces
+    mangled = replace_all_substr(entry, "-", "+-");             // separate monomials with +
+    mangled = replace_all_substr(mangled, "++", "+");           // merge duplicated + signs 
+    mangled = replace_all_substr(mangled, "x", "x^1");          // add power of 1 to x term
+    mangled = replace_all_substr(mangled, "^1^", "^");          // remove power of 1 to non x terms
+    mangled = replace_all_substr(mangled, "x", "*x");           // add multiplication sign to all coefficients
+    mangled = replace_all_substr(mangled, "**", "*");           // remove duplicated multiplication signs
     if (mangled.front() == '*') {
         mangled.insert(mangled.begin(), '+');           // add plus sign to beginning if monic to be covered by next replacement
     }
-    mangled = ReplaceAll(mangled, "+*", "+1*");        // add 1 to all monic monomials
-    mangled = ReplaceAll(mangled, "-*", "-1*");        // add -1 to all negative monic monomials
-    mangled = ReplaceAll(mangled, "*x^", ",");          // replace *x^ with a single character separator 
+    mangled = replace_all_substr(mangled, "+*", "+1*");        // add 1 to all monic monomials
+    mangled = replace_all_substr(mangled, "-*", "-1*");        // add -1 to all negative monic monomials
+    mangled = replace_all_substr(mangled, "*x^", ",");          // replace *x^ with a single character separator 
 
     std::vector<std::string> tokenized = split(mangled, '+');
     tokenized.erase(tokenized.begin()); //Because there is always a leading +
