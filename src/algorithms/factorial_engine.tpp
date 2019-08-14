@@ -7,8 +7,7 @@ using NTL::ZZ_pX;
 using NTL::ZZ_p;
 using NTL::ZZ;
 using NTL::Mat;
-#include <iostream>
-using namespace std;
+
 /*
  * Finds the product A[0]A[1]...A[n-1] using:
  * naive_factorial: naive product tree calculation

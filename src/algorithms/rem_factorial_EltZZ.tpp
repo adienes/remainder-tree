@@ -8,7 +8,6 @@
 #include "../elements/element.hpp"
 #include "factorial_engine.hpp"
 #include <iostream>
-using namespace std;
 
 using NTL::ZZ;
 using NTL::ZZ_p;
