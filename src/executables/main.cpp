@@ -8,6 +8,7 @@
 #include "../elements/element.hpp"
 #include "../algorithms/rem_forest.hpp"
 #include "../algorithms/rem_chunk.hpp"
+#include "../algorithms/utils.hpp"
 
 using std::vector;
 using NTL::ZZ;
@@ -16,23 +17,20 @@ vector<Elt<ZZ>> A_main(long lower, long upper){
     vector<Elt<ZZ>> output(upper-lower);
     
     for(long i = lower; i < upper; i++){
-    	if (i == 0) {
-    		output[0] = 1;
-    	}
-
-    	else {
-        	output[i-lower] = Elt<ZZ>(i);
-    	}
+        output[i-lower] = Elt<ZZ>(i+1);
     }
     return output;
 }
 
 vector<Elt<ZZ>> m_main(long lower, long upper){
+    vector<Elt<ZZ>> test = A_main(0, 10);
+    cout << "test: " << test.size() << endl;
+
     vector<Elt<ZZ>> output(upper-lower);
     for(long i = lower; i < upper; i++){
         ZZ num(i+1);
         if(ProbPrime(num)){
-            output[i-lower] = Elt<ZZ>(num*num);
+            output[i-lower] = Elt<ZZ>(num);
         }
         else{
             output[i-lower] = Elt<ZZ>(1);
@@ -49,14 +47,23 @@ int main()
     std::function<vector<Elt<ZZ>> (long, long)> A_gen = A_main;
     std::function<vector<Elt<ZZ>> (long, long)> m_gen = m_main;
     
-    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 32, 8, 0, 0);
+    vector<int> poly(2);
+    poly[0] = 1;
+    poly[1] = 1;
+    vector<vector<int>> col(1);
+    col[0] = poly;
+    PolyMatrix mat(1);
+    mat[0] = col;
+
+
+    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 32768, 4096, 0, 0, mat);
 
     for(long i = 0, chunks_size = chunks.size(); i < chunks_size; i++){
         vector<Elt<ZZ>> chunkreturn = chunks[i]();
         for(long j = 0, chunkreturn_size = chunkreturn.size(); j < chunkreturn_size; j++){
-            std::cout << chunkreturn[j] << " ";
+//            std::cout << chunkreturn[j] << " ";
         }
-        std::cout << std::endl;
+//        std::cout << std::endl;
     }
     /*
     long B = (1<<19);

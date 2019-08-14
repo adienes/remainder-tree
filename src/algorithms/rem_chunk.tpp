@@ -10,8 +10,8 @@ using std::vector;
 
 
 template <typename T, typename U>
-vector<std::function<vector<T> ()>> chunkify(std::function<vector<T> (long, long)> A_gen, // lower and upper bounds are inclusive-exclusive
-											std::function<vector<U> (long, long)> m_gen, // lower and upper bounds are inclusive-exclusive
+vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long, long)>& A_gen, // lower and upper bounds are inclusive-exclusive
+											const std::function<vector<U> (long, long)>& m_gen, // lower and upper bounds are inclusive-exclusive
 											long lower_bound, long upper_bound, long chunk_size,
 											long forest_param, long recompute_param, const PolyMatrix& formula) {
 
@@ -29,14 +29,14 @@ vector<std::function<vector<T> ()>> chunkify(std::function<vector<T> (long, long
 	while (_UB <= upper_bound) { 
         
 
-		std::function<vector<T> ()> chunk_func = [=]() -> vector<T> {
+		std::function<vector<T> ()> chunk_func = [&]() -> vector<T> {
 			vector<T> _A = A_gen(_LB, _UB);
 			vector<U> _m = m_gen(_LB, _UB);
-
-			U _Y = compute_product_node<U> (_m, 1);
-			T _V = calculate_factorial<T,U>(_LB, _Y, A_gen, formula);
+cout << "a_gen " << _A.size() << endl;
+			U _Y = compute_product_node(_m, 1);
+			T _V = calculate_factorial(_LB, _Y, A_gen, formula);
 			//DEBUG make sure these functions don't go out of scope somehow?
-			return remainder_forest<T, U> (_A, _m, forest_param, recompute_param, _V, _Y);
+			return remainder_forest(_A, _m, forest_param, recompute_param, _V, _Y);
 		};
 
 		chunk_generators.push_back(chunk_func);

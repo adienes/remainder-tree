@@ -7,7 +7,8 @@
 
 #include "../elements/element.hpp"
 #include "factorial_engine.hpp"
-
+#include <iostream>
+using namespace std;
 
 using NTL::ZZ;
 using NTL::ZZ_p;
@@ -15,35 +16,31 @@ using NTL::ZZ_pX;
 using NTL::Mat;
 
 
-template<>
 Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector<Elt<ZZ>> (long, long)>& get_A, const PolyMatrix& formula){
     assert(("Element given is not a square matrix." && (formula.size() == formula[0].size())));
     
     // Matrix-type elements
     assert(("ZZ's must have 1x1 matrix formulas." && ((long)formula.size() <= 1)));
     
-    long formula00_size = formula[0][0].size();
 
     // Do naive_factorial if n is small enough
-    if(n < 30000){
+    if(n < 30000 || formula.size() == 0){
+cout << "bad" << endl;
+cout << "n size " << get_A(0, n).size() << endl;
         return naive_factorial<Elt<ZZ>, Elt<ZZ>>(n, m, get_A); // TODO: write naive_factorial
     }
 
+    long formula00_size = formula[0][0].size();
     // Linear and Polynomial-type elements
-    else if(n < 1000000000 || formula00_size >= 2){
-        // TODO: convert polynomial coefficients into ZZ_p and call poly_factorial()
-        
-        
+    if(n < 1000000000 || formula00_size >= 2){
+        // TODO: convert polynomial coefficients into ZZ_p and call poly_factorial()        
+cout << "good" << endl;        
         // Otherwise, do poly_factorial
         ZZ_pX poly;
         for(long exp = 0; exp < formula00_size; exp++){                                                                                                     
             ZZ_p coeff;
             coeff.init(m.t);
-            coeff = 0;
-            for(long digit = formula[0][0][exp].size()-1; digit >= 0; digit--){
-                coeff *= 2;
-                coeff += formula[0][0][exp][digit] ? 1 : 0;
-            }
+            coeff = formula[0][0][exp];
             SetCoeff(poly, exp, coeff);
         }
 
@@ -63,11 +60,7 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
         for(long exp = 0; exp < formula00_size; exp++){
             ZZ_p coeff;
             coeff.init(m.t); 
-            coeff = 0;
-            for(long digit = formula[0][0][exp].size()-1; digit >= 0; digit--){
-                coeff *= 2;
-                coeff += formula[0][0][exp][digit] ? 1 : 0;
-            }
+            coeff = formula[0][0][exp];
             SetCoeff(poly, exp, coeff);
         }
         matrix.put(0, 0, poly);

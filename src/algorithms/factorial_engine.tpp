@@ -7,7 +7,8 @@ using NTL::ZZ_pX;
 using NTL::ZZ_p;
 using NTL::ZZ;
 using NTL::Mat;
-
+#include <iostream>
+using namespace std;
 /*
  * Finds the product A[0]A[1]...A[n-1] using:
  * naive_factorial: naive product tree calculation
@@ -18,7 +19,9 @@ using NTL::Mat;
 template<typename T, typename U>
 T naive_factorial(long n, const U& m, const std::function<vector<T> (long, long)>& get_A){
     // use get node method in intermediate_computation.hpp
-    return compute_product_node<T, U>(get_A(0, n), m, 1);
+    vector<T> A_list = get_A(0, n);
+    cout << A_list.size() << endl;
+    return compute_product_node<T, U>(A_list, m, 1);
 }
 
 // Helper methods for poly_factorial

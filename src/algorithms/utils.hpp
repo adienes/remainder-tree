@@ -7,10 +7,9 @@
 /* PolyMatrix: Matrix of polys w/ coeffs represented by binary arrays
  * []: row index
  * [][]: column index
- * [][][]: polynomial coefficient at x^index
- * [][][][]: ith least significant digit base 2 of coefficient
+ * [][][]: polynomial coefficient at x^index (MUST BE AN INT)
  */
-typedef std::vector<std::vector<std::vector<std::vector<bool>>>> PolyMatrix; 
+typedef std::vector<std::vector<std::vector<int>>> PolyMatrix; 
 
 bool is_power2(long);
 
