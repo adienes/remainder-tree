@@ -62,7 +62,7 @@ int main()
     PolyMatrix mat(1);
     mat[0] = col;
 
-    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 65536, 32768, 0, 0, mat);
+    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 1<<25, 1<<25, 0, 0, mat);
 
     std::cout << "Finished chunkifying!" << std::endl;
 

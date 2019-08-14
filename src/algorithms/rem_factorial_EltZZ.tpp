@@ -40,7 +40,6 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
     // Linear and Polynomial-type elements
     if(n < 1000000000 || maxdeg >= 2){
         // TODO: convert polynomial coefficients into ZZ_p and call poly_factorial()        
-cout << "good" << endl;        
         // Otherwise, do poly_factorial
         ZZ_pX poly;
         for(auto const& term : formula[0][0]){
@@ -60,6 +59,7 @@ cout << "good" << endl;
     // Large Linear-type elements
     else{ 
         // TODO: convert polynomial coefficients into Mat<ZZ_p> and call matrix_factorial()
+        cout << "really GOOD" << endl;
         Mat<ZZ_pX> matrix;
         matrix.SetDims(1, 1);
         ZZ_pX poly;
@@ -70,12 +70,12 @@ cout << "good" << endl;
             SetCoeff(poly, term.first, coeff);
         }
         matrix.put(0, 0, poly);
-
+cout << "poly: " << poly << endl;
         Mat<ZZ_p> output;
         output.SetDims(1, 1);
         output = matrix_factorial(n, m.t, matrix);
         Elt<ZZ> output_elt(rep(output.get(0, 0)));
-
+cout << "done with factorial" << endl;
         return output_elt;
         
     }
