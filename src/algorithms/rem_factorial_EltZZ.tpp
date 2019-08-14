@@ -17,11 +17,15 @@ using NTL::Mat;
 
 
 Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector<Elt<ZZ>> (long, long)>& get_A, const PolyMatrix& formula){
+    if (n == 0) {
+        return Elt<ZZ>(1);
+    }
+
+    assert(("No formula given!" && not formula.empty()));
     assert(("Element given is not a square matrix." && (formula.size() == formula[0].size())));
     
     // Matrix-type elements
     assert(("ZZ's must have 1x1 matrix formulas." && ((long)formula.size() <= 1)));
-    
 
     // Do naive_factorial if n is small enough
     if(n < 30000 || formula.size() == 0){

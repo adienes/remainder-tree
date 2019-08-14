@@ -4,7 +4,6 @@
 #include "intermediate_computation.hpp"
 #include "rem_factorial.hpp"
 
-#include "tree_io.hpp" //DEBUG
 
 using std::vector;
 

@@ -1,9 +1,89 @@
-#include <vector>
-#include <assert.h>
+#include <cassert>
+#include <sstream>
 
 #include "../elements/element.hpp"
 
 using std::vector;
+
+
+std::string ReplaceAll(std::string str, const std::string& from, const std::string& to) {
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
+    }
+    return str;
+}
+
+
+std::vector<std::string> split(const std::string& s, char delimiter)
+{
+   std::vector<std::string> tokens;
+   std::string token;
+   std::istringstream tokenStream(s);
+   while (std::getline(tokenStream, token, delimiter))
+   {
+      tokens.push_back(token);
+   }
+   return tokens;
+}
+
+std::map<long, long> parse_matrix_entry(std::string entry) {
+	//An entry looks like "a_n*x^n + ... a_0"
+	std::map<long ,long> polynomial;
+  std::string mangled = ReplaceAll(entry, "-", "+-");
+  
+  if (mangled.front() == 'x') {
+    mangled.insert(mangled.begin(), '+');
+  }
+  
+  mangled = ReplaceAll(mangled, "+x", "+1*x");
+  mangled = ReplaceAll(mangled, "-x", "-1*x");
+  mangled = ReplaceAll(mangled, "x+", "x^1+");
+
+  std::vector<std::string> tokenized = split(mangled, '+');
+  tokenized.erase(tokenized.begin()); //Because there is always a leading +
+
+  for (auto&& c : tokenized) {
+  	std::cout << c << ", ";
+  }
+  std::cout << std::endl;
+
+  for (auto&& c : tokenized) {
+
+  	std::vector<std::string> cepair = split(c, 'x');
+
+  	for (auto&& b : cepair) {
+  		std::cout << b << " ";
+  	}
+  	std::cout << std::endl;
+
+  	// std::string::size_type exp = 0;
+
+   //  std::cout << "c = " << c << std::endl;
+   //  std::cout << "and the integer version!" << std::endl;
+   //  std::cout << std::stoll(c, &exp) << " coeff " << std::endl;;
+
+   //  std::cout << "exponent = ? " << c.substr(exp) << std::endl;
+  }
+  return polynomial;
+}
+
+
+
+PolyMatrix parse_matrix_formula(std::string formula) {
+	PolyMatrix output;
+
+	std::stringstream ss(formula);
+	for (int i; ss >> i;) {
+		std::cout << i << " ";
+		if(ss.peek() == ',') {
+			ss.ignore();
+		}
+	}
+	return output;
+}
+
 
 bool is_power2(long x) {
 	return (x != 0) && ((x & (x - 1)) == 0);
