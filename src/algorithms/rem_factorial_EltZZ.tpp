@@ -29,28 +29,30 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
 
     // Do naive_factorial if n is small enough
     if(n < 30000 || formula.size() == 0){
-cout << "bad" << endl;
-cout << "n size " << get_A(0, n).size() << endl;
         return naive_factorial<Elt<ZZ>, Elt<ZZ>>(n, m, get_A); // TODO: write naive_factorial
     }
-
-    long formula00_size = formula[0][0].size();
+    long maxdeg = 0;
+    for(auto const& term : formula[0][0]){
+        if(term.first > maxdeg){
+            maxdeg = term.first;
+        }
+    }
     // Linear and Polynomial-type elements
-    if(n < 1000000000 || formula00_size >= 2){
+    if(n < 1000000000 || maxdeg >= 2){
         // TODO: convert polynomial coefficients into ZZ_p and call poly_factorial()        
 cout << "good" << endl;        
         // Otherwise, do poly_factorial
         ZZ_pX poly;
-        for(long exp = 0; exp < formula00_size; exp++){                                                                                                     
+        for(auto const& term : formula[0][0]){
             ZZ_p coeff;
             coeff.init(m.t);
-            coeff = formula[0][0][exp];
-            SetCoeff(poly, exp, coeff);
+            coeff = term.second;
+            SetCoeff(poly, term.first, coeff);
         }
-
         ZZ_p output;
         output.init(m.t);
         output = poly_factorial(n, m.t, poly); // TODO: write poly_factorial
+
         Elt<ZZ> output_elt(rep(output));
 
         return output_elt;
@@ -61,11 +63,11 @@ cout << "good" << endl;
         Mat<ZZ_pX> matrix;
         matrix.SetDims(1, 1);
         ZZ_pX poly;
-        for(long exp = 0; exp < formula00_size; exp++){
+        for(auto const& term : formula[0][0]){
             ZZ_p coeff;
-            coeff.init(m.t); 
-            coeff = formula[0][0][exp];
-            SetCoeff(poly, exp, coeff);
+            coeff.init(m.t);
+            coeff = term.second;
+            SetCoeff(poly, term.first, coeff);
         }
         matrix.put(0, 0, poly);
 

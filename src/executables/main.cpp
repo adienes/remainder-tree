@@ -19,15 +19,17 @@ vector<Elt<ZZ>> A_main(long lower, long upper){
     vector<Elt<ZZ>> output(upper-lower);
     
     for(long i = lower; i < upper; i++){
-        output[i-lower] = Elt<ZZ>(i+1);
+        if(i == 0){
+            output[0] = Elt<ZZ>(1);
+        }
+        else{
+            output[i-lower] = Elt<ZZ>(i);
+        }
     }
     return output;
 }
 
 vector<Elt<ZZ>> m_main(long lower, long upper){
-    vector<Elt<ZZ>> test = A_main(0, 10);
-    cout << "test: " << test.size() << endl;
-
     vector<Elt<ZZ>> output(upper-lower);
     for(long i = lower; i < upper; i++){
         ZZ num(i+1);
@@ -54,16 +56,13 @@ int main()
     std::function<vector<Elt<ZZ>> (long, long)> A_gen = A_main;
     std::function<vector<Elt<ZZ>> (long, long)> m_gen = m_main;
     
-    vector<int> poly(2);
-    poly[0] = 1;
-    poly[1] = 1;
-    vector<vector<int>> col(1);
+    std::map<long, long> poly  = parse_matrix_entry("x");
+    vector<std::map<long, long>> col(1);
     col[0] = poly;
     PolyMatrix mat(1);
     mat[0] = col;
 
-
-    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 32768, 4096, 0, 0, mat);
+    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 65536, 32768, 0, 0, mat);
 
     std::cout << "Finished chunkifying!" << std::endl;
 
@@ -73,10 +72,6 @@ int main()
         std::cout << "got chunkreturn! it is:" << std::endl;;
         print_row(chunkreturn);
 
-        for(long j = 0, chunkreturn_size = chunkreturn.size(); j < chunkreturn_size; j++){
-//            std::cout << chunkreturn[j] << " ";
-        }
-//        std::cout << std::endl;
     }
 
 

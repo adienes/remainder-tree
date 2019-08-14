@@ -30,43 +30,48 @@ std::vector<std::string> split(const std::string& s, char delimiter)
 
 std::map<long, long> parse_matrix_entry(std::string entry) {
 	//An entry looks like "a_n*x^n + ... a_0"
-	std::map<long ,long> polynomial;
-  std::string mangled = ReplaceAll(entry, "-", "+-");
-  
-  if (mangled.front() == 'x') {
-    mangled.insert(mangled.begin(), '+');
-  }
-  
-  mangled = ReplaceAll(mangled, "+x", "+1*x");
-  mangled = ReplaceAll(mangled, "-x", "-1*x");
-  mangled = ReplaceAll(mangled, "x+", "x^1+");
+    std::map<long ,long> polynomial;
+    std::string mangled = ReplaceAll(entry, " ", "");   // delete spaces
+    mangled = ReplaceAll(entry, "-", "+-");             // separate monomials with +
+    mangled = ReplaceAll(mangled, "++", "+");           // merge duplicated + signs 
+    mangled = ReplaceAll(mangled, "x", "x^1");          // add power of 1 to x term
+    mangled = ReplaceAll(mangled, "^1^", "^");          // remove power of 1 to non x terms
+    mangled = ReplaceAll(mangled, "x", "*x");           // add multiplication sign to all coefficients
+    mangled = ReplaceAll(mangled, "**", "*");           // remove duplicated multiplication signs
+    if (mangled.front() == '*') {
+        mangled.insert(mangled.begin(), '+');           // add plus sign to beginning if monic to be covered by next replacement
+    }
+    mangled = ReplaceAll(mangled, "+*", "+1*");        // add 1 to all monic monomials
+    mangled = ReplaceAll(mangled, "-*", "-1*");        // add -1 to all negative monic monomials
+    mangled = ReplaceAll(mangled, "*x^", ",");          // replace *x^ with a single character separator 
 
-  std::vector<std::string> tokenized = split(mangled, '+');
-  tokenized.erase(tokenized.begin()); //Because there is always a leading +
+    std::vector<std::string> tokenized = split(mangled, '+');
+    tokenized.erase(tokenized.begin()); //Because there is always a leading +
 
-  for (auto&& c : tokenized) {
-  	std::cout << c << ", ";
-  }
-  std::cout << std::endl;
+    for (auto&& c : tokenized) {
+        std::cout << c << ", ";
+    }
+    std::cout << std::endl;
 
-  for (auto&& c : tokenized) {
+    for (auto&& c : tokenized) {
 
-  	std::vector<std::string> cepair = split(c, 'x');
+        std::vector<std::string> cepair = split(c, ',');
 
-  	for (auto&& b : cepair) {
-  		std::cout << b << " ";
-  	}
-  	std::cout << std::endl;
+        for (auto&& b : cepair) {
+            std::cout << b << " ";
+        }
+        std::cout << std::endl;
+        
+        polynomial.insert(std::pair<long, long>(stoi(cepair[1]), stoi(cepair[0])));
+        //  std::string::size_type exp = 0;
 
-  	// std::string::size_type exp = 0;
+        //  std::cout << "c = " << c << std::endl;
+        //  std::cout << "and the integer version!" << std::endl;
+        //  std::cout << std::stoll(c, &exp) << " coeff " << std::endl;;
 
-   //  std::cout << "c = " << c << std::endl;
-   //  std::cout << "and the integer version!" << std::endl;
-   //  std::cout << std::stoll(c, &exp) << " coeff " << std::endl;;
-
-   //  std::cout << "exponent = ? " << c.substr(exp) << std::endl;
-  }
-  return polynomial;
+        //  std::cout << "exponent = ? " << c.substr(exp) << std::endl;
+    }
+    return polynomial;
 }
 
 

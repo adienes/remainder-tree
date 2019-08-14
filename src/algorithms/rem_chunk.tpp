@@ -24,14 +24,12 @@ vector<std::function<vector<T> ()>> chunkify(const std::function<vector<T> (long
     
 	long _UB = lower_bound+chunk_size; //UB stands for upper bound
 	long _LB = lower_bound;
-
 	while (_UB <= upper_bound) { 
         
 
-		std::function<vector<T> ()> chunk_func = [&]() -> vector<T> {
+		std::function<vector<T> ()> chunk_func = [=]() -> vector<T> {
 			vector<T> _A = A_gen(_LB, _UB);
 			vector<U> _m = m_gen(_LB, _UB);
-cout << "a_gen " << _A.size() << endl;
 			U _Y = compute_product_node(_m, 1);
 			T _V = calculate_factorial(_LB, _Y, A_gen, formula);
 			//DEBUG make sure these functions don't go out of scope somehow?
