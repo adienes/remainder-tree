@@ -58,6 +58,7 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
     // Large Linear-type elements
     else{ 
         // TODO: convert polynomial coefficients into Mat<ZZ_p> and call matrix_factorial()
+        cout << "really GOOD" << endl;
         Mat<ZZ_pX> matrix;
         matrix.SetDims(1, 1);
         ZZ_pX poly;
@@ -68,12 +69,12 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
             SetCoeff(poly, term.first, coeff);
         }
         matrix.put(0, 0, poly);
-
+cout << "poly: " << poly << endl;
         Mat<ZZ_p> output;
         output.SetDims(1, 1);
         output = matrix_factorial(n, m.t, matrix);
         Elt<ZZ> output_elt(rep(output.get(0, 0)));
-
+cout << "done with factorial" << endl;
         return output_elt;
         
     }

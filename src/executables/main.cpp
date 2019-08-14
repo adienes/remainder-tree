@@ -47,12 +47,22 @@ vector<Elt<ZZ>> m_main(long lower, long upper){
 
 int main()
 {
+	
+
+    
+    // std::string line = "x^5+43*x^2-x-9";
+    // parse_matrix_entry(line);
+
     std::function<vector<Elt<ZZ>> (long, long)> A_gen = A_main;
     std::function<vector<Elt<ZZ>> (long, long)> m_gen = m_main;
     
-    PolyMatrix mat = parse_matrix_formula("[x]");
+    std::map<long, long> poly  = parse_matrix_entry("x");
+    vector<std::map<long, long>> col(1);
+    col[0] = poly;
+    PolyMatrix mat(1);
+    mat[0] = col;
 
-    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 32, 32, 0, 0, mat);
+    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 1<<25, 1<<25, 0, 0, mat);
 
     std::cout << "Finished chunkifying!" << std::endl;
 

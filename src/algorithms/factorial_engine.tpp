@@ -35,23 +35,17 @@ ZZ_p poly_factorial(long n, const ZZ& m, const ZZ_pX& poly){
 }
 
 // Helper methods for matrix_factorial
-void A(Mat<ZZ_p>& out, const ZZ_p& x, const Mat<ZZ_pX>& in);
+void A_gen(Mat<ZZ_p>& out, const ZZ_p& x, const Mat<ZZ_pX>& in);
 void invert_all(vector<ZZ_p>& out, const vector<ZZ_p>& a);
 void find_delta(vector<ZZ_p>& out, const ZZ& m);
 void find_delta(vector<ZZ_p>& out, const ZZ& m, const ZZ_p& a);
 void shift_values(vector<ZZ_p>& out, const vector<ZZ_p>& values, const ZZ_p& a, const ZZ_p& b, const ZZ& m);
 void shift_values(vector<Mat<ZZ_p>>& out, const vector<Mat<ZZ_p>>& values, const ZZ_p& a, const ZZ_p& b, const ZZ& m);
-void multieval_prod(vector<Mat<ZZ_p>>& out, const Mat<ZZ_pX>& matrix, const ZZ& m);
-void multieval_prod(vector<Mat<ZZ_p>>& out, const ZZ_p& k, const Mat<ZZ_pX>& matrix, const ZZ& m);
-void matrix_factorial(Mat<ZZ_p>& out, long n, const Mat<ZZ_pX>& matrix, const ZZ& m);
+void multieval_prod(vector<Mat<ZZ_p>>& out, const std::function<void (Mat<ZZ_p>&, const ZZ_p&)>& A, const ZZ& m);
+void multieval_prod(vector<Mat<ZZ_p>>& out, const ZZ_p& k, const std::function<void (Mat<ZZ_p>&, const ZZ_p&)>& A, const ZZ& m);
+void mat_fac(Mat<ZZ_p>& out, long n, const std::function<void (Mat<ZZ_p>&, const ZZ_p&)>& A, const ZZ& m);
 
-Mat<ZZ_p> matrix_factorial(long n, const ZZ& m, const Mat<ZZ_pX>& matrix){
-     Mat<ZZ_p> output;
-     matrix_factorial(output, n, matrix, m);
-     return output;
-}
-
-void A(Mat<ZZ_p>& out, const ZZ_p& x, const Mat<ZZ_pX>& in){
+void A_gen(Mat<ZZ_p>& out, const ZZ_p& x, const Mat<ZZ_pX>& in){
     out.SetDims(in.NumRows(), in.NumCols());
     for(long row = 0; row < in.NumRows(); row++){
         for(long col = 0; col < in.NumCols(); col++){
@@ -59,6 +53,14 @@ void A(Mat<ZZ_p>& out, const ZZ_p& x, const Mat<ZZ_pX>& in){
         }
     }
 }
+
+Mat<ZZ_p> matrix_factorial(long n, const ZZ& m, const Mat<ZZ_pX>& matrix){
+     Mat<ZZ_p> output;
+     std::function<void (Mat<ZZ_p>&, const ZZ_p&)> A = std::bind(A_gen, std::placeholders::_1, std::placeholders::_2, matrix);
+     mat_fac(output, n, A, m);
+     return output;
+}
+
 
 /*
  * BEGIN: poly_factorial algorithm
@@ -207,19 +209,20 @@ void invert_all(vector<ZZ_p>& out, const vector<ZZ_p>& a){
 void find_delta(vector<ZZ_p>& out, const ZZ& m){
     long d = out.size() - 1;
     vector<ZZ_p> ints(d);
+//cout << "setting inverted stuff" << endl;
     for(long i = 0, ints_size = ints.size(); i < ints_size; i++){
         ints[i].init(m);
         ints[i] = i+1;
     }
     vector<ZZ_p> inv_ints(d);
     invert_all(inv_ints, ints);
-    
+//cout << "done inverting starting calculation" << endl;
     vector<ZZ_p> deltas(d+1);
     deltas[0] = inv_ints[0]; // = 1
     for(long i = 1, inv_ints_size = inv_ints.size(); i < inv_ints_size; i++){
         mul(deltas[0], deltas[0], inv_ints[i]);
     } // deltas[0] = 1/d!
-    
+//cout << "done calculation set sign" << endl;
     if(d%2 == 1){
         deltas[0] = -deltas[0]; // deltas[0] = 1/((-1)^d*d!)
     }
@@ -228,7 +231,7 @@ void find_delta(vector<ZZ_p>& out, const ZZ& m){
         mul(deltas[i], deltas[i-1], i-1-d);
         mul(deltas[i], deltas[i], inv_ints[i-1]);
     }
-
+//cout << "finished inverting everything" << endl;
     out = deltas;
 }
 
@@ -266,17 +269,20 @@ void find_delta(vector<ZZ_p>& out, const ZZ_p& a, const ZZ& m){
  */
 void shift_values(vector<ZZ_p>& out, const vector<ZZ_p>& values, const ZZ_p& a, const ZZ_p& b, const ZZ& m){
     assert(out.size() == values.size());
-
+//cout << "find delta" << endl;
     long d = values.size() - 1;
     vector<ZZ_p> P(d+1);
     find_delta(P, m);
-    
+//cout << "finished finding delta" << endl; 
     ZZ_pX Px;
+//cout << "number of coefficients: " << values.size() << endl;
     for(long i = 0, values_size = values.size(); i < values_size; i++){
+//cout << "set coefficient " << i << endl;
         mul(P[i], P[i], values[i]);
         SetCoeff(Px, i, P[i]);
+//cout << "done setting coeff" << i << endl;
     }
-
+//cout << "Px = " << Px << endl;
     ZZ_p shift;
     shift.init(m);
     inv(shift, b);
@@ -292,14 +298,15 @@ void shift_values(vector<ZZ_p>& out, const vector<ZZ_p>& values, const ZZ_p& a, 
     for(long i = 0, S_size = S.size(); i < S_size; i++){
         SetCoeff(Sx, i, S[i]);
     }   
-
+//cout << "Sx = " << Sx << endl;
     ZZ_pX PS;
     mul(PS, Px, Sx);
-
+//cout << "PS = " << PS << endl;
     find_delta(out, shift, m);
     for(long i = 0, out_size = out.size(); i < out_size; i++){
         mul(out[i], out[i], coeff(PS, i+d));
     }
+//cout << "finished shifting" << endl;
 }
                                                                                   
 /*
@@ -336,46 +343,47 @@ void shift_values(vector<Mat<ZZ_p>>& out, const vector<Mat<ZZ_p>>& values, const
  * M_k(x) = M(x+1)M(x+2)...M(x+k)
  * To calculate M_m(x) at 0, k, ..., mk, use the value M_m/2(x) at 0, k, ..., (m/2)k
  */
-void multieval_prod(vector<Mat<ZZ_p>>& out, const Mat<ZZ_pX>& matrix, const ZZ& m){
+void multieval_prod(vector<Mat<ZZ_p>>& out, const std::function<void (Mat<ZZ_p>&, const ZZ_p&)>& A, const ZZ& m){
     ZZ_p kp;
     kp.init(m);
     kp = out.size()-1;
-    multieval_prod(out, kp, matrix, m);
+    multieval_prod(out, kp, A, m);
 }
 /*
  * m := out.size()-1
  */
-void multieval_prod(vector<Mat<ZZ_p>>& out, const ZZ_p& k, const Mat<ZZ_pX>& matrix, const ZZ& m){
+void multieval_prod(vector<Mat<ZZ_p>>& out, const ZZ_p& k, const std::function<void (Mat<ZZ_p>&, const ZZ_p&)>& A, const ZZ& m){
     long n = out.size()-1;
-    
+cout << "currently checking with size: " << n << endl; 
     if(n == 1){
         ZZ_p one;
         one.init(m);
         one = 1;
         ZZ_p kone = k+1;
-        A(out[0], one, matrix);
-        A(out[1], kone, matrix);
+        A(out[0], one);
+        A(out[1], kone);
         return;
     }
 
     vector<Mat<ZZ_p>> lower_layer(n/2+1);
-    multieval_prod(lower_layer, k, matrix, m);
-   
+    multieval_prod(lower_layer, k, A, m);
+cout << "finished recursion at " << n << endl;   
     vector<Mat<ZZ_p>> ll_extend(lower_layer.size());
     ZZ_p n21k = k*(n/2+1);
     shift_values(ll_extend, lower_layer, n21k, k, m);
-
+cout << "finished shifting values 1" << endl;
     vector<Mat<ZZ_p>> ll_total;
     ll_total.reserve(lower_layer.size() + ll_extend.size());
     ll_total.insert(ll_total.end(), lower_layer.begin(), lower_layer.end());
     ll_total.insert(ll_total.end(), ll_extend.begin(), ll_extend.end());
-
+//cout << "done reserving" << endl;
     vector<Mat<ZZ_p>> ll_shift(ll_total.size());
     ZZ_p n2;
     n2.init(m);
     n2 = n/2;
+//cout << "time to shift" << endl;
     shift_values(ll_shift, ll_total, n2, k, m);
-
+cout << "finished shifting values 2" << endl;
     for(long i = 0, out_size = out.size(); i < out_size; i++){
         mul(out[i], ll_shift[i], ll_total[i]);
     }
@@ -383,21 +391,23 @@ void multieval_prod(vector<Mat<ZZ_p>>& out, const ZZ_p& k, const Mat<ZZ_pX>& mat
         for(long i = 0, out_size = out.size(); i < out_size; i++){
             ZZ_p ikn = k*i + n;
             Mat<ZZ_p> extra;
-            A(extra, ikn, matrix);
+            A(extra, ikn);
             mul(out[i], extra, out[i]);
         }
     }
+
+//cout << "finished" << endl;
 
 }
 
 /*
  * Calculate M(1)M(2)...M(n) mod p
  */
-void matrix_factorial(Mat<ZZ_p>& out, long n, const Mat<ZZ_pX>& matrix, const ZZ& m){
+void mat_fac(Mat<ZZ_p>& out, long n, const std::function<void (Mat<ZZ_p>&, const ZZ_p&)>& A, const ZZ& m){
     long rtn = sqrt(n);
     
     vector<Mat<ZZ_p>> seg_prods(rtn+1);
-    multieval_prod(seg_prods, matrix, m);
+    multieval_prod(seg_prods, A, m);
 
     if(n < rtn*rtn + rtn){
         for(long i = seg_prods.size()-2; i > 0; i--){
@@ -408,7 +418,7 @@ void matrix_factorial(Mat<ZZ_p>& out, long n, const Mat<ZZ_pX>& matrix, const ZZ
             ZZ_p x;
             x.init(m);
             x = i;
-            A(extra, x, matrix);
+            A(extra, x);
             mul(seg_prods[0], extra, seg_prods[0]);
         }
     }
@@ -421,7 +431,7 @@ void matrix_factorial(Mat<ZZ_p>& out, long n, const Mat<ZZ_pX>& matrix, const ZZ
             ZZ_p x;
             x.init(m);
             x = i;
-            A(extra, x, matrix);
+            A(extra, x);
             mul(seg_prods[0], extra, seg_prods[0]);
         }
     }
