@@ -5,16 +5,15 @@
 
 using std::vector;
 
-vector <vector<long>> complexity_graph(long N, long d, vector <std::function< vector<bool> (long N)>> search_funcs) {
+vector <vector<long>> complexity_graph(long d, vector <std::function< vector<bool> (long N)>> search_funcs) {
 	long s = search_funcs.size();
 
 	vector<vector<long>> graph(1);
 	graph.reserve(d);
 	graph[0] = vector<long> (s+1, 0); //Corresponds to origin---make s+1 larger if there are other data collected.
-	
-	long interval = N/d;
-	long B = interval;
-	while (B <= N) {
+
+	long B = 1;
+	while (d >= 0) {
 
 		vector<long> datum;
 		datum.reserve(s+1);
@@ -31,7 +30,8 @@ vector <vector<long>> complexity_graph(long N, long d, vector <std::function< ve
 
 		graph.push_back(datum);
 
-		B += interval;
+		B <<= 1;
+		d -= 1;
 	}
 
 	return graph;

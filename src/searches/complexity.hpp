@@ -8,14 +8,14 @@
 /* TODO: It is slightly dangerous to cast milliseconds to long.
  * TODO: Does not make any checks for powers of 2 etc. Please only pass in powers of 2.
  *
- * This function is a bit of a weird one. I'm assuming that passed in is an upper bound,
- * a number of datapoints, and a vector of search functions which take a range and return
+ * This function is a bit of a weird one. I'm assuming that passed in is a number of powers of
+ * 2 to compute, and a vector of search functions which take a range and return
  * a vector of bools (found item or not). The search functions passed in might want more
  * arguments than just an upper bound. Use std::bind for this purpose to pass in fixed arguments.
  * Return value is a vector containing the x-value, and then the y-values for each function,
  * plus any other data we may want to collect (dunno what yet) all collected in a vector.
  */
-std::vector <std::vector<long>> complexity_graph(long, long, std::vector <std::function< std::vector<bool> (long N)>>);
+std::vector <std::vector<long>> complexity_graph(long, std::vector <std::function< std::vector<bool> (long N)>>);
 
 void write_complexity_graph (const std::vector<std::vector<long>>&, std::string);
 

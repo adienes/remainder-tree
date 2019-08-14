@@ -21,12 +21,10 @@ vector<bool> constant_slow(long B) {
 }
 
 
-vector<bool> random_zz(long B, long forest_param, long recompute_param) {
+vector<bool> random_zz_remtree(long B) {
 
 	vector <Elt<NTL::ZZ> > A_rand (B);
 	vector <Elt<NTL::ZZ> > m_rand (B);
-
-	//using namespace std;
 
 	std::random_device rd;
 	std::mt19937 mt(rd());
@@ -38,7 +36,7 @@ vector<bool> random_zz(long B, long forest_param, long recompute_param) {
 		m_rand[i] = dist(mt);
 	}
 
-	remainder_forest(A_rand, m_rand, forest_param, recompute_param);
+	remainder_forest(A_rand, m_rand, 0, 0);
 
 	vector<bool> ret(1);
 	return ret;
