@@ -16,13 +16,11 @@ std::string replace_all_substr(std::string str, const std::string& from, const s
 }
 
 
-std::vector<std::string> split(const std::string& s, char delimiter)
-{
+std::vector<std::string> split(const std::string& s, char delimiter) {
    std::vector<std::string> tokens;
    std::string token;
    std::istringstream tokenStream(s);
-   while (std::getline(tokenStream, token, delimiter))
-   {
+   while (std::getline(tokenStream, token, delimiter)) {
       tokens.push_back(token);
    }
    return tokens;
@@ -31,45 +29,33 @@ std::vector<std::string> split(const std::string& s, char delimiter)
 std::map<long, long> parse_matrix_entry(std::string entry) {
 	//An entry looks like "a_n*x^n + ... a_0"
     std::map<long ,long> polynomial;
-    std::string mangled = replace_all_substr(entry, " ", "");   // delete spaces
-    mangled = replace_all_substr(entry, "-", "+-");             // separate monomials with +
+    std::string mangled = entry;
+    mangled.insert(mangled.begin(), '+');
+
+    mangled = replace_all_substr(mangled, " ", "");   			// delete spaces
+    mangled = replace_all_substr(mangled, "-", "+-");           // separate monomials with +
     mangled = replace_all_substr(mangled, "++", "+");           // merge duplicated + signs 
     mangled = replace_all_substr(mangled, "x", "x^1");          // add power of 1 to x term
     mangled = replace_all_substr(mangled, "^1^", "^");          // remove power of 1 to non x terms
-    mangled = replace_all_substr(mangled, "x", "*x");           // add multiplication sign to all coefficients
-    mangled = replace_all_substr(mangled, "**", "*");           // remove duplicated multiplication signs
-    if (mangled.front() == '*') {
-        mangled.insert(mangled.begin(), '+');           // add plus sign to beginning if monic to be covered by next replacement
-    }
-    mangled = replace_all_substr(mangled, "+*", "+1*");        // add 1 to all monic monomials
-    mangled = replace_all_substr(mangled, "-*", "-1*");        // add -1 to all negative monic monomials
-    mangled = replace_all_substr(mangled, "*x^", ",");          // replace *x^ with a single character separator 
+    mangled = replace_all_substr(mangled, "x", "*x");			// add multiplication sign to all coefficients
+    mangled = replace_all_substr(mangled, "**", "*");			// remove duplicated multiplication signs
+    mangled = replace_all_substr(mangled, "+*", "+1*");			// add 1 to all monic monomials
+    mangled = replace_all_substr(mangled, "-*", "-1*");			// add -1 to all negative monic monomials
+    mangled = replace_all_substr(mangled, "*x^", ",");			// replace *x^ with a single character separator 
 
     std::vector<std::string> tokenized = split(mangled, '+');
     tokenized.erase(tokenized.begin()); //Because there is always a leading +
 
     for (auto&& c : tokenized) {
-        std::cout << c << ", ";
-    }
-    std::cout << std::endl;
-
-    for (auto&& c : tokenized) {
 
         std::vector<std::string> cepair = split(c, ',');
 
-        for (auto&& b : cepair) {
-            std::cout << b << " ";
+        if (cepair.size() == 1) {
+        	cepair.push_back("0");
         }
-        std::cout << std::endl;
         
-        polynomial.insert(std::pair<long, long>(stoi(cepair[1]), stoi(cepair[0])));
-        //  std::string::size_type exp = 0;
+        polynomial[stoll(cepair[1])] = stoll(cepair[0]);
 
-        //  std::cout << "c = " << c << std::endl;
-        //  std::cout << "and the integer version!" << std::endl;
-        //  std::cout << std::stoll(c, &exp) << " coeff " << std::endl;;
-
-        //  std::cout << "exponent = ? " << c.substr(exp) << std::endl;
     }
     return polynomial;
 }
@@ -79,15 +65,25 @@ std::map<long, long> parse_matrix_entry(std::string entry) {
 PolyMatrix parse_matrix_formula(std::string formula) {
 	PolyMatrix output;
 
-	std::stringstream ss(formula);
-	for (int i; ss >> i;) {
-		std::cout << i << " ";
-		if(ss.peek() == ',') {
-			ss.ignore();
+	//Always leading and lagging square brackets for the matrix
+	formula.erase(formula.begin());
+	formula.erase(formula.end()-1);
+
+
+	vector<std::string> rows = split(formula, ';');
+	for (auto&& r : rows) {
+		vector<std::map<long, long> > matrixrow;
+
+		vector<std::string> cols = split(r, ',');
+		for (auto&& c : cols) {
+			matrixrow.push_back(parse_matrix_entry(c));
 		}
+		output.push_back(matrixrow);
 	}
+
 	return output;
 }
+
 
 
 bool is_power2(long x) {
