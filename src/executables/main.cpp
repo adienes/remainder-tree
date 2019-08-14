@@ -9,6 +9,8 @@
 #include "../algorithms/rem_forest.hpp"
 #include "../algorithms/rem_chunk.hpp"
 
+#include "../algorithms/tree_io.hpp"
+
 using std::vector;
 using NTL::ZZ;
 
@@ -46,18 +48,33 @@ vector<Elt<ZZ>> m_main(long lower, long upper){
 int main()
 {
 	
+
+    
+    // std::string line = "x^5+43*x^2-x-9";
+    // parse_matrix_entry(line);
+
     std::function<vector<Elt<ZZ>> (long, long)> A_gen = A_main;
     std::function<vector<Elt<ZZ>> (long, long)> m_gen = m_main;
     
     vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 32, 8, 0, 0);
 
+    std::cout << "Finished chunkifying!" << std::endl;
+
     for(long i = 0, chunks_size = chunks.size(); i < chunks_size; i++){
+  		std::cout << " i = " << i << std::endl;
         vector<Elt<ZZ>> chunkreturn = chunks[i]();
+        std::cout << "got chunkreturn! it is:" << std::endl;;
+        print_row(chunkreturn);
+
         for(long j = 0, chunkreturn_size = chunkreturn.size(); j < chunkreturn_size; j++){
             std::cout << chunkreturn[j] << " ";
         }
         std::cout << std::endl;
     }
+
+
+
+
     /*
     long B = (1<<19);
 

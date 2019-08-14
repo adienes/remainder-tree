@@ -1,16 +1,19 @@
 #ifndef REMAINDERTREE_SRC_ALGORITHMS_UTILS_H_
 #define REMAINDERTREE_SRC_ALGORITHMS_UTILS_H_
 
+#include <string>
 #include <vector>
+#include <map>
 #include "../elements/element.hpp"
 
 /* PolyMatrix: Matrix of polys w/ coeffs represented by binary arrays
  * []: row index
  * [][]: column index
  * [][][]: polynomial coefficient at x^index
- * [][][][]: ith least significant digit base 2 of coefficient
  */
-typedef std::vector<std::vector<std::vector<std::vector<bool>>>> PolyMatrix; 
+typedef std::vector<std::vector<std::map<long, long> > > PolyMatrix; 
+
+PolyMatrix parse_string_formula(std::string);
 
 bool is_power2(long);
 
