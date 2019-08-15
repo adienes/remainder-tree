@@ -7,7 +7,6 @@
 
 #include "../elements/element.hpp"
 #include "factorial_engine.hpp"
-#include <iostream>
 
 using NTL::ZZ;
 using NTL::ZZ_p;
@@ -31,7 +30,7 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
         return naive_factorial<Elt<ZZ>, Elt<ZZ>>(n, m, get_A); // TODO: write naive_factorial
     }
     long maxdeg = 0;
-    for(auto const& term : formula[0][0]){
+    for(const auto&& term : formula[0][0]){
         if(term.first > maxdeg){
             maxdeg = term.first;
         }
@@ -41,7 +40,7 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
         // TODO: convert polynomial coefficients into ZZ_p and call poly_factorial()        
         // Otherwise, do poly_factorial
         ZZ_pX poly;
-        for(auto const& term : formula[0][0]){
+        for(const auto&& term : formula[0][0]){
             ZZ_p coeff;
             coeff.init(m.t);
             coeff = term.second;
@@ -58,23 +57,20 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
     // Large Linear-type elements
     else{ 
         // TODO: convert polynomial coefficients into Mat<ZZ_p> and call matrix_factorial()
-        cout << "really GOOD" << endl;
         Mat<ZZ_pX> matrix;
         matrix.SetDims(1, 1);
         ZZ_pX poly;
-        for(auto const& term : formula[0][0]){
+        for(const auto&& term : formula[0][0]){
             ZZ_p coeff;
             coeff.init(m.t);
             coeff = term.second;
             SetCoeff(poly, term.first, coeff);
         }
         matrix.put(0, 0, poly);
-cout << "poly: " << poly << endl;
         Mat<ZZ_p> output;
         output.SetDims(1, 1);
         output = matrix_factorial(n, m.t, matrix);
         Elt<ZZ> output_elt(rep(output.get(0, 0)));
-cout << "done with factorial" << endl;
         return output_elt;
         
     }

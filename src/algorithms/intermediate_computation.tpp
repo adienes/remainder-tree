@@ -75,8 +75,8 @@ vector<T> subproduct_tree_askew(const vector<T>& vals, const vector<U>& mod_tree
 		} else { //parent is product of left child and superleft child
 			//subp_tree_askew[i] = (subp_tree_askew[2*i]*subp_tree_askew[2*i - 1])%modulus;
 			
-			subp_tree_askew[i] = subp_tree_askew[2*i];
-			subp_tree_askew[i].mulmod(subp_tree_askew[2*i - 1], mod_tree[1]);
+			subp_tree_askew[i] = subp_tree_askew[2*i - 1];
+			subp_tree_askew[i].mulmod(subp_tree_askew[2*i], mod_tree[1]);
 			//in place is possibly marginally faster
 
 			//subp_tree_askew[2*i].mod(mod_tree[2*i]); not necessary as it gets killed
@@ -143,8 +143,8 @@ T compute_product_node_askew(const vector<T>& vals, const U& modulus, long k) { 
 	}
 
 	else {
-		T C = compute_product_node_askew<T,U>(vals, modulus, 2*k);
-		C.mulmod(compute_product_node_askew<T,U>(vals, modulus, 2*k-1), modulus);
+		T C = compute_product_node_askew<T,U>(vals, modulus, 2*k-1);
+		C.mulmod(compute_product_node_askew<T,U>(vals, modulus, 2*k), modulus);
 		return C;
 	}	
 }

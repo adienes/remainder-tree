@@ -13,7 +13,7 @@
  */
 typedef std::vector<std::vector<std::map<long, long> > > PolyMatrix; 
 
-PolyMatrix parse_string_formula(std::string);
+PolyMatrix parse_matrix_formula(std::string);
 
 bool is_power2(long);
 

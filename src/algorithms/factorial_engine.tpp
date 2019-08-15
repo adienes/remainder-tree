@@ -354,7 +354,7 @@ void multieval_prod(vector<Mat<ZZ_p>>& out, const std::function<void (Mat<ZZ_p>&
  */
 void multieval_prod(vector<Mat<ZZ_p>>& out, const ZZ_p& k, const std::function<void (Mat<ZZ_p>&, const ZZ_p&)>& A, const ZZ& m){
     long n = out.size()-1;
-cout << "currently checking with size: " << n << endl; 
+//cout << "currently checking with size: " << n << endl; 
     if(n == 1){
         ZZ_p one;
         one.init(m);
@@ -367,11 +367,11 @@ cout << "currently checking with size: " << n << endl;
 
     vector<Mat<ZZ_p>> lower_layer(n/2+1);
     multieval_prod(lower_layer, k, A, m);
-cout << "finished recursion at " << n << endl;   
+//cout << "finished recursion at " << n << endl;   
     vector<Mat<ZZ_p>> ll_extend(lower_layer.size());
     ZZ_p n21k = k*(n/2+1);
     shift_values(ll_extend, lower_layer, n21k, k, m);
-cout << "finished shifting values 1" << endl;
+//cout << "finished shifting values 1" << endl;
     vector<Mat<ZZ_p>> ll_total;
     ll_total.reserve(lower_layer.size() + ll_extend.size());
     ll_total.insert(ll_total.end(), lower_layer.begin(), lower_layer.end());
@@ -383,7 +383,7 @@ cout << "finished shifting values 1" << endl;
     n2 = n/2;
 //cout << "time to shift" << endl;
     shift_values(ll_shift, ll_total, n2, k, m);
-cout << "finished shifting values 2" << endl;
+//cout << "finished shifting values 2" << endl;
     for(long i = 0, out_size = out.size(); i < out_size; i++){
         mul(out[i], ll_shift[i], ll_total[i]);
     }
