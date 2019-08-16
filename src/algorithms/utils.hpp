@@ -35,10 +35,10 @@ std::vector<T> get_subtree (const std::vector<T>&, long);
 template <typename T>
 std::vector<T> get_shade(const std::vector<T>&, long);
 
-template<typename T>
+template <typename T>
 std::vector<T> elt_to_base(const std::vector<Elt<T>>&);
 
-template<typename T>
+template <typename T>
 std::vector<Elt<T>> base_to_elt(const std::vector<T>&);
 
 

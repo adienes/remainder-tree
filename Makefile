@@ -1,5 +1,5 @@
 CXX := g++
-SRC_DIR := ./src/executables
+SRC_DIR := ./examples
 OBJ_DIR := ./obj
 BIN_DIR := ./bin
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
