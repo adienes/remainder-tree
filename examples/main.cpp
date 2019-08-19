@@ -38,7 +38,8 @@ vector<Elt<ZZ>> m_main(long lower, long upper){
     for(long i = lower; i < upper; i++){
         ZZ num(i+1);
         if(ProbPrime(num)){
-            output[i-lower] = Elt<ZZ>(num);
+	  power(num, num, 2);
+	  output[i-lower] = Elt<ZZ>(num);
         }
         else{
             output[i-lower] = Elt<ZZ>(1);
@@ -62,16 +63,40 @@ int main()
     
     PolyMatrix mat = parse_matrix_formula("[x]");
 
-    vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 1<<25, 1<<23, 0, 0, mat);
+    //vector<std::function<vector<Elt<ZZ>> ()>> chunks = chunkify(A_gen, m_gen, 0, 1<<26, 1<<21, 0, 0, mat);
 
+    vector<std::function<vector<Elt<ZZ> > ()> > numerators = chunkify(gen_wolstenholme_numerator, gen_fifth_prime_power, 0, 1<<24, 1<<19, 0, 0, mat);
+
+    vector<std::function<vector<Elt<ZZ> > ()> > denominators = chunkify(gen_wolstenholme_denominator, gen_fourth_prime_power, 0, 1<<24, 1<<19, 0, 0, mat);
+    
     std::cout << "Finished chunkifying!" << std::endl;
 
-	auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
 
+    Elt<ZZ>p(1);
     for(long i = 0, chunks_size = chunks.size(); i < chunks_size; i++){
   		std::cout << " i = " << i << std::endl;
-        vector<Elt<ZZ>> chunkreturn = chunks[i]();
+        vector<Elt<ZZ> > chunknums = numerators[i]();
+	vector<Elt<ZZ> > chunkdenoms = denominators[i]();
+
+	for (auto&& i : chunknums) {
+	  i.t /= p.t;
+
+	  ZZ mod;
+	  power(mod, p.1, 4);
+
+	  
+	  
+	}
+	for (auto&& i : chunkreturn) {
+	  if (i.t+1 == (p*p).t) {
+	    std::cout << "Found one! It was: " << p << std::endl;
+	  }
+
+	  p.t += 1;
+	}
     }
+
 
     auto end = std::chrono::high_resolution_clock::now();
 	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds> (end-start).count();

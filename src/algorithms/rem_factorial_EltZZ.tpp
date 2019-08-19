@@ -30,7 +30,7 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
         return naive_factorial<Elt<ZZ>, Elt<ZZ>>(n, m, get_A); // TODO: write naive_factorial
     }
     long maxdeg = 0;
-    for(const auto&& term : formula[0][0]){
+    for(const auto& term : formula[0][0]){
         if(term.first > maxdeg){
             maxdeg = term.first;
         }
@@ -40,7 +40,7 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
         // TODO: convert polynomial coefficients into ZZ_p and call poly_factorial()        
         // Otherwise, do poly_factorial
         ZZ_pX poly;
-        for(const auto&& term : formula[0][0]){
+        for(const auto& term : formula[0][0]){
             ZZ_p coeff;
             coeff.init(m.t);
             coeff = term.second;
@@ -60,7 +60,7 @@ Elt<ZZ> calculate_factorial(long n, const Elt<ZZ>& m, const std::function<vector
         Mat<ZZ_pX> matrix;
         matrix.SetDims(1, 1);
         ZZ_pX poly;
-        for(const auto&& term : formula[0][0]){
+        for(const auto& term : formula[0][0]){
             ZZ_p coeff;
             coeff.init(m.t);
             coeff = term.second;
